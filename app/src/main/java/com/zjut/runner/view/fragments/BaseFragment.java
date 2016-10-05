@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
+import com.zjut.runner.R;
 import com.zjut.runner.util.StringUtil;
 import com.zjut.runner.view.activities.BaseActivity;
 import com.zjut.runner.view.activities.MainActivity;
@@ -69,8 +71,7 @@ public abstract class BaseFragment extends Fragment{
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         changeTitle();
         if(layoutId != -1){
             rootView = inflater.inflate(layoutId,null);

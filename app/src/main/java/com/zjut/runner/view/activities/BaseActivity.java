@@ -17,6 +17,7 @@ import com.zjut.runner.view.fragments.BaseFragment;
  * Created by Phuylai on 2016/10/4.
  */
 public class BaseActivity extends AppCompatActivity {
+
     protected int layoutId = -1;
     protected BaseFragment currentFragment = null;
     protected Menu menu;
@@ -24,7 +25,7 @@ public class BaseActivity extends AppCompatActivity {
         initActionBar();
     }
     protected void initActionBar(){
-        ActionBar actionBar = getActionBar();
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
@@ -96,7 +97,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void setTitle(String title){
-        getActionBar().setTitle(title);
+        getSupportActionBar().setTitle(title);
     }
 
 }

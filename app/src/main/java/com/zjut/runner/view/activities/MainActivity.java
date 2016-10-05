@@ -1,5 +1,6 @@
 package com.zjut.runner.view.activities;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -65,8 +67,8 @@ public class MainActivity extends BaseActivity
         floatingActionButton.setOnClickListener(this);
         initDrawerLayout();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setOnClickListener(this);
-        //goToMainPageFragment();
+        navigationView.setNavigationItemSelectedListener(this);
+        goToMainPageFragment();
     }
 
     private void initDrawerLayout(){
@@ -108,12 +110,13 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        if (!actionBarClick()) {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        else if(!actionBarClick()){
             super.onBackPressed();
         }
-        overridePendingTransition(R.animator.slide_up,
-                R.animator.slide_down);
-
+        overridePendingTransition(R.animator.back_in,R.animator.back_out);
     }
 
     public void closeDrawers() {
@@ -411,5 +414,23 @@ public class MainActivity extends BaseActivity
             if (currentFragment != null)
                 currentFragment.search(searchString);
         }
+    }
+
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 }
