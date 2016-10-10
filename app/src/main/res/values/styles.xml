@@ -17,4 +17,29 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="login_sub_actions">
+    <item name="android:textSize">16sp</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginTop">20dp</item>
+    <item name="android:textColor">@color/white</item>
+</style>
+
+<style name="login_edit_style">
+<item name="android:layout_width">match_parent</item>
+<item name="android:layout_height">wrap_content</item>
+<item name="android:layout_marginTop">@dimen/margin_extra_medium</item>
+<item name="android:maxLines">1</item>
+<item name="android:paddingBottom">@dimen/margin_extra_large</item>
+</style>
+
+<style name="str_login_button">
+<item name="android:layout_width">fill_parent</item>
+<item name="android:layout_height">wrap_content</item>
+<item name="android:textColor">@color/white</item>
+<item name="android:textStyle">bold</item>
+<item name="android:textSize">16sp</item>
+<item name="android:background">@color/orange</item>
+</style>
+
 </resources>

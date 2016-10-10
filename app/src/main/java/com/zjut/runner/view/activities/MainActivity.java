@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,6 +24,7 @@ import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.RunnableManager;
 import com.zjut.runner.view.fragments.BaseFragment;
 import com.zjut.runner.view.fragments.MainPageFragment;
+import com.zjut.runner.view.fragments.RunnerFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,17 +58,32 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
+    protected void initActionBar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+    }
+
+    @Override
+    protected void setListeners() {
+        floatingActionButton.setOnClickListener(this);
+        navigationView.setNavigationItemSelectedListener(this);
+        drawerToggle.setToolbarNavigationClickListener(this);
+    }
+
+    @Override
     protected void findViews() {
         super.findViews();
         fragmentManager = getSupportFragmentManager();
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(this);
         initDrawerLayout();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
         goToMainPageFragment();
+        goToFragment(new RunnerFragment());
     }
 
     private void initDrawerLayout(){
@@ -76,7 +91,7 @@ public class MainActivity extends BaseActivity
         drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,
                 R.string.navigation_drawer_open,R.string.navigation_drawer_close){
             public void onDrawerClosed(View view){
-              setHomeMenuVisible(true);
+                setHomeMenuVisible(true);
             }
             public void onDrawerOpened(View drawerView){
                 setHomeMenuVisible(false);
@@ -131,7 +146,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-       return super.onCreateOptionsMenu(menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -200,8 +215,8 @@ public class MainActivity extends BaseActivity
 
     private void backToPrevious() {
         super.onBackPressed();
-        overridePendingTransition(R.animator.slide_up,
-                R.animator.slide_down);
+        overridePendingTransition(R.animator.back_in,
+                R.animator.back_out);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -229,8 +244,12 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onClick(View v) {
-        Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        if(v.getId() == R.id.fab){
+            Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return;
+        }
+        actionBarClick();
     }
 
     @Override
@@ -339,9 +358,9 @@ public class MainActivity extends BaseActivity
     public void goToSelectFragment(BaseFragment topFragment, Fragment fragment) {
         addSelectedFragment(topFragment);
         transaction = fragmentManager.beginTransaction();
-        transaction.setCustomAnimations(R.animator.slide_up,
-                R.animator.slide_down, R.animator.slide_up,
-                R.animator.slide_down);
+        transaction.setCustomAnimations(R.animator.back_in,
+                R.animator.back_out, R.animator.back_in,
+                R.animator.back_out);
         transaction.add(R.id.content, fragment);
         transaction.addToBackStack(null);
         transaction.commitAllowingStateLoss();
@@ -351,9 +370,9 @@ public class MainActivity extends BaseActivity
                                    String backName) {
         addSelectedFragment(topFragment);
         transaction = fragmentManager.beginTransaction();
-        transaction.setCustomAnimations(R.animator.slide_up,
-                R.animator.slide_down, R.animator.slide_up,
-                R.animator.slide_down);
+        transaction.setCustomAnimations(R.animator.back_in,
+                R.animator.back_out, R.animator.back_in,
+                R.animator.back_out);
         transaction.add(R.id.content, fragment);
         transaction.addToBackStack(backName);
         transaction.commitAllowingStateLoss();
@@ -362,15 +381,14 @@ public class MainActivity extends BaseActivity
     public void skipToFragmentByContentId(Fragment fragment, int contentId,
                                           boolean addToStack, String backName) {
         skipToFragmentByContentId(fragment, contentId, addToStack, backName,
-                R.animator.slide_up, R.animator.slide_down);
+                R.animator.back_in, R.animator.back_out);
     }
 
     public void skipToFragmentByContentId(Fragment fragment, int contentId,
                                           boolean addToStack, String backName, int moveInAnimateId,
                                           int moveOutAnimateId) {
         transaction = fragmentManager.beginTransaction();
-        transaction.setCustomAnimations(moveInAnimateId, moveOutAnimateId,
-                R.animator.slide_up, R.animator.slide_down);
+        transaction.setCustomAnimations(moveInAnimateId,moveOutAnimateId,R.animator.back_in,R.animator.back_out);
         transaction.replace(contentId, fragment);
         if (addToStack) {
             transaction.addToBackStack(backName);

@@ -2,7 +2,6 @@ package com.zjut.runner.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,6 @@ public class MainPageFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layoutId = R.layout.fragment_main;
-        Log.i("come","1");
         if (mView != null) {
             ViewGroup parent = (ViewGroup) mView.getParent();
             if (parent != null) {

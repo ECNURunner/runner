@@ -12,4 +12,9 @@ public class Constants {
 
     public final static String POP_TO_HOME = "HOMELIST_FRAGMENT";
 
+    // setAlpha
+    public static final int DEF_OPAQUE = 255;
+    public static final int ENABLE_OPAQUE = (int) (DEF_OPAQUE * 0.6);
+    public static final int DISABLE_OPAQUE = (int) (DEF_OPAQUE * 0.3);
+
 }

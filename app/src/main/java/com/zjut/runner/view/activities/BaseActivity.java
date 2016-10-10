@@ -1,9 +1,9 @@
 package com.zjut.runner.view.activities;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,22 +16,20 @@ import com.zjut.runner.view.fragments.BaseFragment;
 /**
  * Created by Phuylai on 2016/10/4.
  */
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     protected int layoutId = -1;
     protected BaseFragment currentFragment = null;
     protected Menu menu;
+    protected ActionBar actionBar;
+
     protected void findViews(){
         initActionBar();
     }
-    protected void initActionBar(){
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
-    }
-    protected void setListeners(){}
+
+    protected abstract void initActionBar();
+
+    protected abstract void setListeners();
 
     private void initFragments(){
 
@@ -40,7 +38,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(isLoadingScreen()){
+        if(isLoadingScreen() /*|| isLoginScreen()*/){
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -60,6 +58,10 @@ public class BaseActivity extends AppCompatActivity {
 
     private boolean isLoadingScreen(){
         return this.getClass() == LoadingActivity.class;
+    }
+
+    private boolean isLoginScreen(){
+        return this.getClass() == LoginActivity.class;
     }
 
     public void setCurrentFragment(BaseFragment currentFragment){
@@ -99,6 +101,5 @@ public class BaseActivity extends AppCompatActivity {
     protected void setTitle(String title){
         getSupportActionBar().setTitle(title);
     }
-
 }
 
