@@ -199,19 +199,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         R.animator.back_out);
                 break;
             case R.id.tv_forget_password:
-                /*intent = new Intent(this, ResetPasswordActivity.class);
+                intent = new Intent(this, ResetPasswordActivity.class);
                 startActivityForResult(intent,
                         RegisterActivity.REQUEST_REGISTER_CODE);
-                overridePendingTransition(R.animator.activity_in,
-                        R.animator.activity_out);*/
-
+                overridePendingTransition(R.animator.back_in,
+                        R.animator.back_out);
                 break;
             case R.id.tv_verify:
-                /*intent = new Intent(this,VerifyActivity.class);
+                intent = new Intent(this,VerifyActivity.class);
                 startActivityForResult(intent,
                         RegisterActivity.REQUEST_REGISTER_CODE);
-                overridePendingTransition(R.animator.activity_in,
-                        R.animator.activity_out);*/
+                overridePendingTransition(R.animator.back_in,
+                        R.animator.back_out);
             default:
                 break;
         }
@@ -249,11 +248,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        /*if (requestCode == RegisterActivity.REQUEST_REGISTER_CODE
+        if (requestCode == RegisterActivity.REQUEST_REGISTER_CODE
                 && resultCode == RegisterActivity.RESULT_REGISTER_SUCCESS) {
             String userName = preference.getUsername();
             String passWord = preference.getPassword();
             et_username.setText(userName);
-            et_password.setText(passWord);*/
+            et_password.setText(passWord);
+        }
     }
 }

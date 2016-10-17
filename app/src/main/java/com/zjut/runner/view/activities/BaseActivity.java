@@ -1,5 +1,6 @@
 package com.zjut.runner.view.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -10,7 +11,11 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.avos.avoscloud.AVUser;
+import com.zjut.runner.Controller.CurrentSession;
 import com.zjut.runner.util.ActivitiesManager;
+import com.zjut.runner.util.MLog;
+import com.zjut.runner.util.MyPreference;
 import com.zjut.runner.util.ToastUtil;
 import com.zjut.runner.view.fragments.BaseFragment;
 
@@ -110,6 +115,25 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void setTitle(String title){
         getSupportActionBar().setTitle(title);
+    }
+
+    public void logOut() {
+        if (this.getClass() != LoginActivity.class) {
+            AVUser.logOut();
+            //TODO:clean cache
+
+            // CLEAN PASSWORD FROM SHARED PREFERENCES
+            MyPreference preference = MyPreference.getInstance(this);
+            preference.setPassword("");
+
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            startActivity(intent);
+            finish();
+
+            MLog.e("CMD_LOGOUT","SUCCESS");
+        }
     }
 }
 

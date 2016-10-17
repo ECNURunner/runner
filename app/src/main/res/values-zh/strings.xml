@@ -4,7 +4,8 @@
     <string name="navigation_drawer_open">打开抽屉</string>
     <string name="navigation_drawer_close">关闭抽屉</string>
     <string name="action_settings">设置</string>
-    //login
+    <string name="action_logout">退出</string>
+    <!--login-->
     <string name="str_login_phone">手机号码</string>
     <string name="toast_login_null">请检查用户名和密码</string>
     <string name="toast_login_invalid_username">用户名或密码错误</string>
@@ -12,7 +13,7 @@
     <string name="tv_login">登 录</string>
     <string name="str_forgot">忘记密码？</string>
     <string name="str_signup">注册</string>
-    //register
+    <!--register-->
     <string name="str_register_username">名字</string>
     <string name="str_register_password">密码</string>
     <string name="str_register_confirmpassword">确认密码</string>
@@ -26,5 +27,13 @@
     <string name="register_detail_phone">验证码短信已发送至手机</string>
     <string name="str_resend_captcha">%1$s秒后重发</string>
     <string name="verify_phone">手机验证</string>
+    <!--forget psd-->
+    <string name="str_input_captcha">输入验证码</string>
+    <string name="str_get_captcha">获取验证码</string>
+    <string name="str_reset_psd_new">输入新密码</string>
+    <string name="str_reset_psd_confirm">确认新密码</string>
+    <string name="str_reset_psd_reset">重设</string>
+    <string name="now_phone_not_equals_get_captcha_num">此手机号有不同于获取验证码手机号</string>
+    <string name="btn_verify">验证</string>
 
 </resources>

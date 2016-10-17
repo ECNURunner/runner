@@ -240,7 +240,7 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-
+            logOut();
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
