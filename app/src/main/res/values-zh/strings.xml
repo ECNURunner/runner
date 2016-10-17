@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">runner</string>
+    <string name="navigation_drawer_open">打开抽屉</string>
+    <string name="navigation_drawer_close">关闭抽屉</string>
+    <string name="action_settings">设置</string>
+    //login
+    <string name="str_login_phone">手机号码</string>
+    <string name="toast_login_null">请检查用户名和密码</string>
+    <string name="toast_login_invalid_username">用户名或密码错误</string>
+    <string name="toast_login_error">登录失败</string>
+    //register
+    <string name="str_register_username">名字</string>
+    <string name="str_register_password">密码</string>
+    <string name="str_register_confirmpassword">确认密码</string>
+    <string name="str_next">继续</string>
+    <string name="tv_register_agree">同意</string>
+    <string name="toast_password_format_errormsg">密码必须不少于6个字符并不包含空格</string>
+    <string name="toast_two_password_errormsg">两次输入的密码必须匹配</string>
+    <string name="str_register">注 册</string>
+    <string name="register_verificationhint">输入验证码</string>
+    <string name="register_sendagain">重发验证码</string>
+    <string name="register_detail_phone">验证码短信已发送至手机</string>
+    <string name="str_resend_captcha">%1$s秒后重发</string>
+
+</resources>

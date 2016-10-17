@@ -15,16 +15,21 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogInCallback;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.GeneralUtils;
+import com.zjut.runner.util.MyPreference;
 import com.zjut.runner.util.StringUtil;
+import com.zjut.runner.util.ToastUtil;
 
 /**
  * Created by Phuylai on 2016/10/5.
  */
 public class LoginActivity extends BaseActivity implements View.OnClickListener, TextWatcher,
-        TextView.OnEditorActionListener{
+        TextView.OnEditorActionListener {
 
     @Override
     protected void initActionBar() {
@@ -46,11 +51,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private TextView tv_forgetPassword;
     private TextView tvUsernameDesc;
     private TextView tv_verify;
+    private MyPreference preference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         layoutId = R.layout.activity_login;
-        //preference = MyPreference.getInstance(this);
+        preference = MyPreference.getInstance(this);
         super.onCreate(savedInstanceState);
     }
 
@@ -66,6 +72,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void findViews() {
         super.findViews();
+        super.findViews();
         tvUsernameDesc = (TextView) findViewById(R.id.tv_username_desc);
         tv_signup = (TextView) findViewById(R.id.tv_signup);
         tv_forgetPassword = (TextView) findViewById(R.id.tv_forget_password);
@@ -75,18 +82,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         et_username = (EditText) findViewById(R.id.et_username);
         et_password = (EditText) findViewById(R.id.et_password);
         btn_login = (Button) findViewById(R.id.btn_login);
-        //username = preference.getUsername();
-        //password = preference.getPassword();
+        username = preference.getUsername();
+        password = preference.getPassword();
         et_username.setText(username);
         et_password.setText(password);
         setLogin();
-        //Utils.setPassWordEditTextHintType(et_password);
+        GeneralUtils.setPassWordEditTextHintType(et_password);
         setButtonDisable();
         changeIconMarginTop();
     }
 
-    private void setLogin(){
-        //et_username.setHint(R.string.str_login_phone);
+    private void setLogin() {
+        et_username.setHint(R.string.str_login_phone);
         tvUsernameDesc.setText("");
         et_username.setInputType(InputType.TYPE_CLASS_TEXT);
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) tvUsernameDesc.getLayoutParams();
@@ -141,34 +148,31 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     protected void startLoading() {
-        /*username = et_username.getText().toString();
+        username = et_username.getText().toString();
         password = et_password.getText().toString();
 
         if (StringUtil.isNull(username) || StringUtil.isNull(password)) {
             ToastUtil.showToast(R.string.toast_login_null);
-        } else if (!Utils.matchREGEX(Constants.PASSWORD_RULES_REGEX,
+        } else if (!GeneralUtils.matchREGEX(Constants.PASSWORD_RULES_REGEX,
                 password)) {
             ToastUtil.showToast(R.string.toast_login_invalid_username);
         } else {
-            // TODO Timeout for login? I notice d that the XMPPService already
-            // has an internal one, is it not going to be redundant?
             disableLogIn();
-            //loginAction.userLogin(username,password);
             AVUser.loginByMobilePhoneNumberInBackground(username, password, new LogInCallback<AVUser>() {
                 @Override
                 public void done(AVUser avUser, AVException e) {
-                    if(e == null){
-                        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                    if (e == null) {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         MyPreference.getInstance(getApplicationContext()).setPassword(password);
                         startActivity(intent);
                         finish();
-                    }else{
-                        showToast(R.string.toast_login_error);
+                    } else {
+                        ToastUtil.showToast(R.string.toast_login_error);
                         enableLogIn();
                     }
                 }
             });
-        }*/
+        }
     }
 
     private void disableLogIn() {
@@ -182,31 +186,28 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
-        //Intent intent = null;
+        Intent intent = null;
         switch (v.getId()) {
             case R.id.btn_login:
-                //startLoading();
-                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                startActivity(intent);
-                finish();
+                startLoading();
                 break;
-            /*case R.id.tv_signup:
-                intent = new Intent(this, RegisterActivity.class);
+            case R.id.tv_signup:
+                /*intent = new Intent(this, RegisterActivity.class);
                 startActivityForResult(intent,
                         RegisterActivity.REQUEST_REGISTER_CODE);
                 overridePendingTransition(R.animator.activity_in,
-                        R.animator.activity_out);
+                        R.animator.activity_out);*/
                 break;
             case R.id.tv_forget_password:
-                intent = new Intent(this, ResetPasswordActivity.class);
+                /*intent = new Intent(this, ResetPasswordActivity.class);
                 startActivityForResult(intent,
                         RegisterActivity.REQUEST_REGISTER_CODE);
                 overridePendingTransition(R.animator.activity_in,
-                        R.animator.activity_out);
+                        R.animator.activity_out);*/
 
                 break;
             case R.id.tv_verify:
-                intent = new Intent(this,VerifyActivity.class);
+                /*intent = new Intent(this,VerifyActivity.class);
                 startActivityForResult(intent,
                         RegisterActivity.REQUEST_REGISTER_CODE);
                 overridePendingTransition(R.animator.activity_in,
@@ -236,7 +237,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         if (v.getId() == R.id.et_password) {
             switch (actionId) {
                 case EditorInfo.IME_ACTION_DONE:
-                    //startLoading();
+                    startLoading();
                     return true;
                 default:
                     break;
@@ -248,12 +249,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        /*MLog.d(TAG, "requestCode=" + requestCode + "resultCode=" + resultCode);
-        if (requestCode == RegisterActivity.REQUEST_REGISTER_CODE
+        /*if (requestCode == RegisterActivity.REQUEST_REGISTER_CODE
                 && resultCode == RegisterActivity.RESULT_REGISTER_SUCCESS) {
             String userName = preference.getUsername();
             String passWord = preference.getPassword();
             et_username.setText(userName);
             et_password.setText(passWord);*/
-        }
     }
+}

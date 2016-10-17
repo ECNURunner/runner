@@ -6,9 +6,9 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.text.Html;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-import com.zjut.runner.R;
 import com.zjut.runner.util.StringUtil;
 import com.zjut.runner.view.activities.BaseActivity;
 import com.zjut.runner.view.activities.MainActivity;
@@ -118,7 +117,7 @@ public abstract class BaseFragment extends Fragment{
     protected void setTitle(CharSequence title){
         if(activity == null)
             return;
-        android.app.ActionBar actionBar = activity.getActionBar();
+        ActionBar actionBar = activity.getSupportActionBar();
         if(actionBar == null){
             return;
         }
@@ -128,10 +127,23 @@ public abstract class BaseFragment extends Fragment{
     protected void setTitle(String title){
         if(activity == null)
             return;
-        android.app.ActionBar actionBar = activity.getActionBar();
+        ActionBar actionBar = activity.getSupportActionBar();
         if(actionBar == null)
             return;
         actionBar.setTitle(title);
+    }
+
+    protected void setTitle(int resourceId) {
+        if (activity == null) {
+            return;
+        }
+
+        ActionBar actionBar = activity.getSupportActionBar();
+        if (actionBar == null) {
+            return;
+        }
+
+        actionBar.setTitle(resourceId);
     }
 
     protected abstract void findViews(View rootView);

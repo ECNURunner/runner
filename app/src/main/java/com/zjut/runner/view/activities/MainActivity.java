@@ -82,8 +82,11 @@ public class MainActivity extends BaseActivity
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         initDrawerLayout();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        initFragment();
+    }
+
+    protected void initFragment(){
         goToMainPageFragment();
-        goToFragment(new RunnerFragment());
     }
 
     private void initDrawerLayout(){

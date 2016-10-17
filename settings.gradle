@@ -1,1 +1,3 @@
-include ':app'
+include ':app',':'
+include ':db_library'
+include ':multi-image-selector'

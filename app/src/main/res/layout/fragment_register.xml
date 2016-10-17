@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/register_padding_left_right"
+        android:paddingRight="@dimen/register_padding_left_right"
+        android:paddingTop="@dimen/register_padding_top" >
+
+        <EditText
+            android:id="@+id/et_mobile"
+            style="@style/register_edittext_style"
+            android:hint="@string/str_login_phone"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/et_username"
+            style="@style/register_edittext_style"
+            android:hint="@string/str_register_username" />
+
+        <EditText
+            android:id="@+id/et_password"
+            style="@style/register_edittext_style"
+            android:hint="@string/str_register_password"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/et_confirm_password"
+            style="@style/register_edittext_style"
+            android:hint="@string/str_register_confirmpassword"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/tv_warning"
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:visibility="invisible"
+            />
+
+        <Button
+            android:id="@+id/btn_next"
+            style="@style/str_register_button"
+            android:text="@string/str_next" />
+    </LinearLayout>
+
+</ScrollView>

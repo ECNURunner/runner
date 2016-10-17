@@ -5,4 +5,20 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    //login
+    <string name="str_login_phone">Phone number</string>
+    <string name="toast_login_null">Check your username and password again</string>
+    <string name="toast_login_invalid_username">Incorrect email, phone or password</string>
+    <string name="toast_login_error">Fail to login</string>
+    //register
+    <string name="str_register_username">Name</string>
+    <string name="str_register_password">Password</string>
+    <string name="str_register_confirmpassword">Confirm password</string>
+    <string name="str_next">Next</string>
+    <string name="tv_register_agree">Agree</string>
+    <string name="str_register">Register</string>
+    <string name="register_verificationhint">Please enter verification code</string>
+    <string name="register_sendagain">Send verification code again</string>
+    <string name="register_detail_phone">An sms with verification code has sent to your phone</string>
+    <string name="str_resend_captcha">Resend after %1$s seconds</string>
 </resources>
