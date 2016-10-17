@@ -37,7 +37,7 @@ public class MainActivity extends BaseActivity
 
     private DrawerLayout drawerLayout = null;
     private ActionBarDrawerToggle drawerToggle = null;
-    private Toolbar toolbar = null;
+    protected Toolbar toolbar = null;
     private FloatingActionButton floatingActionButton = null;
     private NavigationView navigationView = null;
     private FrameLayout content = null;

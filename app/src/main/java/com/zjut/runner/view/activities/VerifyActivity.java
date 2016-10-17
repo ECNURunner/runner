@@ -1,5 +1,7 @@
 package com.zjut.runner.view.activities;
 
+import com.zjut.runner.R;
+import com.zjut.runner.util.ResourceUtil;
 import com.zjut.runner.view.fragments.VerifyFragment;
 
 /**
@@ -13,6 +15,7 @@ public class VerifyActivity extends MainActivity {
 
     @Override
     protected void initFragment() {
+        toolbar.setBackgroundColor(ResourceUtil.getColor(R.color.colorPrimary));
         VerifyFragment verifyFragment = new VerifyFragment();
         goToFragment(verifyFragment,false);
     }

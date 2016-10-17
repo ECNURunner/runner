@@ -1,5 +1,7 @@
 package com.zjut.runner.view.activities;
 
+import com.zjut.runner.R;
+import com.zjut.runner.util.ResourceUtil;
 import com.zjut.runner.view.fragments.ResetPasswordFragment;
 
 /**
@@ -9,6 +11,7 @@ import com.zjut.runner.view.fragments.ResetPasswordFragment;
 public class ResetPasswordActivity extends MainActivity {
     @Override
     protected void initFragment() {
+        toolbar.setBackgroundColor(ResourceUtil.getColor(R.color.colorPrimary));
         ResetPasswordFragment resetPasswordFragment = new ResetPasswordFragment();
         goToFragment(resetPasswordFragment,false);
     }

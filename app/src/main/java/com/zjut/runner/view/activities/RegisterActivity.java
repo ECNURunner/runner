@@ -1,5 +1,7 @@
 package com.zjut.runner.view.activities;
 
+import com.zjut.runner.R;
+import com.zjut.runner.util.ResourceUtil;
 import com.zjut.runner.view.fragments.RegisterFragment;
 
 /**
@@ -12,6 +14,7 @@ public class RegisterActivity extends MainActivity {
 
     @Override
     protected void initFragment() {
+        toolbar.setBackgroundColor(ResourceUtil.getColor(R.color.colorPrimary));
         RegisterFragment registerFragment = new RegisterFragment();
         goToFragment(registerFragment,false);
     }
