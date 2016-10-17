@@ -78,8 +78,7 @@ public class RegisterFragment extends BaseFragment implements TextWatcher, View.
 
     @Override
     public void changeTitle() {
-        //TODO: MainActivity set title
-       // setTitle(R.string.str_register);
+       setTitle(R.string.str_register);
     }
 
     protected void setActionButtonDisable(boolean isEnable) {

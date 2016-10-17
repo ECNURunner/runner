@@ -167,7 +167,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         startActivity(intent);
                         finish();
                     } else {
-                        ToastUtil.showToast(R.string.toast_login_error);
+                        showToast(R.string.toast_login_error);
                         enableLogIn();
                     }
                 }
@@ -192,11 +192,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 startLoading();
                 break;
             case R.id.tv_signup:
-                /*intent = new Intent(this, RegisterActivity.class);
+                intent = new Intent(this, RegisterActivity.class);
                 startActivityForResult(intent,
                         RegisterActivity.REQUEST_REGISTER_CODE);
-                overridePendingTransition(R.animator.activity_in,
-                        R.animator.activity_out);*/
+                overridePendingTransition(R.animator.back_in,
+                        R.animator.back_out);
                 break;
             case R.id.tv_forget_password:
                 /*intent = new Intent(this, ResetPasswordActivity.class);

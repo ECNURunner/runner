@@ -80,6 +80,7 @@ public class MainActivity extends BaseActivity
         super.findViews();
         fragmentManager = getSupportFragmentManager();
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        floatingActionButton.setVisibility(View.GONE);
         initDrawerLayout();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         initFragment();

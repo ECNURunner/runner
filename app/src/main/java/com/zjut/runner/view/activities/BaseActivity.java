@@ -11,6 +11,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.zjut.runner.util.ActivitiesManager;
+import com.zjut.runner.util.ToastUtil;
 import com.zjut.runner.view.fragments.BaseFragment;
 
 /**
@@ -96,6 +97,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         ActivitiesManager.getInstance().removeActivity(this);
+    }
+
+    /**
+     * show toast by resId
+     *
+     * @param resID
+     */
+    protected void showToast(int resID) {
+        ToastUtil.showToast(resID);
     }
 
     protected void setTitle(String title){

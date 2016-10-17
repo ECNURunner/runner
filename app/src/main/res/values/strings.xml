@@ -5,12 +5,15 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    //login
+    <!--login-->
     <string name="str_login_phone">Phone number</string>
     <string name="toast_login_null">Check your username and password again</string>
     <string name="toast_login_invalid_username">Incorrect email, phone or password</string>
     <string name="toast_login_error">Fail to login</string>
-    //register
+    <string name="str_login">Log in</string>
+    <string name="str_forgot">Forgot password?</string>
+    <string name="str_signup">Sign up</string>
+    <!--register-->
     <string name="str_register_username">Name</string>
     <string name="str_register_password">Password</string>
     <string name="str_register_confirmpassword">Confirm password</string>
@@ -21,4 +24,7 @@
     <string name="register_sendagain">Send verification code again</string>
     <string name="register_detail_phone">An sms with verification code has sent to your phone</string>
     <string name="str_resend_captcha">Resend after %1$s seconds</string>
+    <string name="toast_password_format_errormsg">Password must contain at least 6 characters and no white space</string>
+    <string name="toast_two_password_errormsg">Password should match.</string>
+    <string name="verify_phone">Verify</string>
 </resources>

@@ -8,6 +8,7 @@ import com.zjut.runner.Model.LanguageType;
 import com.zjut.runner.util.GeneralUtils;
 import com.zjut.runner.util.LanguageUtil;
 import com.zjut.runner.util.MyPreference;
+import com.zjut.runner.util.ResourceUtil;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -28,7 +29,7 @@ public class RunnerApp extends Application {
         super.onCreate();
         SQLiteDatabase.loadLibs(this);
         instance = this;
-        GeneralUtils.initConfig(getApplicationContext());
+        ResourceUtil.initConfig(getApplicationContext());
         setPreferenceChange();
         AVOSCloud.initialize(this,"CCzSqBhPvPJnE1L9YuvJqtJ0-gzGzoHsz","eAxo9lNzT3bb3PGY1o1GQVxN");
     }
