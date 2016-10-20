@@ -3,10 +3,14 @@ package com.zjut.runner.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Display;
+import android.view.View;
 import android.widget.EditText;
 
 import java.util.regex.Pattern;
@@ -67,6 +71,30 @@ public class GeneralUtils {
 
     public static boolean matchREGEX(Pattern pattern, String matchString) {
         return pattern.matcher(matchString).matches();
+    }
+
+    /**
+     * To recycle the bitmap when activity is destroyed
+     * @author phuylai
+     * @param view
+     */
+
+    public static void recycleBackground(View view){
+        if(view == null){
+            return;
+        }
+        Drawable drawable = view.getBackground();
+        if(!(drawable instanceof BitmapDrawable)){
+            drawable = null;
+            return;
+        }
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+        if(bitmap != null && !bitmap.isRecycled()){
+            bitmap.recycle();
+            bitmap = null;
+        }
+        bitmapDrawable = null;
     }
 
 }

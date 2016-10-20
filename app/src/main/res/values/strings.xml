@@ -36,4 +36,6 @@
     <string name="str_reset_psd_reset">Reset</string>
     <string name="now_phone_not_equals_get_captcha_num">Your can\'t get a captcha for this phone number again</string>
     <string name="btn_verify">Verify</string>
+    <!--myprofile-->
+    <string name="str_not_set">not set</string>
 </resources>

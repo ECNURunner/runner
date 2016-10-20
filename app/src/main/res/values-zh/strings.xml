@@ -35,5 +35,7 @@
     <string name="str_reset_psd_reset">重设</string>
     <string name="now_phone_not_equals_get_captcha_num">此手机号有不同于获取验证码手机号</string>
     <string name="btn_verify">验证</string>
+    <!--myprofile-->
+    <string name="str_not_set">未设置</string>
 
 </resources>

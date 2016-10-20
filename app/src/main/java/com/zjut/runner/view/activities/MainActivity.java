@@ -17,11 +17,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.RunnableManager;
+import com.zjut.runner.util.ToastUtil;
 import com.zjut.runner.view.fragments.BaseFragment;
 import com.zjut.runner.view.fragments.MainPageFragment;
 import com.zjut.runner.view.fragments.RunnerFragment;
@@ -41,6 +43,7 @@ public class MainActivity extends BaseActivity
     private FloatingActionButton floatingActionButton = null;
     private NavigationView navigationView = null;
     private FrameLayout content = null;
+    private LinearLayout ll_nav_header = null;
 
     protected BaseFragment currentFragment = null;
     private MainPageFragment mainPageFragment;
@@ -73,6 +76,7 @@ public class MainActivity extends BaseActivity
         floatingActionButton.setOnClickListener(this);
         navigationView.setNavigationItemSelectedListener(this);
         drawerToggle.setToolbarNavigationClickListener(this);
+        ll_nav_header.setOnClickListener(this);
     }
 
     @Override
@@ -83,6 +87,7 @@ public class MainActivity extends BaseActivity
         floatingActionButton.setVisibility(View.GONE);
         initDrawerLayout();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        ll_nav_header = (LinearLayout) navigationView.getHeaderView(0);
         initFragment();
     }
 
@@ -251,6 +256,9 @@ public class MainActivity extends BaseActivity
         if(v.getId() == R.id.fab){
             Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
+            return;
+        }else if(v.getId() == R.id.ll_nav_header){
+            ToastUtil.showToast("header click");
             return;
         }
         actionBarClick();

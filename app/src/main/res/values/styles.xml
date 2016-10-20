@@ -87,4 +87,18 @@
         <item name="android:layout_marginRight">20dp</item>
     </style>
 
+    <style name="detail_item_actionname" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="detail_item_des" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="grey_line_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dip</item>
+        <item name="android:background">@color/gray</item>
+    </style>
+
 </resources>

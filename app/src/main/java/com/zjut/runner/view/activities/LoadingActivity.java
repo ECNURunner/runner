@@ -9,7 +9,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
+import com.avos.avoscloud.AVUser;
+import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.R;
+import com.zjut.runner.util.GeneralUtils;
 
 /**
  * Created by Phuylai on 2016/10/4.
@@ -49,16 +52,25 @@ public class LoadingActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //Utils.recycleBackground(rl_background);
-        //Utils.recycleBackground(iv_loading);
+        GeneralUtils.recycleBackground(rl_background);
+        GeneralUtils.recycleBackground(iv_loading);
     }
 
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            Intent intent = new Intent(LoadingActivity.this,LoginActivity.class);
-            startActivity(intent);
-            finish();
+            if(AVUser.getCurrentUser() != null){
+                //TODO: get campus model here
+                CampusModel campusModel = CampusModel.setCampusModel(AVUser.getCurrentUser());
+                
+                Intent intent = new Intent(LoadingActivity.this,MainActivity.class);
+                startActivity(intent);
+                finish();
+            }else {
+                Intent intent = new Intent(LoadingActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     };
 
