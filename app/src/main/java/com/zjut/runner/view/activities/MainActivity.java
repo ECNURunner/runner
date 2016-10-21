@@ -16,10 +16,18 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
+import android.widget.TextView;
 
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVUser;
+import com.koushikdutta.ion.Ion;
+import com.zjut.runner.Model.CampusModel;
+import com.zjut.runner.Model.RefreshType;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.RunnableManager;
@@ -27,6 +35,7 @@ import com.zjut.runner.util.ToastUtil;
 import com.zjut.runner.view.fragments.BaseFragment;
 import com.zjut.runner.view.fragments.MainPageFragment;
 import com.zjut.runner.view.fragments.RunnerFragment;
+import com.zjut.runner.view.fragments.UserProfileFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +45,7 @@ public class MainActivity extends BaseActivity
         MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener {
 
     public static final String tag = MainActivity.class.getSimpleName();
+    public CampusModel campusModel;
 
     private DrawerLayout drawerLayout = null;
     private ActionBarDrawerToggle drawerToggle = null;
@@ -44,6 +54,10 @@ public class MainActivity extends BaseActivity
     private NavigationView navigationView = null;
     private FrameLayout content = null;
     private LinearLayout ll_nav_header = null;
+    private View headerView = null;
+    private ImageView iv_profile = null;
+    private TextView tv_name = null;
+    private TextView tv_mobile = null;
 
     protected BaseFragment currentFragment = null;
     private MainPageFragment mainPageFragment;
@@ -56,8 +70,14 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        parseArgument();
         layoutId = R.layout.activity_main;
         super.onCreate(savedInstanceState);
+    }
+
+    private void parseArgument(){
+        Bundle bundle = this.getIntent().getExtras();
+        campusModel = (CampusModel) bundle.getSerializable(Constants.PARAM_CAMPUS);
     }
 
     @Override
@@ -87,8 +107,29 @@ public class MainActivity extends BaseActivity
         floatingActionButton.setVisibility(View.GONE);
         initDrawerLayout();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        ll_nav_header = (LinearLayout) navigationView.getHeaderView(0);
+        initHeaderView();
         initFragment();
+    }
+
+    private void initHeaderView(){
+        headerView = navigationView.getHeaderView(0);
+        ll_nav_header = (LinearLayout) headerView;
+        iv_profile = (ImageView) headerView.findViewById(R.id.imageView);
+        tv_name = (TextView) headerView.findViewById(R.id.tv_name);
+        tv_mobile = (TextView) headerView.findViewById(R.id.tv_phone);
+        if(campusModel.getUrl() != null){
+            Ion.with(iv_profile)
+                    .placeholder(R.drawable.ic_usericon_default)
+                    .error(R.drawable.ic_usericon_default)
+                    .load(campusModel.getUrl());
+        }else if(campusModel.getUrlProfile() != null){
+            Ion.with(iv_profile)
+                    .placeholder(R.drawable.ic_usericon_default)
+                    .error(R.drawable.ic_usericon_default)
+                    .load(campusModel.getUrlProfile().getThumbnailUrl(false,100,100));
+        }
+        tv_name.setText(campusModel.getUsername());
+        tv_mobile.setText(campusModel.getMobile());
     }
 
     protected void initFragment(){
@@ -258,7 +299,7 @@ public class MainActivity extends BaseActivity
                     .setAction("Action", null).show();
             return;
         }else if(v.getId() == R.id.ll_nav_header){
-            ToastUtil.showToast("header click");
+            goToFragment(new UserProfileFragment());
             return;
         }
         actionBarClick();
@@ -462,5 +503,34 @@ public class MainActivity extends BaseActivity
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public void refreshNavView(RefreshType refreshType, String text){
+        switch (refreshType){
+            case MOBILE:
+                tv_mobile.setText(text);
+                break;
+            case PROFILE:
+                AVFile avFile = AVUser.getCurrentUser().getAVFile(Constants.PARAM_PIC_URL);
+                Ion.with(iv_profile)
+                        .placeholder(R.drawable.ic_usericon_default)
+                        .error(R.drawable.ic_usericon_default)
+                        .load(avFile.getThumbnailUrl(false,100,100));
+                break;
+            case NAME:
+                tv_name.setText(text);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    public void hideKeyBoard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(getWindow().getDecorView()
+                    .getWindowToken(), 0);
+        }
     }
 }

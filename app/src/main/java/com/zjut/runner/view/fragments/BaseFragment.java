@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
+import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.util.StringUtil;
 import com.zjut.runner.view.activities.BaseActivity;
 import com.zjut.runner.view.activities.MainActivity;

@@ -39,6 +39,9 @@ dependencies {
     compile 'com.android.support:design:23.4.0'
     compile project(':multi-image-selector')
     compile project(':db_library')
+    compile ('com.koushikdutta.ion:ion:2.+'){
+        exclude module: 'gson'
+    }
     // LeanCloud 基础包
     compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
 

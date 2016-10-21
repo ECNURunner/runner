@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/line_gray"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/margin_standard"
+    android:paddingRight="@dimen/margin_standard" >
+
+    <EditText
+        android:id="@+id/et_old_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/tv_old_psd"
+        android:inputType="textPassword"
+        android:visibility="gone"
+        />
+
+    <EditText
+        android:id="@+id/et_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:layout_below="@id/et_old_pass"
+        />
+    <EditText
+        android:id="@+id/et_pass"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_input"
+        android:inputType="textPassword"
+        />
+
+    <LinearLayout
+        android:id="@+id/rl_change_password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_pass"
+        android:orientation="vertical"
+        android:visibility="gone" >
+        <EditText
+            android:id="@+id/et_new_password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:hint="@string/tv_reset_psd_new"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/et_new_password_again"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:hint="@string/tv_reset_psd_confirm"
+            android:inputType="textPassword" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/tv_warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_change_password"
+        layout="@layout/item_warning" />
+
+    <Button
+        android:id="@+id/btn_verificationBtn"
+        style="@style/str_login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_warning"
+        android:text="@string/str_submit" />
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/progressbar_layout_wait" />
+
+</RelativeLayout>

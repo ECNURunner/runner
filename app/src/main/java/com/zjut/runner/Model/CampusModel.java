@@ -15,27 +15,15 @@ public class CampusModel extends AccountModel {
     private String cardPass;
     private String campusID;
     private String campusName;
-    private String campusClass;
-    private String majorEn;
-    private String majorCn;
-    private String dormNo;
-    private String roomNo;
-    private float cardBalance;
+    private float balance;
 
     public CampusModel(String username, String mobile, String email, GenderType genderType,
-                       String url, String cardPass, String campusID, String campusName,
-                       String campusClass, String majorEn, String majorCn, String dormNo,
-                       String roomNo, float cardBalance) {
+                       String url, String cardPass, String campusID, String campusName, float balance) {
         super(username, mobile, email, genderType, url);
         this.cardPass = cardPass;
         this.campusID = campusID;
         this.campusName = campusName;
-        this.campusClass = campusClass;
-        this.majorEn = majorEn;
-        this.majorCn = majorCn;
-        this.dormNo = dormNo;
-        this.roomNo = roomNo;
-        this.cardBalance = cardBalance;
+        this.balance = balance;
     }
 
     public CampusModel(String username, String mobile, String email, GenderType genderType, AVFile urlProfile) {
@@ -77,57 +65,6 @@ public class CampusModel extends AccountModel {
         this.campusName = campusName;
     }
 
-    public String getCampusClass() {
-        return campusClass;
-    }
-
-    public void setCampusClass(String campusClass) {
-        this.campusClass = campusClass;
-    }
-
-    public String getMajorEn() {
-        return majorEn;
-    }
-
-    public void setMajorEn(String majorEn) {
-        this.majorEn = majorEn;
-    }
-
-    public String getMajorCn() {
-        return majorCn;
-    }
-
-    public void setMajorCn(String majorCn) {
-        this.majorCn = majorCn;
-    }
-
-    public String getDormNo() {
-        return dormNo;
-    }
-
-    public void setDormNo(String dormNo) {
-        this.dormNo = dormNo;
-    }
-
-    public String getRoomNo() {
-        return roomNo;
-    }
-
-    public void setRoomNo(String roomNo) {
-        this.roomNo = roomNo;
-    }
-
-    public float getCardBalance() {
-        return cardBalance;
-    }
-
-    public void setCardBalance(int cardBalance) {
-        this.cardBalance = cardBalance;
-    }
-
-    public void setCardBalance(float cardBalance) {
-        this.cardBalance = cardBalance;
-    }
 
     public static CampusModel setCampusModel(AVUser avUser){
         CampusModel campusModel = new CampusModel();
@@ -158,20 +95,23 @@ public class CampusModel extends AccountModel {
         return campusModel;
     }
 
+    public void setBalance(float cardBalance) {
+        this.balance = cardBalance;
+    }
+
+    public float getBalance(){
+        return balance;
+    }
+
     public static CampusModel refreshCampus(CampusModel oldModel,List<AVObject> avObjects){
         if(oldModel == null || avObjects == null){
             return null;
         }
         AVObject avObject = avObjects.get(0);
         CampusModel campusModel = new CampusModel();
-        campusModel.setCampusClass(avObject.getString(Constants.PARAM_CLASS));
         campusModel.setCardPass(avObject.getString(Constants.PARAM_CARD_PASS));
         campusModel.setCampusName(avObject.getString(Constants.PARAM_CARD_NAME));
-        campusModel.setMajorCn(avObject.getString(Constants.PARAM_MAJOR_CN));
-        campusModel.setMajorEn(avObject.getString(Constants.PARAM_MAJOR_EN));
-        campusModel.setDormNo(avObject.getString(Constants.PARAM_DORM));
-        campusModel.setRoomNo(avObject.getString(Constants.PARAM_NO));
-        campusModel.setCardBalance((float)avObject.getDouble(Constants.PARAM_CARD_BALANCE));
+        campusModel.setBalance((float)avObject.getDouble(Constants.PARAM_CARD_BALANCE));
         campusModel.setEmail(oldModel.getEmail());
         campusModel.setMobile(oldModel.getMobile());
         campusModel.setUsername(oldModel.getUsername());

@@ -44,6 +44,7 @@ public class Constants {
     public static final int TIMER_END = -6;
 
     //CAMPUS INFO
+    public static final String PARAM_CAMPUS = "campus_info";
     public static final String PARAM_CLASS = "class";
     public static final String PARAM_ID = "studentID";
     public static final String PARAM_DORM = "dormNo";

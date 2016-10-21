@@ -5,6 +5,7 @@
     <string name="navigation_drawer_close">关闭抽屉</string>
     <string name="action_settings">设置</string>
     <string name="action_logout">退出</string>
+    <string name="connection_not_avalible">与服务器断开连接</string>
     <!--login-->
     <string name="str_login_phone">手机号码</string>
     <string name="toast_login_null">请检查用户名和密码</string>
@@ -37,5 +38,32 @@
     <string name="btn_verify">验证</string>
     <!--myprofile-->
     <string name="str_not_set">未设置</string>
+    <string name="str_female">女</string>
+    <string name="str_male">男</string>
+    <string name="title_profile">我的账号</string>
+    <string name="str_username">昵称</string>
+    <string name="str_gender">性别</string>
+    <string name="str_email">邮箱</string>
+    <string name="str_phone">手机</string>
+    <string name="str_id">ID</string>
+    <string name="str_name">名字</string>
+    <string name="str_balance">余额</string>
+    <string name="str_bind">绑定</string>
+    <string name="str_unbind">解绑</string>
+    <string name="toast_success_changed">修改成功</string>
+    <string name="dialog_warning">提醒</string>
+    <string name ="dialog_unbind">确定是否要解绑？</string>
+    <string name="button_ok">确认</string>
+    <string name="button_cancel">取消</string>
+    <string name="tv_reset_psd_new">输入新密码</string>
+    <string name="tv_old_psd">输入旧密码</string>
+    <string name="toast_old_psd_error">旧密码不正确</string>
+    <string name="tv_reset_psd_confirm">确认新密码</string>
+    <string name="tv_reset_psd_reset">重设</string>
+    <string name="str_reset_psd_successfully">重设密码成功，请登录</string>
+    <string name="str_submit">提交</string>
+    <string name="toast_change_phone_success">手机号码更新成功</string>
+    <string name="toast_email_isnot_effective">请输入有效的邮箱地址</string>
+
 
 </resources>

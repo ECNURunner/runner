@@ -30,12 +30,23 @@
     <!--detail action item-->
     <dimen name="item_padding">16dp</dimen>
     <dimen name="item_icon_size">23dp</dimen>
+    <!--header item-->
+    <dimen name="header_width">80dp</dimen>
+    <dimen name="boarder_width">2dp</dimen>
+    <dimen name="gender_width">12dp</dimen>
+    <dimen name="title_size">20sp</dimen>
+    <dimen name="small_size">14sp</dimen>
+    <!--gender view-->
+    <dimen name="gender_title">23sp</dimen>
+    <dimen name="gender_margin">20dp</dimen>
+    <dimen name="gender_text">16sp</dimen>
     <!--margin-->
     <dimen name="margin_five">5dp</dimen>
     <dimen name="margin_top">20dp</dimen>
     <dimen name="margin_standard">10dp</dimen>
     <dimen name="margin_fifteen">15dp</dimen>
     <dimen name="margin_large">30dp</dimen>
+    <dimen name="margin_zero">0dp</dimen>
     <!--padding-->
     <dimen name="small_padding">3dp</dimen>
 

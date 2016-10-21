@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:layout_gravity="center"
+    >
+    <TextView
+        android:id="@+id/tv_title"
+        android:textSize="@dimen/gender_title"
+        android:textColor="@color/black"
+        android:text="@string/str_gender"
+        android:layout_marginLeft="@dimen/gender_margin"
+        android:layout_marginTop="@dimen/gender_margin"
+        android:layout_marginRight="@dimen/gender_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:id="@+id/rl_female"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gender_item_select"
+        android:paddingLeft="@dimen/gender_margin"
+        android:paddingRight="@dimen/gender_margin"
+        android:layout_marginTop="@dimen/super_large_margin">
+        <TextView
+            android:id="@+id/tv_name_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/gender_text"
+            android:text="@string/str_female"/>
+        <RadioButton
+            android:id="@+id/rb_female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_male"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gender_item_select"
+        android:paddingLeft="@dimen/gender_margin"
+        android:paddingRight="@dimen/gender_margin"
+        android:layout_marginTop="@dimen/super_large_margin">
+        <TextView
+            android:id="@+id/tv_name_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/gender_text"
+            android:text="@string/str_male"/>
+        <RadioButton
+            android:id="@+id/rb_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+</LinearLayout>

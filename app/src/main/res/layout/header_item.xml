@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/ll_header"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/margin_standard"
+    android:paddingTop="@dimen/margin_top">
+    <RelativeLayout
+        android:layout_gravity="center_horizontal"
+        android:layout_width="@dimen/header_width"
+        android:layout_height="@dimen/header_width"
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:clickable="true">
+        <View
+            android:id="@+id/rl_icon"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/line_gray" >
+        </View>
+        <com.zjut.runner.widget.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/iv_user"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:civ_border_width="@dimen/boarder_width"
+            app:civ_border_color="@color/line_gray"
+            />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_user"
+        style="@style/detail_username_textstyle"
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ll_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/iv_gender"
+            android:layout_width="@dimen/gender_width"
+            android:layout_height="@dimen/gender_width"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_gender"
+            style="@style/detail_gender_textstyle"
+            android:layout_marginLeft="@dimen/margin_standard" />
+        </LinearLayout>
+    </LinearLayout>
