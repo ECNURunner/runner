@@ -31,6 +31,11 @@ public class Constants {
     //Language
     public static final String PARAM_LANGUAGE = "language";
 
+    //BANNER
+    public static final String PARAM_URL = "url";
+    public static final String PARAM_GOTO = "goTo";
+    public static final String PARAM_TITLE = "title";
+
     //password
     public static final String PASSWORD_RULES_REGEX = "^[\\Sa-zA-Z0-9_.]{6,15}$";
     public static final int PASSWORD_MINNUM = 6;

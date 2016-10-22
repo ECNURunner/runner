@@ -6,6 +6,8 @@
     <string name="action_settings">设置</string>
     <string name="action_logout">退出</string>
     <string name="connection_not_avalible">与服务器断开连接</string>
+    <string name="menu_home">主页</string>
+    <string name = "reminder">提醒</string>
     <!--login-->
     <string name="str_login_phone">手机号码</string>
     <string name="toast_login_null">请检查用户名和密码</string>
@@ -65,6 +67,8 @@
     <string name="toast_change_phone_success">手机号码更新成功</string>
     <string name="toast_email_isnot_effective">请输入有效的邮箱地址</string>
     <string name="card_balance">余额</string>
+    <string name = "str_message_invalid">账户还没绑定，请到我的账户进行绑定</string>
+
 
 
 </resources>

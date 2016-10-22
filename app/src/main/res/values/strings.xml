@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">runner</string>
 
+    <string name="menu_home">Home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name = "reminder">Reminder</string>
 
     <string name="connection_not_avalible">Connection to server has been lost.</string>
     <string name="action_settings">Settings</string>
@@ -70,6 +72,8 @@
     <string name="toast_change_phone_success">Phone Changed Successfully</string>
     <string name="toast_email_isnot_effective">A valid email address is required</string>
     <string name="card_balance">Balance</string>
+    <string name = "str_message_invalid">Account has not been bound,
+        Please go to Profile and Bind</string>
 
 
 </resources>

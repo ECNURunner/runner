@@ -39,6 +39,22 @@ public class ResourceUtil {
         return mRessurces.getColor(colorResId);
     }
 
+    public static int getColor(Context context, int colorId) {
+        if (context == null) {
+            return 0;
+        }
+
+        return getColor(context.getResources(), colorId);
+    }
+
+    public static int getColor(Resources resources, int colorId) {
+        if (resources == null) {
+            return 0;
+        }
+
+        return resources.getColor(colorId);
+    }
+
     public static String getString(int colorResId) {
         return mRessurces.getString(colorResId);
     }

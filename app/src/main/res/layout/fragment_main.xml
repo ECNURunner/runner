@@ -1,11 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-   <TextView
+   <RelativeLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:id="@+id/tv_test"
-       android:text="HELLLOOOOOO"/>
-</LinearLayout>
+       android:id="@+id/profile_header">
+
+      <com.zjut.runner.widget.ExpandableHeightGridView
+          android:id="@+id/icon_gv"
+          android:layout_marginTop="@dimen/margin_standard"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:horizontalSpacing="1dp"
+          android:verticalSpacing="1dp"
+          android:numColumns="4"
+          android:stretchMode="columnWidth"
+          android:gravity="center"/>
+
+      <RelativeLayout
+          android:id="@+id/rl_header"
+          android:layout_width="match_parent"
+          android:layout_below="@id/icon_gv"
+          android:layout_height="@dimen/header_height">
+         <com.zjut.runner.widget.AutoScrollViewPager
+             xmlns:android="http://schemas.android.com/apk/res/android"
+             android:id="@+id/customer_pager"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent" />
+         <LinearLayout
+             android:id="@+id/tap_point"
+             android:layout_width="match_parent"
+             android:layout_height="@dimen/tap_point_height"
+             android:paddingBottom="@dimen/tap_point_padding"
+             android:layout_alignParentBottom="true"
+             android:gravity="center_horizontal"
+             android:orientation="horizontal" >
+         </LinearLayout>
+      </RelativeLayout>
+       <android.support.v7.widget.RecyclerView
+           android:id="@+id/rv_list"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_below="@id/rl_header">
+       </android.support.v7.widget.RecyclerView>
+   </RelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>

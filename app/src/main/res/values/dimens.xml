@@ -40,8 +40,17 @@
     <dimen name="gender_title">23sp</dimen>
     <dimen name="gender_margin">20dp</dimen>
     <dimen name="gender_text">16sp</dimen>
+    <!--dashboard-->
+    <dimen name="header_height">130dp</dimen>
+    <dimen name="tap_point_height">12dp</dimen>
+    <dimen name="tap_point_padding">2dp</dimen>
+    <dimen name="header_title_font">20sp</dimen>
+    <!--grid icon-->
+    <dimen name="menu_size">50dp</dimen>
+    <dimen name="menu_title">10sp</dimen>
     <!--margin-->
     <dimen name="margin_five">5dp</dimen>
+    <dimen name="margin_eight">8dp</dimen>
     <dimen name="margin_top">20dp</dimen>
     <dimen name="margin_standard">10dp</dimen>
     <dimen name="margin_fifteen">15dp</dimen>

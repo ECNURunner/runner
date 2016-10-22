@@ -8,6 +8,8 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Display;
 import android.view.View;
@@ -19,6 +21,8 @@ import java.util.regex.Pattern;
  * Created by Phuylai on 2016/10/5.
  */
 public class GeneralUtils {
+
+    private static final String TAG = "Utils";
 
     private static Context mContext = null;
     private static Resources mResources = null;
@@ -95,6 +99,30 @@ public class GeneralUtils {
             bitmap = null;
         }
         bitmapDrawable = null;
+    }
+
+    /**
+     * Check if device is connected to internet
+     * @param context
+     *
+     */
+
+    public static boolean isConnect(Context context) {
+        try {
+            ConnectivityManager connectivity = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivity != null) {
+                NetworkInfo info = connectivity.getActiveNetworkInfo();
+                if (info != null && info.isConnected()) {
+                    if (info.getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            MLog.e(TAG, e);
+        }
+        return false;
     }
 
 }

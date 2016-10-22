@@ -45,6 +45,7 @@ import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.GeneralUtils;
 import com.zjut.runner.util.ResourceUtil;
 import com.zjut.runner.util.RunnableManager;
+import com.zjut.runner.util.StringUtil;
 import com.zjut.runner.util.ToastUtil;
 import com.zjut.runner.view.fragments.BaseFragment;
 import com.zjut.runner.view.fragments.MainPageFragment;
@@ -680,6 +681,15 @@ public class MainActivity extends BaseActivity
     public void changeTitle(int resID){
         if(collapsingToolbarLayout != null){
             collapsingToolbarLayout.setTitle(getResources().getString(resID));
+        }
+    }
+
+    public void changeTitle(String title){
+        if(StringUtil.isNull(title)){
+            return;
+        }
+        if(collapsingToolbarLayout != null){
+            collapsingToolbarLayout.setTitle(title);
         }
     }
 }
