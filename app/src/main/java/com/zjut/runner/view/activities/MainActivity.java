@@ -1,7 +1,12 @@
 package com.zjut.runner.view.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -16,33 +21,49 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.RefreshCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.koushikdutta.ion.Ion;
+import com.zjut.runner.Controller.CurrentSession;
 import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.Model.RefreshType;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
+import com.zjut.runner.util.GeneralUtils;
+import com.zjut.runner.util.ResourceUtil;
 import com.zjut.runner.util.RunnableManager;
 import com.zjut.runner.util.ToastUtil;
 import com.zjut.runner.view.fragments.BaseFragment;
 import com.zjut.runner.view.fragments.MainPageFragment;
 import com.zjut.runner.view.fragments.RunnerFragment;
 import com.zjut.runner.view.fragments.UserProfileFragment;
+import com.zjut.runner.widget.BaseViewHolder;
+import com.zjut.runner.widget.UserHeaderHolder;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+
+import static com.zjut.runner.util.Constants.REQUEST_IMAGE;
+
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
-        MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener {
+        MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener, UserHeaderHolder.ProfileClick {
 
     public static final String tag = MainActivity.class.getSimpleName();
     public CampusModel campusModel;
@@ -58,6 +79,11 @@ public class MainActivity extends BaseActivity
     private ImageView iv_profile = null;
     private TextView tv_name = null;
     private TextView tv_mobile = null;
+    private LinearLayout ll_collapsing = null;
+    private ProgressBar progressBar = null;
+    private UserHeaderHolder userHeaderHolder = null;
+    private AppBarLayout appBarLayout = null;
+    protected CollapsingToolbarLayout collapsingToolbarLayout = null;
 
     protected BaseFragment currentFragment = null;
     private MainPageFragment mainPageFragment;
@@ -77,7 +103,9 @@ public class MainActivity extends BaseActivity
 
     private void parseArgument(){
         Bundle bundle = this.getIntent().getExtras();
-        campusModel = (CampusModel) bundle.getSerializable(Constants.PARAM_CAMPUS);
+        if(bundle != null) {
+            campusModel = (CampusModel) bundle.getSerializable(Constants.PARAM_CAMPUS);
+        }
     }
 
     @Override
@@ -96,6 +124,10 @@ public class MainActivity extends BaseActivity
         floatingActionButton.setOnClickListener(this);
         navigationView.setNavigationItemSelectedListener(this);
         drawerToggle.setToolbarNavigationClickListener(this);
+        setHeaderClick();
+    }
+
+    protected void setHeaderClick(){
         ll_nav_header.setOnClickListener(this);
     }
 
@@ -105,13 +137,63 @@ public class MainActivity extends BaseActivity
         fragmentManager = getSupportFragmentManager();
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         floatingActionButton.setVisibility(View.GONE);
+        //navigation
         initDrawerLayout();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        //collapsing layout
+        ll_collapsing = (LinearLayout) findViewById(R.id.ll_collapsing);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
+
+        //app bar layout
+        progressBar = (ProgressBar) findViewById(R.id.toolbar_progress_bar);
+        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        appBarLayout.setExpanded(false,true);
+
+
         initHeaderView();
         initFragment();
     }
 
-    private void initHeaderView(){
+    public void addHeader(){
+        UserHeaderHolder headerHolder = new UserHeaderHolder(this,campusModel,this);
+        userHeaderHolder = AddHeader(headerHolder, GeneralUtils.getDimenPx(this,R.dimen.margin_sixty));
+    }
+
+    private UserHeaderHolder AddHeader(UserHeaderHolder userHeaderHolder,int marginTop){
+        View rootView = userHeaderHolder.getRootView();
+        addView(rootView);
+        setMarginTop(marginTop, rootView);
+        return userHeaderHolder;
+    }
+
+    protected void addView(View view) {
+        if (view == null) {
+            return;
+        }
+        if (ll_collapsing == null) {
+            return;
+        }
+        if(view.getParent() != null){
+            ll_collapsing.removeAllViews();
+        }
+        ll_collapsing.addView(view);
+    }
+
+    protected void setMarginTop(int marginTop, View view) {
+        if (view == null) {
+            return;
+        }
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) view.getLayoutParams();
+        if (lp == null){
+            lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        lp.topMargin = marginTop;
+        view.setLayoutParams(lp);
+    }
+
+
+    protected void initHeaderView(){
         headerView = navigationView.getHeaderView(0);
         ll_nav_header = (LinearLayout) headerView;
         iv_profile = (ImageView) headerView.findViewById(R.id.imageView);
@@ -122,11 +204,6 @@ public class MainActivity extends BaseActivity
                     .placeholder(R.drawable.ic_usericon_default)
                     .error(R.drawable.ic_usericon_default)
                     .load(campusModel.getUrl());
-        }else if(campusModel.getUrlProfile() != null){
-            Ion.with(iv_profile)
-                    .placeholder(R.drawable.ic_usericon_default)
-                    .error(R.drawable.ic_usericon_default)
-                    .load(campusModel.getUrlProfile().getThumbnailUrl(false,100,100));
         }
         tv_name.setText(campusModel.getUsername());
         tv_mobile.setText(campusModel.getMobile());
@@ -440,6 +517,7 @@ public class MainActivity extends BaseActivity
     public void skipToFragmentByContentId(Fragment fragment, int contentId,
                                           boolean addToStack, String backName, int moveInAnimateId,
                                           int moveOutAnimateId) {
+        collapsingToolbarLayout.setBackgroundColor(ResourceUtil.getColor(R.color.colorPrimary));
         transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(moveInAnimateId,moveOutAnimateId,R.animator.back_in,R.animator.back_out);
         transaction.replace(contentId, fragment);
@@ -470,6 +548,62 @@ public class MainActivity extends BaseActivity
         searchRunnable.setSearchString(query);
         RunnableManager.getInstance().postDelayed(searchRunnable,
                 SEARCH_WAIT_TIME);
+    }
+
+    @Override
+    public void changeProfile() {
+        int selectMode = MultiImageSelectorActivity.MODE_SINGLE;
+        Intent intent = new Intent(this,MultiImageSelectorActivity.class);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA,true);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE,selectMode);
+        startActivityForResult(intent, REQUEST_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        progressBar.setVisibility(View.VISIBLE);
+        if(requestCode == REQUEST_IMAGE && data != null && resultCode == Activity.RESULT_OK){
+            String name = AVUser.getCurrentUser().getUsername() + ".jpg";
+            List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+            try {
+                final AVFile avFile = AVFile.withAbsoluteLocalPath(name, path.get(0));
+                avFile.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if (e == null) {
+                            saveToCacheDB(avFile);
+                        } else {
+                            ToastUtil.showToastShort(getApplicationContext(), e.getMessage());
+                        }
+                    }
+                });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void saveToCacheDB(final AVFile avFile) {
+        AVUser.getCurrentUser().setFetchWhenSave(true);
+        AVUser.getCurrentUser().put(Constants.PARAM_PIC_URL, avFile);
+        AVUser.getCurrentUser().saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
+                    campusModel.setUrl(avFile.getThumbnailUrl(false,100,100));
+                    CurrentSession.updateProfileWithCache(getApplicationContext(), campusModel);
+                    AVUser.getCurrentUser().refreshInBackground(new RefreshCallback<AVObject>() {
+                        @Override
+                        public void done(AVObject avObject, AVException e) {
+                            progressBar.setVisibility(View.GONE);
+                            userHeaderHolder.setProfile(campusModel);
+                            refreshNavView(RefreshType.PROFILE,null);
+                        }
+                    });
+                }
+            }
+        });
     }
 
     class SearchRunnable implements Runnable {
@@ -525,6 +659,7 @@ public class MainActivity extends BaseActivity
         }
 
     }
+
 
     public void hideKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);

@@ -10,6 +10,8 @@ public class Constants {
     //debug true or false
     public static final boolean DEBUG_ENABLE = true;
 
+    public static final int REQUEST_IMAGE = 9;
+
     public final static String POP_TO_HOME = "HOMELIST_FRAGMENT";
 
     // setAlpha

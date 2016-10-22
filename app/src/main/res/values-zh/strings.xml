@@ -64,6 +64,7 @@
     <string name="str_submit">提交</string>
     <string name="toast_change_phone_success">手机号码更新成功</string>
     <string name="toast_email_isnot_effective">请输入有效的邮箱地址</string>
+    <string name="card_balance">余额</string>
 
 
 </resources>

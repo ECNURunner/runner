@@ -43,7 +43,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        getActionBar().hide();
+        //getActionBar().hide();
 
         setContentView(R.layout.activity_default);
 

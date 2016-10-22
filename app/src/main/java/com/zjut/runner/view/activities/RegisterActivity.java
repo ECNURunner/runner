@@ -13,6 +13,16 @@ public class RegisterActivity extends MainActivity {
     public static final int RESULT_REGISTER_SUCCESS = 2;
 
     @Override
+    protected void initHeaderView() {
+
+    }
+
+    @Override
+    protected void setHeaderClick() {
+
+    }
+
+    @Override
     protected void initFragment() {
         toolbar.setBackgroundColor(ResourceUtil.getColor(R.color.colorPrimary));
         RegisterFragment registerFragment = new RegisterFragment();

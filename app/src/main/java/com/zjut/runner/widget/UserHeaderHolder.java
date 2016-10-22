@@ -1,11 +1,15 @@
 package com.zjut.runner.widget;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.koushikdutta.ion.Ion;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.zjut.runner.Controller.ViewController;
 import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.R;
@@ -32,6 +36,8 @@ public class UserHeaderHolder extends BaseViewHolder {
     private ProfileClick profileClick;
     private Context context;
 
+    private DisplayImageOptions options;
+
     public UserHeaderHolder(Context context,CampusModel campusModel,ProfileClick profileClick){
         super(context);
         this.context = context;
@@ -40,6 +46,15 @@ public class UserHeaderHolder extends BaseViewHolder {
         setBackground();
         setView();
         setProfile(campusModel);
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_usericon_default)
+                .showImageForEmptyUri(R.drawable.ic_usericon_default)
+                .showImageOnFail(R.drawable.ic_usericon_default)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
 
     private void setBackground(){
@@ -76,15 +91,11 @@ public class UserHeaderHolder extends BaseViewHolder {
     }
 
     public void setProfile(CampusModel campusModel){
-        if(campusModel.getUrlProfile() != null) {
+        if(!StringUtil.isNull(campusModel.getUrl())){
+            ImageLoader.getInstance().displayImage(campusModel.getUrl(),circleImageView,options);
             Ion.with(circleImageView)
-                    .placeholder(R.drawable.ic_usericon_default)
                     .error(R.drawable.ic_usericon_default)
-                    .load(campusModel.getUrlProfile().getThumbnailUrl(false,100,100));
-        }else if(!StringUtil.isNull(campusModel.getUrl())){
-            Ion.with(circleImageView)
                     .placeholder(R.drawable.ic_usericon_default)
-                    .error(R.drawable.ic_usericon_default)
                     .load(campusModel.getUrl());
         }
         else{

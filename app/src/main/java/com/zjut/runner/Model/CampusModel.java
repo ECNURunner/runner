@@ -5,13 +5,14 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.zjut.runner.util.Constants;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Administrator on 2016/10/20.
  */
 
-public class CampusModel extends AccountModel {
+public class CampusModel extends AccountModel{
     private String cardPass;
     private String campusID;
     private String campusName;
@@ -26,8 +27,8 @@ public class CampusModel extends AccountModel {
         this.balance = balance;
     }
 
-    public CampusModel(String username, String mobile, String email, GenderType genderType, AVFile urlProfile) {
-        super(username, mobile, email, genderType, urlProfile);
+    public CampusModel(String username, String mobile, String email, GenderType genderType, String urlProfile) {
+        super(username, mobile, email, genderType,urlProfile);
     }
 
     public CampusModel(String mobile) {
@@ -35,10 +36,6 @@ public class CampusModel extends AccountModel {
     }
 
     public CampusModel() {
-    }
-
-    public CampusModel(AccountModel accountModel){
-        super(accountModel);
     }
 
     public String getCardPass() {
@@ -82,7 +79,7 @@ public class CampusModel extends AccountModel {
         }
         AVFile urlProfile = avUser.getAVFile(Constants.PARAM_PIC_URL);
         if(urlProfile != null){
-            campusModel.setUrlProfile(urlProfile);
+            campusModel.setUrl(urlProfile.getThumbnailUrl(false,100,100));
         }
         String genderType = avUser.getString(Constants.PARAM_GENDER);
         if(genderType != null){
@@ -115,7 +112,6 @@ public class CampusModel extends AccountModel {
         campusModel.setEmail(oldModel.getEmail());
         campusModel.setMobile(oldModel.getMobile());
         campusModel.setUsername(oldModel.getUsername());
-        campusModel.setUrlProfile(oldModel.getUrlProfile());
         campusModel.setUrl(oldModel.getUrl());
         campusModel.setGenderType(oldModel.getGenderType());
         campusModel.setCampusID(oldModel.getCampusID());

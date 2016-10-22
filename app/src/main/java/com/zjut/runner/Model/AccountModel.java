@@ -14,7 +14,6 @@ public class AccountModel implements Serializable{
     private String password;
     private String email;
     private GenderType genderType;
-    private AVFile urlProfile;
     private String url;
 
     public AccountModel(String username, String mobile, String email, GenderType genderType, String url) {
@@ -32,27 +31,11 @@ public class AccountModel implements Serializable{
 
     }
 
-    public AccountModel(String username, String mobile, String email, GenderType genderType, AVFile urlProfile) {
-        this.username = username;
-        this.mobile = mobile;
-        this.email = email;
-        this.genderType = genderType;
-        this.urlProfile = urlProfile;
-    }
-
     public AccountModel(String mobile) {
         this.mobile = mobile;
     }
 
     public AccountModel() {
-    }
-
-    public AccountModel(AccountModel accountModel) {
-        this.username = accountModel.getUsername();
-        this.mobile = accountModel.getMobile();
-        this.email = accountModel.getEmail();
-        this.genderType = accountModel.getGenderType();
-        this.urlProfile = accountModel.getUrlProfile();
     }
 
     public String getUsername() {
@@ -93,14 +76,6 @@ public class AccountModel implements Serializable{
 
     public void setGenderType(GenderType genderType) {
         this.genderType = genderType;
-    }
-
-    public AVFile getUrlProfile() {
-        return urlProfile;
-    }
-
-    public void setUrlProfile(AVFile urlProfile) {
-        this.urlProfile = urlProfile;
     }
 
     public String getUrl() {

@@ -1,7 +1,5 @@
 package com.zjut.runner.view.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,17 +12,13 @@ import android.widget.RadioButton;
 import android.widget.ScrollView;
 
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.RefreshCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.zjut.runner.Controller.AsyncTaskController;
 import com.zjut.runner.Controller.CurrentSession;
 import com.zjut.runner.Model.ActionType;
 import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.Model.GenderType;
-import com.zjut.runner.Model.RefreshType;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.GeneralUtils;
@@ -36,21 +30,17 @@ import com.zjut.runner.widget.DetailActionItemHolder;
 import com.zjut.runner.widget.MaterialDialog;
 import com.zjut.runner.widget.UserHeaderHolder;
 
-import org.w3c.dom.UserDataHandler;
-
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 
 /**
  * Created by Administrator on 2016/10/21.
  */
 
-public class UserProfileFragment extends BaseFragment implements UserHeaderHolder.ProfileClick,
+public class UserProfileFragment extends BaseFragment implements
         DetailActionItemHolder.ItemClickListener,Runnable{
 
     public final static String TAG = PhoneFragment.class.getName();
@@ -118,6 +108,7 @@ public class UserProfileFragment extends BaseFragment implements UserHeaderHolde
 
     @Override
     protected void findViews(View rootView) {
+        activity.addHeader();
         progressBar = (ProgressBar) rootView.findViewById(R.id.pb_sending_post);
         bodyView = (LinearLayout) rootView.findViewById(R.id.ll_details_view);
         wrapView = (ScrollView) rootView.findViewById(R.id.sv_action_area);
@@ -155,13 +146,7 @@ public class UserProfileFragment extends BaseFragment implements UserHeaderHolde
 
     private void setView(){
         removeView();
-        setHeader();
         setDetail();
-    }
-
-    private void setHeader(){
-        UserHeaderHolder headerHolder = new UserHeaderHolder(activity,activity.campusModel,this);
-        userHeaderHolder = AddHeader(headerHolder, GeneralUtils.getDimenPx(activity,R.dimen.margin_zero));
     }
 
     private void removeView(){
@@ -186,6 +171,7 @@ public class UserProfileFragment extends BaseFragment implements UserHeaderHolde
         if(!StringUtil.isNull(activity.campusModel.getCampusID())){
             addCampusDetail(0, R.string.str_id, activity.campusModel.getCampusID(), null, false);
             addCampusDetail(0,R.string.str_name,activity.campusModel.getCampusName(),null,false);
+            addCampusDetail(0,R.string.card_balance,String.valueOf(activity.campusModel.getBalance()),null,false);
             addCampusDetail(0,R.string.str_unbind,null,ActionType.UNBIND,true);
         }else{
             addCampusDetail(0, R.string.str_bind, null, ActionType.BINDING, true);
@@ -231,7 +217,7 @@ public class UserProfileFragment extends BaseFragment implements UserHeaderHolde
 
     private void addGreyLine(int height){
         View view = new View(activity);
-        view.setBackgroundColor(getResources().getColor(R.color.gray));
+        view.setBackgroundColor(getResources().getColor(R.color.line_gray));
         view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height));
         addView(view);
     }
@@ -289,62 +275,6 @@ public class UserProfileFragment extends BaseFragment implements UserHeaderHolde
     @Override
     public void search(String searchString) {
 
-    }
-
-    @Override
-    public void changeProfile() {
-        int selectMode = MultiImageSelectorActivity.MODE_SINGLE;
-        Intent intent = new Intent(activity,MultiImageSelectorActivity.class);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA,true);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE,selectMode);
-        startActivityForResult(intent, REQUEST_IMAGE);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_IMAGE && data != null && resultCode == Activity.RESULT_OK){
-            progressBar.setVisibility(View.VISIBLE);
-            String name = AVUser.getCurrentUser().getUsername() + ".jpg";
-            List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-            try {
-                final AVFile avFile = AVFile.withAbsoluteLocalPath(name, path.get(0));
-                avFile.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(AVException e) {
-                        if (e == null) {
-                            saveToCacheDB(avFile);
-                        } else {
-                            ToastUtil.showToastShort(activity, e.getMessage());
-                        }
-                    }
-                });
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void saveToCacheDB(final AVFile avFile) {
-        AVUser.getCurrentUser().setFetchWhenSave(true);
-        AVUser.getCurrentUser().put(Constants.PARAM_PIC_URL, avFile);
-        AVUser.getCurrentUser().saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                if (e == null) {
-                    activity.campusModel.setUrlProfile(avFile);
-                    CurrentSession.updateProfileWithCache(context, activity.campusModel);
-                    AVUser.getCurrentUser().refreshInBackground(new RefreshCallback<AVObject>() {
-                        @Override
-                        public void done(AVObject avObject, AVException e) {
-                            progressBar.setVisibility(View.GONE);
-                            userHeaderHolder.setProfile(activity.campusModel);
-                            activity.refreshNavView(RefreshType.PROFILE,null);
-                        }
-                    });
-                }
-            }
-        });
     }
 
     @Override

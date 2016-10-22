@@ -69,6 +69,7 @@
     <string name="toast_fail_bind">Password or ID is incorrect</string>
     <string name="toast_change_phone_success">Phone Changed Successfully</string>
     <string name="toast_email_isnot_effective">A valid email address is required</string>
+    <string name="card_balance">Balance</string>
 
 
 </resources>

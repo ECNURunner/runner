@@ -64,7 +64,7 @@ public class CurrentSession {
             return false;
         }
         campusModelMap.put(campusModel.getMobile(),campusModel);
-        return CampusDBController.updateProfilePicToDB(context, campusModel.getUrlProfile().getThumbnailUrl(false, 100, 100),
+        return CampusDBController.updateProfilePicToDB(context, campusModel.getUrl(),
                 campusModel.getMobile());
     }
     public static boolean updateGenderWithCache(Context context,CampusModel campusModel){

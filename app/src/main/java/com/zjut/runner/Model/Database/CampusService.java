@@ -133,7 +133,7 @@ public class CampusService {
         if(campusModel.getGenderType() != null) {
             contentValues.put(CampusModelDB.KEY_GENDER, campusModel.getGenderType().toString());
         }
-        contentValues.put(CampusModelDB.KEY_URL,campusModel.getUrlProfile().getThumbnailUrl(false, 100, 100));
+        contentValues.put(CampusModelDB.KEY_URL,campusModel.getUrl());
         db.insertWithOnConflict(CampusModelDB.TABLE_CAMPUS, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
         MLog.i("Campus Data"," insert");
         return true;

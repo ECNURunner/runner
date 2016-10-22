@@ -47,6 +47,8 @@
     <dimen name="margin_fifteen">15dp</dimen>
     <dimen name="margin_large">30dp</dimen>
     <dimen name="margin_zero">0dp</dimen>
+    <dimen name="margin_sixty">60dp</dimen>
+    <dimen name="margin_action_bar">220dp</dimen>
     <!--padding-->
     <dimen name="small_padding">3dp</dimen>
 

@@ -9,6 +9,17 @@ import com.zjut.runner.view.fragments.ResetPasswordFragment;
  */
 
 public class ResetPasswordActivity extends MainActivity {
+
+    @Override
+    protected void initHeaderView() {
+
+    }
+
+    @Override
+    protected void setHeaderClick() {
+
+    }
+
     @Override
     protected void initFragment() {
         toolbar.setBackgroundColor(ResourceUtil.getColor(R.color.colorPrimary));

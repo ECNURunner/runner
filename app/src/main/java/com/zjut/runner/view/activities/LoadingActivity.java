@@ -73,7 +73,7 @@ public class LoadingActivity extends BaseActivity {
     private void switchUI(){
         if(AVUser.getCurrentUser() != null){
             campusModel = CampusModel.setCampusModel(AVUser.getCurrentUser());
-            if(StringUtil.isNull(campusModel.getCampusID())){
+            if(!StringUtil.isNull(campusModel.getCampusID())){
                 loadCampusInfo();
             }else{
                 goToMainActivity();
