@@ -3,6 +3,7 @@ package com.zjut.runner.view.fragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,7 @@ public class UserProfileFragment extends BaseFragment implements
     private ProgressBar progressBar;
     private Collection<BaseViewHolder> baseViewHolders = new ArrayList<>();
     private LinearLayout bodyView;
-    private ScrollView wrapView;
+    private NestedScrollView wrapView;
     private View mView;
 
     private UserHeaderHolder userHeaderHolder;
@@ -103,15 +104,16 @@ public class UserProfileFragment extends BaseFragment implements
 
     @Override
     public void changeTitle() {
-        setTitle(R.string.title_profile);
+        activity.changeTitle(R.string.title_profile);
     }
 
     @Override
     protected void findViews(View rootView) {
         activity.addHeader();
+        activity.expandToolbar(true);
         progressBar = (ProgressBar) rootView.findViewById(R.id.pb_sending_post);
         bodyView = (LinearLayout) rootView.findViewById(R.id.ll_details_view);
-        wrapView = (ScrollView) rootView.findViewById(R.id.sv_action_area);
+        wrapView = (NestedScrollView) rootView.findViewById(R.id.sv_action_area);
         requestModel();
     }
 

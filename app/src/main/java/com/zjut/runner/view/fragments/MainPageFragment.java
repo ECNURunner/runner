@@ -43,11 +43,12 @@ public class MainPageFragment extends BaseFragment {
 
     @Override
     public void changeTitle() {
-
+        activity.changeTitle(R.string.app_name);
     }
 
     @Override
     protected void findViews(View rootView) {
+        activity.expandToolbar(false);
         textView = (TextView) rootView.findViewById(R.id.tv_test);
         textView.setText("Change");
     }

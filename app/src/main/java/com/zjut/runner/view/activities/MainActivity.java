@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity
     private ProgressBar progressBar = null;
     private UserHeaderHolder userHeaderHolder = null;
     private AppBarLayout appBarLayout = null;
-    protected CollapsingToolbarLayout collapsingToolbarLayout = null;
+    public CollapsingToolbarLayout collapsingToolbarLayout = null;
 
     protected BaseFragment currentFragment = null;
     private MainPageFragment mainPageFragment;
@@ -105,6 +105,14 @@ public class MainActivity extends BaseActivity
         Bundle bundle = this.getIntent().getExtras();
         if(bundle != null) {
             campusModel = (CampusModel) bundle.getSerializable(Constants.PARAM_CAMPUS);
+        }
+    }
+
+    public void expandToolbar(boolean expand){
+        if(expand){
+            appBarLayout.setExpanded(expand,expand);
+        }else{
+            appBarLayout.setExpanded(expand,true);
         }
     }
 
@@ -666,6 +674,12 @@ public class MainActivity extends BaseActivity
         if (imm.isActive()) {
             imm.hideSoftInputFromWindow(getWindow().getDecorView()
                     .getWindowToken(), 0);
+        }
+    }
+
+    public void changeTitle(int resID){
+        if(collapsingToolbarLayout != null){
+            collapsingToolbarLayout.setTitle(getResources().getString(resID));
         }
     }
 }

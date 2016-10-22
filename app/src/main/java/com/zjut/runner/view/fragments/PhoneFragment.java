@@ -56,6 +56,6 @@ public class PhoneFragment extends NameFragment {
 
     @Override
     public void changeTitle() {
-        setTitle(R.string.str_phone);
+        activity.changeTitle(R.string.str_phone);
     }
 }

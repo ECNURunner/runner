@@ -55,6 +55,6 @@ public class EmailFragment extends NameFragment {
 
     @Override
     public void changeTitle() {
-        setTitle(R.string.str_email);
+        activity.changeTitle(R.string.str_email);
     }
 }

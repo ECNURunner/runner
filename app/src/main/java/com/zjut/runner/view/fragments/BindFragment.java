@@ -67,11 +67,12 @@ public class BindFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void changeTitle() {
-        setTitle(R.string.str_bind);
+        activity.changeTitle(R.string.str_bind);
     }
 
     @Override
     protected void findViews(View rootView) {
+        activity.expandToolbar(false);
         tv_warning = (TextView) rootView.findViewById(R.id.tv_warning);
         inputID = (EditText) rootView.findViewById(R.id.et_input);
         inputPass = (EditText) rootView.findViewById(R.id.et_pass);

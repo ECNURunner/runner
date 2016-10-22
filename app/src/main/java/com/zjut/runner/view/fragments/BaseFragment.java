@@ -72,7 +72,6 @@ public abstract class BaseFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        changeTitle();
         if(layoutId != -1){
             rootView = inflater.inflate(layoutId,null);
         }
@@ -89,6 +88,7 @@ public abstract class BaseFragment extends Fragment{
         if(activity instanceof MainActivity){
             this.activity = (MainActivity) activity;
             setDrawerIndicatorEnabled();
+            changeTitle();
             this.activity.onFragmentResume(this);
         }
     }

@@ -70,6 +70,6 @@ public class NameFragment extends BindFragment {
 
     @Override
     public void changeTitle() {
-        setTitle(R.string.str_username);
+        activity.changeTitle(R.string.str_username);
     }
 }
