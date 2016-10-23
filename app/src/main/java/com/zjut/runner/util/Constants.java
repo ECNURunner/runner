@@ -68,4 +68,17 @@ public class Constants {
     public static final String PARAM_ACTION = "actionType";
     public static final String PARAM_VERIFIED = "mobilePhoneVerified";
 
+    //REQUEST INFO
+    public static final String TABLE_REQUEST = "Request";
+    public static final String PARAM_REMARK = "remark";
+    public static final String PARAM_DEST = "dest";
+    public static final String PARAM_DEADLINE = "deadline";
+    public static final String PARAM_CHARGE = "charge";
+    public static final String PARAM_ORDER = "orderNo";
+    public static final String PARAM_ORDER_DATE = "orderDate";
+    public static final String PARAM_CAMPUS_ID = "campusID";
+    public static final String PARAM_STATUS = "status";
+    public static final String PARAM_CREATE = "createdAt";
+    public static final String PARAM_REQUEST_REFRESH = "requestRefresh";
+
 }

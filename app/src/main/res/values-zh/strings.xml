@@ -68,7 +68,22 @@
     <string name="toast_email_isnot_effective">请输入有效的邮箱地址</string>
     <string name="card_balance">余额</string>
     <string name = "str_message_invalid">账户还没绑定，请到我的账户进行绑定</string>
-
+    <!--create new-->
+    <string name="str_request_time">请求时间:</string>
+    <string name="str_request">请求时间: %1$s</string>
+    <string name="str_remark">描述:</string>
+    <string name="tap_to_select">点击选择</string>
+    <string name= "str_sucess">成功</string>
+    <string name= "submit">请求已提交</string>
+    <string name= "str_fail">失败</string>
+    <string name="str_create_title">标题:</string>
+    <string name="str_deadline">有效时间:</string>
+    <string name="str_dest">目的地:</string>
+    <string name="str_charge">参考小费: %1$s</string>
+    <string name="title_new">创建</string>
+    <string name = "str_set">设置</string>
+    <string name = "str_sure">是否确定提交？</string>
+    <string name="str_currency">块</string>
 
 
 </resources>

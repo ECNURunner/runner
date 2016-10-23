@@ -45,4 +45,6 @@ dependencies {
     }
     // LeanCloud 基础包
     compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
+    //bottom tab
+    compile 'me.majiajie:pager-bottom-tab-strip:1.0.0'
 }

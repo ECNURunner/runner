@@ -250,7 +250,7 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
                 //activity.goToFragment(new CheckFragment());
                 break;
             case CREATE:
-                //activity.goToFragment(new CardListFragment());
+                activity.goToFragment(new NewRequestFragment());
                 break;
         }
     }
