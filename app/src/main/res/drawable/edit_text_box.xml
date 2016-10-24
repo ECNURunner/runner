@@ -4,6 +4,7 @@
     <stroke android:color="@color/colorPrimary" android:width="1dp"/>
     <corners android:radius="5dp"/>
     <solid android:color="@color/white"/>
-    <padding android:left="5dp" android:top="5dp" android:bottom="5dp"
-        android:right="5dp"/>
+    <padding android:left="@dimen/margin_standard" android:top="@dimen/margin_standard"
+        android:bottom="@dimen/margin_standard"
+        android:right="@dimen/margin_standard"/>
 </shape>

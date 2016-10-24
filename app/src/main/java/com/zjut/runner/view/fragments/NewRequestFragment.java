@@ -93,7 +93,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
         seekBar.setProgress(5);
         tv_charge.setText(getString(R.string.str_charge,"5 ")+ getString(R.string.str_currency));
         et_remarks.setText("");
-        updateCurrentTime();
+        //updateCurrentTime();
     }
 
     private void failSubmit() {
@@ -140,7 +140,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
         progressBar.setVisibility(View.GONE);
         bt_submit = (Button) rootView.findViewById(R.id.btn_sub);
         tv_charge.setText(getString(R.string.str_charge,"5 ")+ getString(R.string.str_currency));
-        updateCurrentTime();
+        //updateCurrentTime();
         setButtonDisable(checkInputInfo());
     }
 

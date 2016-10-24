@@ -244,7 +244,7 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
                 //activity.goToFragment(new ServiceListFragment());
                 break;
             case ORDER:
-                //activity.goToFragment(new BillListFragment());
+                activity.goToFragment(new MyOrderFragment());
                 break;
             case HELPS:
                 //activity.goToFragment(new CheckFragment());

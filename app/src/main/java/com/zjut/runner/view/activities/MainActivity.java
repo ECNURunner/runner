@@ -563,7 +563,7 @@ public class MainActivity extends BaseActivity
     public void changeProfile() {
         int selectMode = MultiImageSelectorActivity.MODE_SINGLE;
         Intent intent = new Intent(this,MultiImageSelectorActivity.class);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA,true);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA,false);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE,selectMode);
         startActivityForResult(intent, REQUEST_IMAGE);
     }
@@ -571,8 +571,8 @@ public class MainActivity extends BaseActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        progressBar.setVisibility(View.VISIBLE);
         if(requestCode == REQUEST_IMAGE && data != null && resultCode == Activity.RESULT_OK){
+            progressBar.setVisibility(View.VISIBLE);
             String name = AVUser.getCurrentUser().getUsername() + ".jpg";
             List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
             try {

@@ -77,15 +77,15 @@
     <!--create new-->
     <string name="str_request_time">Request Time:</string>
     <string name="str_request">Request Time: %1$s</string>
-    <string name="str_remark">Remarks:</string>
+    <string name="str_remark">Remarks</string>
     <string name="tap_to_select">Tab to select</string>
     <string name="str_sucess">Success</string>
     <string name="request_submit">Request is submitted</string>
     <string name="str_fail">Fail</string>
     <string name="fail_submit">Request fail to submit</string>
-    <string name="str_create_title">Title:</string>
+    <string name="str_create_title">Title</string>
     <string name="str_deadline">Deadline:</string>
-    <string name="str_dest">Destination:</string>
+    <string name="str_dest">Destination</string>
     <string name="str_charge">Tip Ref: %1$s</string>
     <string name="title_new">New Request</string>
     <string name = "str_set">Set</string>
