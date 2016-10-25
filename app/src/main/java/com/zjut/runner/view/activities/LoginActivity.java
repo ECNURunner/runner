@@ -234,7 +234,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             @Override
             public void done(List<AVObject> list, AVException e) {
                 if (e == null && list.size() > 0) {
-                    campusModel = CampusModel.refreshCampus(campusModel,list);
+                    campusModel = CampusModel.refreshCampus(campusModel,list.get(0));
                     saveCampusModelToDB();
                 } else {
                     ToastUtil.showToastShort(getApplicationContext(), R.string.connection_not_avalible);

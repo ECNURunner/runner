@@ -2,13 +2,18 @@ package com.zjut.runner.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.zjut.runner.R;
+import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.ResourceUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import me.majiajie.pagerbottomtabstrip.Controller;
 import me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout;
@@ -25,45 +30,31 @@ public class MyOrderFragment extends BaseFragment {
     private PagerBottomTabLayout pagerBottomTabLayout;
     private Controller controller;
 
-    //List<Fragment> mFragments;
-
     @Override
     public void changeTitle() {
-        activity.changeTitle("my order");
+        activity.changeTitle(R.string.str_myorder);
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //initFragment();
-    }
-
-    /*private void initFragment()
+    private void initFragment(int index)
     {
-        mFragments = new ArrayList<>();
-
-        mFragments.add(createFragment("A"));
-        mFragments.add(createFragment("B"));
-        mFragments.add(createFragment("C"));
-        mFragments.add(createFragment("D"));
-        mFragments.add(createFragment("E"));
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        // transaction.setCustomAnimations(R.anim.push_up_in,R.anim.push_up_out);
-        transaction.add(R.id.frameLayout,mFragments.get(0));
+        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.frameLayout,createFragment(0));
         transaction.commit();
-    }*/
+    }
 
-    /*private Fragment createFragment(String content)
-    {
-        AFragment fragment = new AFragment();
+    private void goToFragment(int index){
+        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frameLayout,createFragment(index));
+        transaction.commit();
+    }
+
+    private OrderContentFragment createFragment(int index){
+        OrderContentFragment orderContentFragment = new OrderContentFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("content",content);
-        fragment.setArguments(bundle);
-
-        return fragment;
-    }*/
-
+        bundle.putInt(Constants.PARAM_NO,index);
+        orderContentFragment.setArguments(bundle);
+        return orderContentFragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,18 +65,31 @@ public class MyOrderFragment extends BaseFragment {
     @Override
     protected void findViews(View rootView) {
         pagerBottomTabLayout = (PagerBottomTabLayout) rootView.findViewById(R.id.tab);
-        TabItemBuilder tabItemBuilder = new TabItemBuilder(activity).create()
+        TabItemBuilder pending = new TabItemBuilder(activity).create()
                 .setDefaultIcon(android.R.drawable.ic_menu_send)
-                .setText("信息")
+                .setText(getString(R.string.str_pending))
                 .setSelectedColor(ResourceUtil.getColor(R.color.colorAccent))
-                .setTag("A")
+                .setTag("1")
+                .build();
+
+        TabItemBuilder completed = new TabItemBuilder(activity).create()
+                .setDefaultIcon(android.R.drawable.ic_menu_search)
+                .setText(getString(R.string.str_completed))
+                .setSelectedColor(ResourceUtil.getColor(R.color.colorPrimary))
+                .setTag("2")
+                .build();
+
+        TabItemBuilder cancelled = new TabItemBuilder(activity).create()
+                .setDefaultIcon(android.R.drawable.ic_menu_compass)
+                .setText(getString(R.string.str_cancelled))
+                .setSelectedColor(ResourceUtil.getColor(R.color.colorAccent))
+                .setTag("3")
                 .build();
 
         controller = pagerBottomTabLayout.builder()
-                .addTabItem(tabItemBuilder)
-                .addTabItem(android.R.drawable.ic_menu_compass, "位置",ResourceUtil.getColor(R.color.colorPrimary))
-                .addTabItem(android.R.drawable.ic_menu_search, "搜索",ResourceUtil.getColor(R.color.colorAccent))
-                .addTabItem(android.R.drawable.ic_menu_help, "帮助",ResourceUtil.getColor(R.color.colorPrimary))
+                .addTabItem(pending)
+                .addTabItem(completed)
+                .addTabItem(cancelled)
 //                .setMode(TabLayoutMode.HIDE_TEXT)
 //                .setMode(TabLayoutMode.CHANGE_BACKGROUND_COLOR)
                 .setMode(TabLayoutMode.HIDE_TEXT| TabLayoutMode.CHANGE_BACKGROUND_COLOR)
@@ -93,13 +97,14 @@ public class MyOrderFragment extends BaseFragment {
         //        controller.setMessageNumber("A",2);
 //        controller.setDisplayOval(0,true);
         controller.addTabItemClickListener(listener);
+        initFragment(0);
     }
 
     OnTabItemSelectListener listener = new OnTabItemSelectListener() {
         @Override
         public void onSelected(int index, Object tag)
         {
-            Log.i("asd","onSelected:"+index+"   TAG: "+tag.toString());
+            goToFragment(index);
         }
 
         @Override

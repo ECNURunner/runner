@@ -104,8 +104,16 @@ public class CampusService {
         float balance = cursor.getFloat(
                 cursor.getColumnIndex(CampusModelDB.KEY_BALANCE));
 
+        String objectId = cursor.getString(
+                cursor.getColumnIndex(CampusModelDB.OBJECT_ID)
+        );
+
+        String userObjectId = cursor.getString(
+                cursor.getColumnIndex(CampusModelDB.USER_OBJECT_ID)
+        );
+
         MLog.i("CAMPUS DATA","FROM DB");
-        return new CampusModel(displayName,mobile,email,genderType,url,cardPass,
+        return new CampusModel(objectId,userObjectId,displayName,mobile,email,genderType,url,cardPass,
                 cardID,cardName,balance);
     }
 
@@ -123,6 +131,8 @@ public class CampusService {
 
     private boolean saveCampusModelToDB(SQLiteDatabase db, CampusModel campusModel) {
         contentValues.clear();
+        contentValues.put(CampusModelDB.OBJECT_ID,campusModel.getObjectId());
+        contentValues.put(CampusModelDB.USER_OBJECT_ID,campusModel.getUserObjectId());
         contentValues.put(CampusModelDB.KEY_CARD_ID, campusModel.getCampusID());
         contentValues.put(CampusModelDB.KEY_CARD_PASS, campusModel.getCardPass());
         contentValues.put(CampusModelDB.KEY_NAME, campusModel.getCampusName());

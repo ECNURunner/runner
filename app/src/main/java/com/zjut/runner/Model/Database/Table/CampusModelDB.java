@@ -19,6 +19,8 @@ public class CampusModelDB extends DBModel{
     public static final String TABLE_CAMPUS = "campus_data";
 
     public static final String KEY_ID = "_id";
+    public static final String OBJECT_ID = "objectId";
+    public static final String USER_OBJECT_ID = "userObjectId";
     public static final String KEY_CARD_ID = "card_id";
     public static final String KEY_CARD_PASS = "card_pass";
     public static final String KEY_NAME = "card_name";
@@ -57,6 +59,8 @@ public class CampusModelDB extends DBModel{
                         + " ("
                         + KEY_ID + " integer primary key autoincrement, "
                         + KEY_CARD_ID + " varchar(20), "
+                        + OBJECT_ID + " varchar(25) unique, "
+                        + USER_OBJECT_ID + " varchar(25) unique, "
                         + KEY_CARD_PASS + " varchar(20), "
                         + KEY_NAME + " varchar(60), "
                         + KEY_MOBILE + " varchar(20), "

@@ -92,6 +92,22 @@
     <string name = "str_sure">Are you sure to submit?</string>
     <string name="str_currency">RMB</string>
     <string name= "submit">Request is submitted</string>
+    <!--pull refresh load more-->
+    <string name="xw_ptr_pull_to_refresh">Pull to Refresh</string>
+    <string name="xw_ptr_release_to_refresh">Release to Load More</string>
+    <string name="xw_ptr_refreshing">Refreshing&#8230;</string>
+    <string name="xw_ptr_refresh_succeeded">Refreshed</string>
+    <string name="xw_ptr_refresh_failed">Refreshing Failed</string>
+    <string name="xw_ptr_pull_up_to_load">Pull Up to Load More</string>
+    <string name="xw_ptr_release_to_load">Release to Load</string>
+    <string name="xw_ptr_loading">Loading&#8230;</string>
+    <string name="xw_ptr_load_succeeded">Loading</string>
+    <string name="xw_ptr_load_failed">Loading Failed</string>
+    <!--my order-->
+    <string name="str_myorder">My Order</string>
+    <string name="str_pending">Pending</string>
+    <string name="str_completed">Completed</string>
+    <string name="str_cancelled">Cancelled</string>
 
 
 </resources>

@@ -53,15 +53,24 @@
     <dimen name="size_font_create">15sp</dimen>
     <dimen name="height_remark">110dp</dimen>
     <dimen name="margin_button">13dp</dimen>
+    <!--bill info-->
+    <dimen name="order.date.width">60dp</dimen>
+    <dimen name="order.date.height">85dp</dimen>
+    <dimen name="order.helpers.width">30dp</dimen>
+    <dimen name="text_seventeen">17sp</dimen>
     <!--margin-->
     <dimen name="margin_five">5dp</dimen>
     <dimen name="margin_eight">8dp</dimen>
     <dimen name="margin_top">20dp</dimen>
     <dimen name="margin_standard">10dp</dimen>
     <dimen name="margin_fifteen">15dp</dimen>
+    <dimen name="margin_twelve">12dp</dimen>
     <dimen name="margin_large">30dp</dimen>
     <dimen name="margin_zero">0dp</dimen>
     <dimen name="margin_sixty">60dp</dimen>
+    <dimen name="margin_seventeen">17dp</dimen>
+    <dimen name="margin_two">2dp</dimen>
+    <dimen name="margin_three">3dp</dimen>
     <dimen name="margin_action_bar">220dp</dimen>
 
     <!--padding-->

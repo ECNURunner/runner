@@ -64,6 +64,7 @@ public class Constants {
     public static final String PARAM_GENDER = "gender";
     public static final String PARAM_PIC_URL = "profilePic";
     public static final String TABLE_CAMPUS = "CampusCard";
+    public static final String PARAM_CAMPUS_INFO = "campusInfo";
     public static final String PARAM_VALUE = "value";
     public static final String PARAM_ACTION = "actionType";
     public static final String PARAM_VERIFIED = "mobilePhoneVerified";
@@ -80,5 +81,14 @@ public class Constants {
     public static final String PARAM_STATUS = "status";
     public static final String PARAM_CREATE = "createdAt";
     public static final String PARAM_REQUEST_REFRESH = "requestRefresh";
+
+    //My order
+    public static final String PARAM_OWNER_CAMPUS = "ownerCampus";
+    public static final String PARAM_OWNER_USER = "ownerUser";
+    public static final String PARAM_FINAL_CHARGE = "finalCharge";
+    public static final String PARAM_HELPER_CAMPUS = "helperCampus";
+    public static final String PARAM_HELPER_USER = "helperUser";
+    public static final String PARAM_CHOSEN = "isChosen";
+    public static final String PARAM_NUM_HELPER = "numHelpers";
 
 }

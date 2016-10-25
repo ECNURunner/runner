@@ -16,6 +16,8 @@ import android.widget.TimePicker;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
@@ -51,7 +53,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
     private String remark = "";
     private String dest = "";
     private String title = "";
-    private int charge;
+    private int charge = 5;
     private String deadline = "";
     private String time;
 
@@ -93,6 +95,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
         seekBar.setProgress(5);
         tv_charge.setText(getString(R.string.str_charge,"5 ")+ getString(R.string.str_currency));
         et_remarks.setText("");
+        charge = 5;
         //updateCurrentTime();
     }
 
@@ -258,7 +261,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
     }
 
     private String getTimeString(int year,int month,int day,int hour,int minute){
-        return year + "/" + (month + 1) + "/" + day + "  " +
+        return year + "-" + (month + 1) + "-" + day + "  " +
                 StringUtil.twoDigit(hour) + ":" + StringUtil.twoDigit(minute);
     }
 
@@ -291,9 +294,23 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
         materialDialog.show();
     }
 
-    private void updateToCloud(String time, String remark, String deadline,String title,
-                               String dest,int charge) {
-        AVObject repair = new AVObject(Constants.TABLE_REQUEST);
+    private void updateToCloud(final String time, final String remark, final String deadline, final String title,
+                               final String dest, final int charge) {
+        AVObject campusObject = AVObject.createWithoutData(Constants.TABLE_CAMPUS,activity.campusModel.getObjectId());
+        campusObject.fetchInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                if(e == null){
+                    putRequest(avObject,time,remark,deadline,title,dest,charge);
+                }else{
+                    failSubmit();
+                }
+            }
+        });
+    }
+
+    private void putRequest(AVObject campus,String time,String remark,String deadline,String title,String dest,int charge){
+         AVObject repair = new AVObject(Constants.TABLE_REQUEST);
         repair.put(Constants.PARAM_REMARK, remark);
         repair.put(Constants.PARAM_ORDER_DATE, time);
         repair.put(Constants.PARAM_DEADLINE, deadline);
@@ -301,6 +318,8 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
         repair.put(Constants.PARAM_DEST, dest);
         repair.put(Constants.PARAM_CHARGE, charge);
         repair.put(Constants.PARAM_CAMPUS_ID, activity.campusModel.getCampusID());
+        repair.put(Constants.PARAM_OWNER_CAMPUS,campus);
+        repair.put(Constants.PARAM_OWNER_USER, AVUser.getCurrentUser());
         repair.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {

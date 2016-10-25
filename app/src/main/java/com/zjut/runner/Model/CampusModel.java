@@ -4,6 +4,7 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.zjut.runner.util.Constants;
+import com.zjut.runner.util.StringUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,22 +14,25 @@ import java.util.List;
  */
 
 public class CampusModel extends AccountModel{
+
+    private String objectId;
     private String cardPass;
     private String campusID;
     private String campusName;
     private float balance;
 
-    public CampusModel(String username, String mobile, String email, GenderType genderType,
+    public CampusModel(String objectId,String userObjectId, String username, String mobile, String email, GenderType genderType,
                        String url, String cardPass, String campusID, String campusName, float balance) {
-        super(username, mobile, email, genderType, url);
+        super(userObjectId,username, mobile, email, genderType, url);
         this.cardPass = cardPass;
         this.campusID = campusID;
         this.campusName = campusName;
         this.balance = balance;
+        this.objectId = objectId;
     }
 
-    public CampusModel(String username, String mobile, String email, GenderType genderType, String urlProfile) {
-        super(username, mobile, email, genderType,urlProfile);
+    public CampusModel(String userObjectId, String username, String mobile, String email, GenderType genderType, String urlProfile) {
+        super(userObjectId,username, mobile, email, genderType,urlProfile);
     }
 
     public CampusModel(String mobile) {
@@ -62,9 +66,20 @@ public class CampusModel extends AccountModel{
         this.campusName = campusName;
     }
 
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
 
     public static CampusModel setCampusModel(AVUser avUser){
+        if(avUser == null)
+            return null;
         CampusModel campusModel = new CampusModel();
+        String userObjectId = avUser.getObjectId();
+        campusModel.setUserObjectId(userObjectId);
         String email = avUser.getEmail();
         if(email != null){
             campusModel.setEmail(email);
@@ -86,7 +101,7 @@ public class CampusModel extends AccountModel{
             campusModel.setGenderType(GenderType.getType(genderType));
         }
         String campusID = avUser.getString(Constants.PARAM_ID);
-        if(campusID != null){
+        if(!StringUtil.isNull(campusID)){
             campusModel.setCampusID(campusID);
         }
         return campusModel;
@@ -100,12 +115,12 @@ public class CampusModel extends AccountModel{
         return balance;
     }
 
-    public static CampusModel refreshCampus(CampusModel oldModel,List<AVObject> avObjects){
-        if(oldModel == null || avObjects == null){
+    public static CampusModel refreshCampus(CampusModel oldModel,AVObject avObject){
+        if(oldModel == null || avObject == null){
             return null;
         }
-        AVObject avObject = avObjects.get(0);
         CampusModel campusModel = new CampusModel();
+        campusModel.setObjectId(avObject.getObjectId());
         campusModel.setCardPass(avObject.getString(Constants.PARAM_CARD_PASS));
         campusModel.setCampusName(avObject.getString(Constants.PARAM_CARD_NAME));
         campusModel.setBalance((float)avObject.getDouble(Constants.PARAM_CARD_BALANCE));
@@ -115,6 +130,7 @@ public class CampusModel extends AccountModel{
         campusModel.setUrl(oldModel.getUrl());
         campusModel.setGenderType(oldModel.getGenderType());
         campusModel.setCampusID(oldModel.getCampusID());
+        campusModel.setUserObjectId(oldModel.getUserObjectId());
         return campusModel;
     }
 }

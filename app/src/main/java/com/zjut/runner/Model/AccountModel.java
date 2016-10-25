@@ -9,6 +9,8 @@ import java.io.Serializable;
  */
 
 public class AccountModel implements Serializable{
+
+    private String userObjectId;
     private String username;
     private String mobile;
     private String password;
@@ -16,8 +18,9 @@ public class AccountModel implements Serializable{
     private GenderType genderType;
     private String url;
 
-    public AccountModel(String username, String mobile, String email, GenderType genderType, String url) {
+    public AccountModel(String userObjectId, String username, String mobile, String email, GenderType genderType, String url) {
         this.username = username;
+        this.userObjectId = userObjectId;
         this.mobile = mobile;
         this.email = email;
         this.genderType = genderType;
@@ -29,6 +32,14 @@ public class AccountModel implements Serializable{
         this.mobile = mobile;
         this.password = password;
 
+    }
+
+    public String getUserObjectId() {
+        return userObjectId;
+    }
+
+    public void setUserObjectId(String userObjectId) {
+        this.userObjectId = userObjectId;
     }
 
     public AccountModel(String mobile) {
