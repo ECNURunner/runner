@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import com.zjut.runner.Model.ActionType;
 import com.zjut.runner.R;
+import com.zjut.runner.view.activities.MainActivity;
+import com.zjut.runner.view.fragments.RequestInfoFragment;
 
 /**
  * Created by Administrator on 2016/10/20.
@@ -20,6 +22,7 @@ public class DetailActionItemHolder extends BaseViewHolder {
     private boolean clickAble;
     private ItemClickListener itemClickListener;
     private SettingItemClickListener settingItemClickListener;
+    private HelpersClickListener helpersClickListener;
 
     private TextView tv_name;
     private TextView tv_desc;
@@ -52,6 +55,18 @@ public class DetailActionItemHolder extends BaseViewHolder {
         setView();
     }
 
+    public  DetailActionItemHolder(Context context,int iconImage,int actionName,
+                                   String actionDesc, ActionType actionType, Boolean clickAble,
+                                   HelpersClickListener helpersClickListener){
+        super(context);
+        this.iconImage = iconImage;
+        this.actionDesc = actionDesc;
+        this.actionName = actionName;
+        this.actionType = actionType;
+        this.helpersClickListener = helpersClickListener;
+        this.clickAble = clickAble;
+        setView();
+    }
 
     private void setView(){
         if(iconImage > 0){
@@ -93,12 +108,26 @@ public class DetailActionItemHolder extends BaseViewHolder {
         void passClick();
     }
 
+    public interface HelpersClickListener{
+        void helpersClick();
+    }
+
     public void setSettingItemClickListener(SettingItemClickListener settingItemClickListener) {
         this.settingItemClickListener = settingItemClickListener;
     }
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
+    }
+
+    public void setHelpersClickListener(HelpersClickListener helpersClickListener){
+        this.helpersClickListener = helpersClickListener;
+    }
+
+    private void performHelpersClick(){
+        if(helpersClickListener != null){
+            helpersClickListener.helpersClick();
+        }
     }
 
     private void performLangClick(){
@@ -186,6 +215,9 @@ public class DetailActionItemHolder extends BaseViewHolder {
                 break;
             case PASSWORD:
                 performPassClick();
+                break;
+            case HELPER:
+                performHelpersClick();
                 break;
         }
     }

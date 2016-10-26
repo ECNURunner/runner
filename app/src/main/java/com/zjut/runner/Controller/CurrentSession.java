@@ -6,6 +6,9 @@ import android.widget.Toast;
 
 import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.Model.Database.DBController.CampusDBController;
+import com.zjut.runner.Model.Database.DBController.MyOrderDBController;
+import com.zjut.runner.Model.HelperModel;
+import com.zjut.runner.Model.OrderModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -104,5 +107,37 @@ public class CurrentSession {
         campusModelMap.put(campusModel.getMobile(), campusModel);
         return CampusDBController.updateEmailToDB(context, campusModel.getEmail(),
                 campusModel.getMobile());
+    }
+
+    public static List<OrderModel> getOrderModels(Context context, String ownerID,String status){
+
+        Collection<OrderModel> orderModels = MyOrderDBController.getOrderFromDB(context,ownerID,status);
+        if(orderModels != null && orderModels.size() > 0){
+            return new ArrayList<>(orderModels);
+        }
+        return null;
+    }
+
+    public static void putOrderModel(Context context,OrderModel orderModel,String ownerID){
+        if(orderModel == null){
+            return;
+        }
+        MyOrderDBController.saveOrderToDB(context,orderModel,ownerID);
+    }
+
+    public static List<HelperModel> getHelperModels(Context context, String objectID){
+
+        Collection<HelperModel> helperModels = MyOrderDBController.getHelperFromDB(context,objectID);
+        if(helperModels != null && helperModels.size() > 0){
+            return new ArrayList<>(helperModels);
+        }
+        return null;
+    }
+
+    public static void putHelperModel(Context context,HelperModel helperModel){
+        if(helperModel == null){
+            return;
+        }
+        MyOrderDBController.saveHelpersToDB(context,helperModel);
     }
 }

@@ -100,6 +100,8 @@
     <string name="str_pending">进行中</string>
     <string name="str_completed">已完成</string>
     <string name="str_cancelled">取消</string>
-
-
+    <string name="str_myorder_info">我的订单信息</string>
+    <string name="str_helpers">好心人</string>
+    <string name="alert_cancel">订单不能取消，请联系客服</string>
+    <string name="message_cancel">是否确定取消该订单?</string>
 </resources>

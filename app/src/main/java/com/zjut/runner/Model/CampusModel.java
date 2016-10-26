@@ -42,6 +42,14 @@ public class CampusModel extends AccountModel{
     public CampusModel() {
     }
 
+    public CampusModel(String objectId, String userObjectId, String username, String mobile,
+                       String email, GenderType genderType, String url, String campusID, String campusName) {
+        super(userObjectId,username, mobile, email, genderType, url);
+        this.campusID = campusID;
+        this.campusName = campusName;
+        this.objectId = objectId;
+    }
+
     public String getCardPass() {
         return cardPass;
     }
@@ -133,4 +141,5 @@ public class CampusModel extends AccountModel{
         campusModel.setUserObjectId(oldModel.getUserObjectId());
         return campusModel;
     }
+
 }

@@ -13,7 +13,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 public class MyOrderDB extends DBModel {
 
     private static MyOrderDB instance;
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
     private static final String DBNAME = "myorder.db";
 
     public MyOrderDB(Context context){
@@ -27,6 +27,7 @@ public class MyOrderDB extends DBModel {
     }
 
     public static final String TABLE_MYORDER = "table_myorder";
+    public static final String TABLE_HELPERS = "table_helper";
 
     public static final String KEY_ID = "_id";
     public static final String KEY_OBJECT_ID = "_objectID";
@@ -48,6 +49,13 @@ public class MyOrderDB extends DBModel {
     public static final String KEY_URL = "profile_url";
     public static final String KEY_STATUS ="_status";
     public static final String KEY_NUM_HELPER = "_numHelper";
+
+    public static final String HELPER_CAMPUS_ID = "objectId";
+    public static final String HELPER_USER_ID = "userObjectId";
+    public static final String HELPER_CARD_ID = "card_id";
+    public static final String HELPER_NAME = "card_name";
+    public static final String HELPER_MOBILE = "acc_mobile";
+    public static final String HELPER_EMAIL = "acc_email";
 
     @Override
     protected String getReadLogKey() {
@@ -81,14 +89,34 @@ public class MyOrderDB extends DBModel {
                 + KEY_DEADLINE + " varchar(15), "
                 + KEY_TITLE + " varchar(25), "
                 + KEY_STATUS + " varchar(10), "
-                + KEY_NUM_HELPER + " varchar"
+                + KEY_NUM_HELPER + " int, "
                 + KEY_DEST + " varchar(20))"
+        );
+
+        db.execSQL(
+                "CREATE TABLE IF NOT EXISTS " + TABLE_HELPERS
+                        + " ("
+                        + KEY_ID + " integer primary key autoincrement, "
+                        + KEY_OBJECT_ID + " varchar(20), "
+                        + HELPER_CARD_ID + " varchar(20), "
+                        + HELPER_CAMPUS_ID + " varchar(25) unique, "
+                        + HELPER_USER_ID + " varchar(25) unique, "
+                        + HELPER_NAME + " varchar(60), "
+                        + HELPER_MOBILE + " varchar(20), "
+                        + HELPER_EMAIL + " varchar(60), "
+                        + KEY_GENDER + " varchar(10), "
+                        + KEY_URL + " varchar(100), FOREIGN KEY ("
+                        + KEY_OBJECT_ID + ")"
+                        + " REFERENCES "
+                        + TABLE_MYORDER
+                        + "(" + KEY_OBJECT_ID + "))"
         );
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MYORDER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_HELPERS);
         onCreate(db);
     }
 

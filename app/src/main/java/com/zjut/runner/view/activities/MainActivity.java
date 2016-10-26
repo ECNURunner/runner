@@ -396,7 +396,7 @@ public class MainActivity extends BaseActivity
         if(currentFragment != null){
             currentFragment.initMenu(this,menu);
         }
-        setSearchViewStatus(menu,null);
+        //setSearchViewStatus(menu,null);
         return super.onPrepareOptionsMenu(menu);
     }
 

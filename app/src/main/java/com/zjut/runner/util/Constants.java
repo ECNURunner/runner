@@ -71,6 +71,7 @@ public class Constants {
 
     //REQUEST INFO
     public static final String TABLE_REQUEST = "Request";
+    public static final String PARAM_REQUEST_OBJ = "request";
     public static final String PARAM_REMARK = "remark";
     public static final String PARAM_DEST = "dest";
     public static final String PARAM_DEADLINE = "deadline";
@@ -90,5 +91,11 @@ public class Constants {
     public static final String PARAM_HELPER_USER = "helperUser";
     public static final String PARAM_CHOSEN = "isChosen";
     public static final String PARAM_NUM_HELPER = "numHelpers";
+
+    //Helper list
+    public static final String PARAM_REQUEST_REPLY = "RequestReply";
+    public static final String PARAM_USER_INFO = "userInfo";
+    public static final String PARAM_OBJECT_ID = "objectId";
+
 
 }

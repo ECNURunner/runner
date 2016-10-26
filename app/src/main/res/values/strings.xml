@@ -108,6 +108,10 @@
     <string name="str_pending">Pending</string>
     <string name="str_completed">Completed</string>
     <string name="str_cancelled">Cancelled</string>
+    <string name="str_myorder_info">Order Info</string>
+    <string name="str_helpers">Helpers</string>
+    <string name="alert_cancel">Order can\'t be cancelled, please contact our front desk</string>
+    <string name="message_cancel">Are you sure you want to cancel?</string>
 
 
 </resources>

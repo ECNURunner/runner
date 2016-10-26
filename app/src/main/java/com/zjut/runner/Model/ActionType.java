@@ -7,7 +7,7 @@ package com.zjut.runner.Model;
 public enum ActionType {
 
     NAME("name"),GENDER("gender"),PHONE("phone"),EMAIL("email"),
-    BINDING("binding"),UNBIND("unbind"),LANG("lang"),PASSWORD("password");
+    BINDING("binding"),UNBIND("unbind"),LANG("lang"),PASSWORD("password"), HELPER("helper");
     private final String text;
     ActionType(String text){
         this.text = text;
@@ -47,6 +47,9 @@ public enum ActionType {
         }
         if(LANG.equal(value)){
             return LANG;
+        }
+        if(HELPER.equal(value)){
+            return HELPER;
         }
         return NAME;
     }

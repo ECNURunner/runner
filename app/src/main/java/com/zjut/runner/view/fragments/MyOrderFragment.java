@@ -68,21 +68,21 @@ public class MyOrderFragment extends BaseFragment {
         TabItemBuilder pending = new TabItemBuilder(activity).create()
                 .setDefaultIcon(android.R.drawable.ic_menu_send)
                 .setText(getString(R.string.str_pending))
-                .setSelectedColor(ResourceUtil.getColor(R.color.colorAccent))
+                .setSelectedColor(ResourceUtil.getColor(R.color.colorPrimary))
                 .setTag("1")
                 .build();
 
         TabItemBuilder completed = new TabItemBuilder(activity).create()
                 .setDefaultIcon(android.R.drawable.ic_menu_search)
                 .setText(getString(R.string.str_completed))
-                .setSelectedColor(ResourceUtil.getColor(R.color.colorPrimary))
+                .setSelectedColor(ResourceUtil.getColor(R.color.green))
                 .setTag("2")
                 .build();
 
         TabItemBuilder cancelled = new TabItemBuilder(activity).create()
                 .setDefaultIcon(android.R.drawable.ic_menu_compass)
                 .setText(getString(R.string.str_cancelled))
-                .setSelectedColor(ResourceUtil.getColor(R.color.colorAccent))
+                .setSelectedColor(ResourceUtil.getColor(R.color.red))
                 .setTag("3")
                 .build();
 

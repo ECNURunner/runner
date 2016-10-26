@@ -1,5 +1,6 @@
 package com.zjut.runner.view.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -13,10 +14,13 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
+import com.zjut.runner.Controller.AsyncTaskController;
+import com.zjut.runner.Controller.CurrentSession;
 import com.zjut.runner.Model.OrderModel;
 import com.zjut.runner.Model.OrderStatus;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
+import com.zjut.runner.util.MLog;
 import com.zjut.runner.util.RunnableManager;
 import com.zjut.runner.util.ToastUtil;
 import com.zjut.runner.view.Adapter.OrderListAdapter;
@@ -31,7 +35,7 @@ import java.util.List;
  */
 
 public class OrderContentFragment extends BaseFragment implements PullToRefreshLayout.OnRefreshListener,
-        Runnable, AdapterView.OnItemClickListener {
+        Runnable, AdapterView.OnItemClickListener, BaseFragment.SelectedItemCallBackListener {
 
     private PullToRefreshLayout pullToRefreshLayout;
     private PullListView pullListView;
@@ -41,6 +45,12 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
     private List<OrderModel> orderModels = new ArrayList<>();
     private OrderListAdapter orderListAdapter;
 
+    //load model
+    private AsyncTask<Object,Void,List<OrderModel>> dbLoad = null;
+
+    //save model
+    private AsyncTask<Object,Void,Void> dbSaveOrder = null;
+
     // refresh
     protected Handler mUiHandler = new Handler();
     protected long DELAYMILLIS = 100;
@@ -49,6 +59,7 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
 
     private int index;
     private String status;
+    private String campusID;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +71,7 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
         Bundle bundle = getArguments();
         if(bundle == null)
             return;
+        campusID = activity.campusModel.getCampusID();
         index = bundle.getInt(Constants.PARAM_NO);
         switch (index){
             case 0:
@@ -99,13 +111,32 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
     }
 
     protected synchronized void loadList(final int skip,final int limit){
-        //TODO:load from database then cloud
-        loadFromCloud(skip,limit);
+        if(dbLoad != null){
+            return;
+        }
+        dbLoad = new AsyncTask<Object, Void, List<OrderModel>>() {
+            @Override
+            protected List<OrderModel> doInBackground(Object... params) {
+                return CurrentSession.getOrderModels(activity,campusID,status);
+            }
+
+            @Override
+            protected void onPostExecute(List<OrderModel> orders) {
+                dbLoad = null;
+                if(orders != null && orders.size() > 0){
+                    orderModels.clear();
+                    orderModels.addAll(orders);
+                    refreshList();
+                }
+                loadFromCloud(skip,limit);
+            }
+        };
+        AsyncTaskController.startTask(dbLoad);
     }
 
     protected void loadFromCloud(int skip,int limit){
         AVQuery<AVObject> innerQuery = AVQuery.getQuery(Constants.TABLE_REQUEST);
-        innerQuery.whereEqualTo(Constants.PARAM_CAMPUS_ID,activity.campusModel.getCampusID());
+        innerQuery.whereEqualTo(Constants.PARAM_CAMPUS_ID,campusID);
         innerQuery.whereEqualTo(Constants.PARAM_STATUS,status);
         innerQuery.setSkip(skip);
         innerQuery.setLimit(limit);
@@ -141,9 +172,29 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
             orderModels.clear();
             orderModels.addAll(OrderModel.setOrderModels(list));
             refreshList();
-            //saveResultToDB();
+            saveOrderToDB();
         }
 
+    }
+
+    protected synchronized void saveOrderToDB(){
+        if(dbSaveOrder != null)
+            return;
+        dbSaveOrder = new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... params) {
+                for(OrderModel orderModel:orderModels){
+                    CurrentSession.putOrderModel(activity,orderModel,campusID);
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                dbSaveOrder = null;
+            }
+        };
+        AsyncTaskController.startTask(dbSaveOrder);
     }
 
     protected void refreshList(){
@@ -207,6 +258,24 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        MLog.d("CLICK","HERE");
+        OrderModel orderModel = orderModels.get(position);
+        RequestInfoFragment requestInfoFragment = new RequestInfoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.PARAM_ORDER,orderModel);
+        requestInfoFragment.setArguments(bundle);
+        requestInfoFragment.registerSelectedCallBackListener(this,null);
+        activity.goToFragment(requestInfoFragment);
+    }
 
+    @Override
+    public void onItemSelected(Object selectedItem) {
+        boolean refresh = (boolean) selectedItem;
+        if(refresh){
+            SKIP = 0;
+            onLoad = false;
+            pullListView.setSelectionAfterHeaderView();
+            loadList(0,5);
+        }
     }
 }

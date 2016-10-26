@@ -42,7 +42,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
     protected SeekBar seekBar;
     protected Button bt_submit;
     private View mView;
-    private ProgressBar progressBar;
+    protected ProgressBar progressBar;
 
     private int year;
     private int month;

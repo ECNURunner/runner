@@ -99,6 +99,7 @@ public class WebNormalFragment extends BaseFragment{
 
     @Override
     public void initMenu(Context context, Menu menu) {
+        clearMenu(menu);
         ((Activity) context).getMenuInflater().inflate(R.menu.menu_webview, menu);
     }
 
