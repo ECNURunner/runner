@@ -47,6 +47,13 @@ public class MyOrderService {
                     + MyOrderDB.KEY_OBJECT_ID
                     + " =?";
 
+    final static String getOrders =
+            "SELECT * FROM "
+                    + MyOrderDB.TABLE_MYORDER
+                    + " WHERE "
+                    + MyOrderDB.KEY_CARD_ID
+                    + " !=?";
+
 
     public Collection<OrderModel> loadMyOrderModel(final String ownerID,final String status){
         final List<OrderModel> orderModelList = new ArrayList<>();
@@ -65,6 +72,26 @@ public class MyOrderService {
             }
         };
        myOrderDB.readOperator(tableOperator);
+        return orderModelList;
+    }
+
+    public Collection<OrderModel> loadMyOrderModel(final String ownerID){
+        final List<OrderModel> orderModelList = new ArrayList<>();
+        TableOperator tableOperator = new TableOperator() {
+            @Override
+            public void doWork(SQLiteDatabase db) {
+                net.sqlcipher.Cursor cursor = db.rawQuery(getOrders,new String[]{ownerID});;
+                if(cursor.moveToFirst()){
+                    do{
+                        OrderModel orderModel = getOrderInfo(cursor);
+                        if(orderModel != null)
+                            orderModelList.add(orderModel);
+                    }while (cursor.moveToNext());
+                }
+                cursor.close();
+            }
+        };
+        myOrderDB.readOperator(tableOperator);
         return orderModelList;
     }
 
@@ -168,6 +195,11 @@ public class MyOrderService {
         String requestID = cursor.getString(cursor.getColumnIndex(MyOrderDB.KEY_OBJECT_ID));
 
         String gender = cursor.getString(cursor.getColumnIndex(MyOrderDB.KEY_GENDER));
+
+        String objectId = cursor.getString(cursor.getColumnIndex(MyOrderDB.REQUEST_REPLY));
+
+        int charge = cursor.getInt(cursor.getColumnIndex(MyOrderDB.KEY_CHARGE));
+
         GenderType genderType = null;
         if(!StringUtil.isNull(gender)){
             genderType = GenderType.getType(gender);
@@ -176,7 +208,7 @@ public class MyOrderService {
         String url = cursor.getString(cursor.getColumnIndex(MyOrderDB.KEY_URL));
 
         MLog.i("Helpers", "FROM DB");
-        return new HelperModel(helperCampusID,helperUserID,null,mobile,email,genderType,url,cardID,name,requestID);
+        return new HelperModel(helperCampusID,helperUserID,null,mobile,email,genderType,url,cardID,name,requestID,objectId,charge);
     }
 
     public boolean SaveOrderToDB(final OrderModel orderModel, final String ownerID){
@@ -244,6 +276,8 @@ public class MyOrderService {
         contentValues.put(MyOrderDB.HELPER_EMAIL,helperModel.getEmail());
         contentValues.put(MyOrderDB.KEY_GENDER,helperModel.getGenderType().toString());
         contentValues.put(MyOrderDB.KEY_URL,helperModel.getUrl());
+        contentValues.put(MyOrderDB.REQUEST_REPLY, helperModel.getObjectId());
+        contentValues.put(MyOrderDB.KEY_CHARGE,helperModel.getHelperCharge());
 
         db.insertWithOnConflict(MyOrderDB.TABLE_HELPERS, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
         MLog.i("Helper", " insert");

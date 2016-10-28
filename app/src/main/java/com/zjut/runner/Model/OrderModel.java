@@ -26,6 +26,7 @@ public class OrderModel implements Serializable{
     private OrderStatus status;
     private String objectID;
     private int helpers;
+    private String owner;
 
     public OrderModel(String remark, boolean isChosen, String orderDate, String deadline,String title,
                       String dest, int charge, int finalCharge,
@@ -42,6 +43,14 @@ public class OrderModel implements Serializable{
         this.deadline = deadline;
         this.objectID = objectID;
         this.helpers = helpers;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public int getHelpers() {
@@ -160,9 +169,13 @@ public class OrderModel implements Serializable{
             CampusModel user = CampusModel.setCampusModel(helperUser);
             CampusModel helper = CampusModel.refreshCampus(user,helperCampus);
             int numHelpers = (int)avObject.getNumber(Constants.PARAM_NUM_HELPER);
-            orderModels.add(new OrderModel(remark,chosen,orderDate,deadline,title,dest,charge,
-                    finalCharge,helper,status,objectID,numHelpers));
+            String owner = avObject.getString(Constants.PARAM_CAMPUS_ID);
+            OrderModel orderModel = new OrderModel(remark,chosen,orderDate,deadline,title,dest,charge,
+                    finalCharge,helper,status,objectID,numHelpers);
+            orderModel.setOwner(owner);
+            orderModels.add(orderModel);
         }
         return orderModels;
     }
+
 }

@@ -118,6 +118,15 @@ public class CurrentSession {
         return null;
     }
 
+    public static List<OrderModel> getOrderModels(Context context, String ownerID){
+
+        Collection<OrderModel> orderModels = MyOrderDBController.getOrderFromDB(context,ownerID);
+        if(orderModels != null && orderModels.size() > 0){
+            return new ArrayList<>(orderModels);
+        }
+        return null;
+    }
+
     public static void putOrderModel(Context context,OrderModel orderModel,String ownerID){
         if(orderModel == null){
             return;

@@ -1,6 +1,7 @@
 package com.zjut.runner.view.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,15 +11,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.zjut.runner.Controller.AsyncTaskController;
 import com.zjut.runner.Controller.CurrentSession;
 import com.zjut.runner.Model.ActionType;
+import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.Model.HelperModel;
 import com.zjut.runner.Model.OrderModel;
 import com.zjut.runner.Model.OrderStatus;
@@ -28,9 +34,11 @@ import com.zjut.runner.util.GeneralUtils;
 import com.zjut.runner.util.MLog;
 import com.zjut.runner.util.ResourceUtil;
 import com.zjut.runner.util.StringUtil;
+import com.zjut.runner.widget.CircleImageView;
 import com.zjut.runner.widget.DetailActionItemHolder;
 import com.zjut.runner.widget.MaterialDialog;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,18 +46,15 @@ import java.util.List;
  * Created by Phuylai on 2016/10/26.
  */
 
-public class RequestInfoFragment extends NewRequestFragment implements DetailActionItemHolder.HelpersClickListener{
+public class RequestInfoFragment extends NewRequestFragment implements DetailActionItemHolder.HelpersClickListener, BaseFragment.SelectedItemCallBackListener {
 
-    private OrderModel orderModel;
-
-    @Override
-    public void helpersClick() {
-        MLog.i("helper","click");
-    }
+    protected OrderModel orderModel;
 
     private List<HelperModel> helperModels = new ArrayList<>();
 
     private LinearLayout ll_wrap;
+
+    private  DetailActionItemHolder detailActionItemHolder;
 
     //load model
     private AsyncTask<Object,Void,List<HelperModel>> dbLoad = null;
@@ -57,30 +62,41 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
     //save model
     private AsyncTask<Object,Void,Void> dbSave = null;
 
+    private DisplayImageOptions options;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         parseArgument();
     }
 
-    private void parseArgument(){
+    protected void parseArgument(){
         Bundle bundle = getArguments();
         if(bundle == null)
             return;
         orderModel = (OrderModel) bundle.getSerializable(Constants.PARAM_ORDER);
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_usericon_default)
+                .showImageForEmptyUri(R.drawable.ic_usericon_default)
+                .showImageOnFail(R.drawable.ic_usericon_default)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
 
     @Override
     protected void findViews(View rootView) {
         super.findViews(rootView);
-        loadHelpers();
         ll_wrap = (LinearLayout) rootView.findViewById(R.id.ll_wrap);
+        loadHelpers();
         bt_submit.setVisibility(View.GONE);
         setView();
         setEnable(false);
     }
 
-    private void loadHelpers(){
+    protected void loadHelpers(){
         if(orderModel.getHelpers() > 0){
             progressBar.setVisibility(View.VISIBLE);
             AddViewHelperClick();
@@ -89,12 +105,14 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
     }
 
     private void AddViewHelperClick(){
-        DetailActionItemHolder detailActionItemHolder = new DetailActionItemHolder(activity,0,
-                R.string.str_helpers,StringUtil.convertIntegerToString(orderModel.getHelpers()), ActionType.HELPER,true,this);
+        detailActionItemHolder = new DetailActionItemHolder(activity,0,
+                R.string.str_helper,StringUtil.convertIntegerToString(orderModel.getHelpers()), ActionType.HELPER,true,this);
         View root = detailActionItemHolder.getRootView();
         addView(root);
         setMarginTop(GeneralUtils.getDimenPx(activity, R.dimen.margin_standard),root);
     }
+
+
 
     protected void addView(View view) {
         if (view == null) {
@@ -139,7 +157,7 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         AsyncTaskController.startTask(dbLoad);
     }
 
-    private void loadFromCloud(){
+    protected void loadFromCloud(){
         AVQuery<AVObject> innerquery = new AVQuery<>(Constants.TABLE_REQUEST);
         innerquery.whereEqualTo(Constants.PARAM_OBJECT_ID,orderModel.getObjectID());
         AVQuery<AVObject> query = new AVQuery<>(Constants.PARAM_REQUEST_REPLY);
@@ -182,7 +200,7 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
     }
 
 
-    private void setView(){
+    protected void setView(){
         et_remarks.setText(orderModel.getRemark());
         tv_charge.setText(getString(R.string.str_charge,StringUtil.convertIntegerToString(orderModel.getCharge()))
                 + getString(R.string.str_currency));
@@ -201,7 +219,9 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
     @Override
     public void initMenu(Context context, Menu menu) {
         clearMenu(menu);
-        activity.getMenuInflater().inflate(R.menu.main,menu);
+        if(orderModel.getStatus() == OrderStatus.PENDING && orderModel.getHelpers() == 0){
+            activity.getMenuInflater().inflate(R.menu.main,menu);
+        }
     }
 
     @Override
@@ -260,8 +280,28 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         });
     }
 
+    protected void updateStatusToCloud(HelperModel helperModel){
+        AVObject request = AVObject.createWithoutData(Constants.TABLE_REQUEST,orderModel.getObjectID());
+        request.put(Constants.PARAM_HELPER_USER,helperModel.getUserObjectId());
+        request.put(Constants.PARAM_HELPER_CAMPUS,helperModel.getObjectId());
+        request.put(Constants.PARAM_CHOSEN,true);
+        request.put(Constants.PARAM_FINAL_CHARGE,helperModel.getHelperCharge());
+        request.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                progressBar.setVisibility(View.GONE);
+                if(e == null){
+                    successSubmit();
+                }else{
+                    failSubmit();
+                }
+            }
+        });
+    }
+
     protected void failSubmit() {
         final MaterialDialog materialDialog = new MaterialDialog(activity);
+        progressBar.setVisibility(View.GONE);
         materialDialog.setTitle(R.string.str_fail);
         materialDialog.setMessage(R.string.fail_submit);
         materialDialog.setPositiveButton(R.string.button_ok, new View.OnClickListener() {
@@ -303,12 +343,53 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         materialDialog.show();
     }
 
+    @Override
+    public void helpersClick() {
+        MLog.i("helper","click");
+        if(orderModel.getHelper() != null){
+            showFixedHelper();
+        }else {
+            HelperFragment helperFragment = new HelperFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constants.PARAM_HELPER_USER, (Serializable) helperModels);
+            helperFragment.setArguments(bundle);
+            helperFragment.registerSelectedCallBackListener(this, null);
+            activity.goToFragment(helperFragment);
+        }
+    }
+
+    private void showFixedHelper(){
+        final View view = activity.getLayoutInflater().inflate(R.layout.helper_info, null);
+        final CircleImageView iv_icon = (CircleImageView) view.findViewById(R.id.iv_helper);
+        final TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
+        final TextView tv_phone = (TextView) view.findViewById(R.id.tv_phone);
+        final TextView tv_email = (TextView) view.findViewById(R.id.tv_email);
+        final TextView tv_gender = (TextView) view.findViewById(R.id.tv_gender);
+        final TextView tv_charge = (TextView) view.findViewById(R.id.tv_charge);
+        final MaterialDialog materialDialog = new MaterialDialog(activity)
+                .setView(view);
+        CampusModel campusModel = orderModel.getHelper();
+        if(!StringUtil.isNull(campusModel.getUrl())){
+            ImageLoader.getInstance().displayImage(campusModel.getUrl(),iv_icon,options);
+        }
+        tv_name.setText(getString(R.string.helper_name,campusModel.getCampusName()));
+        tv_phone.setText(getString(R.string.helper_phone,campusModel.getMobile()));
+        tv_email.setText(getString(R.string.helper_email,campusModel.getEmail()));
+        tv_gender.setText(getString(R.string.helper_gender,campusModel.getGenderType().toString()));
+        tv_charge.setText(getString(R.string.helper_charge,StringUtil.convertIntegerToString(orderModel.getFinalCharge())));
+        materialDialog.setPositiveButton(getString(R.string.button_ok), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                materialDialog.dismiss();
+            }
+        });
+        materialDialog.show();
+    }
 
 
     protected void setEnable(boolean b) {
         et_time.setEnabled(b);
         et_remarks.setEnabled(b);
-        bt_submit.setEnabled(b);
         et_deadline.setEnabled(b);
         et_title.setEnabled(b);
         et_dest.setEnabled(b);
@@ -316,4 +397,13 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
     }
 
 
+    @Override
+    public void onItemSelected(Object selectedItem) {
+        if(selectedItem instanceof HelperModel){
+            HelperModel helperModel = (HelperModel) selectedItem;
+            detailActionItemHolder.changeFixedHelper(helperModel.getCampusName());
+            progressBar.setVisibility(View.VISIBLE);
+            updateStatusToCloud(helperModel);
+        }
+    }
 }

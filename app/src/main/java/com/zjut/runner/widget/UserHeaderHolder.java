@@ -93,10 +93,6 @@ public class UserHeaderHolder extends BaseViewHolder {
     public void setProfile(CampusModel campusModel){
         if(!StringUtil.isNull(campusModel.getUrl())){
             ImageLoader.getInstance().displayImage(campusModel.getUrl(),circleImageView,options);
-            Ion.with(circleImageView)
-                    .error(R.drawable.ic_usericon_default)
-                    .placeholder(R.drawable.ic_usericon_default)
-                    .load(campusModel.getUrl());
         }
         else{
             circleImageView.setImageResource(R.drawable.ic_usericon_default);

@@ -109,9 +109,20 @@
     <string name="str_completed">Completed</string>
     <string name="str_cancelled">Cancelled</string>
     <string name="str_myorder_info">Order Info</string>
-    <string name="str_helpers">Helpers</string>
+    <string name="str_helper">Helper</string>
     <string name="alert_cancel">Order can\'t be cancelled, please contact our front desk</string>
     <string name="message_cancel">Are you sure you want to cancel?</string>
+    <!--helper info-->
+    <string name="helper_name">Name: %1$s</string>
+    <string name="helper_phone">Phone: %1$s</string>
+    <string name="helper_email">Email: %1$s</string>
+    <string name="helper_gender">Gender: %1$s</string>
+    <string name="helper_charge">Charge: %1$s</string>
+    <string name="str_helpers">Helpers</string>
+    <string name="str_go_help">Go Run</string>
+    <!--run-->
+    <string name="str_run">Let\'s Run</string>
+    <string name="str_cost">%1$s RMB</string>
 
 
 </resources>

@@ -39,27 +39,27 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
 
     private PullToRefreshLayout pullToRefreshLayout;
     private PullListView pullListView;
-    private ProgressBar progressBar;
+    protected ProgressBar progressBar;
 
-    private List<Object> models = new ArrayList<>();
-    private List<OrderModel> orderModels = new ArrayList<>();
-    private OrderListAdapter orderListAdapter;
+    protected List<Object> models = new ArrayList<>();
+    protected List<OrderModel> orderModels = new ArrayList<>();
+    protected OrderListAdapter orderListAdapter;
 
     //load model
-    private AsyncTask<Object,Void,List<OrderModel>> dbLoad = null;
+    protected AsyncTask<Object,Void,List<OrderModel>> dbLoad = null;
 
     //save model
-    private AsyncTask<Object,Void,Void> dbSaveOrder = null;
+    protected AsyncTask<Object,Void,Void> dbSaveOrder = null;
 
     // refresh
     protected Handler mUiHandler = new Handler();
     protected long DELAYMILLIS = 100;
-    private int SKIP = 0;
-    private boolean onLoad = false;
+    protected int SKIP = 0;
+    protected boolean onLoad = false;
 
     private int index;
     private String status;
-    private String campusID;
+    protected String campusID;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
         parseArgument();
     }
 
-    private void parseArgument(){
+    protected void parseArgument(){
         Bundle bundle = getArguments();
         if(bundle == null)
             return;

@@ -1,6 +1,7 @@
 package com.zjut.runner.view.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -56,6 +57,13 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
     private int charge = 5;
     private String deadline = "";
     private String time;
+    private String campusObjectID;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        campusObjectID = activity.campusModel.getObjectId();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -296,7 +304,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
 
     private void updateToCloud(final String time, final String remark, final String deadline, final String title,
                                final String dest, final int charge) {
-        AVObject campusObject = AVObject.createWithoutData(Constants.TABLE_CAMPUS,activity.campusModel.getObjectId());
+        AVObject campusObject = AVObject.createWithoutData(Constants.TABLE_CAMPUS,campusObjectID);
         campusObject.fetchInBackground(new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
@@ -347,7 +355,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
 
     }
 
-    private void setButtonDisable(boolean checkInputInfo) {
+    protected void setButtonDisable(boolean checkInputInfo) {
         if (checkInputInfo) {
             bt_submit.setEnabled(true);
             bt_submit.getBackground().setAlpha(Constants.DEF_OPAQUE);

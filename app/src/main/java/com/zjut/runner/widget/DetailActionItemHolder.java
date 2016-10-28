@@ -68,6 +68,10 @@ public class DetailActionItemHolder extends BaseViewHolder {
         setView();
     }
 
+    public void changeFixedHelper(String name){
+        this.actionDesc = name;
+    }
+
     private void setView(){
         if(iconImage > 0){
             iv_icon.setImageResource(iconImage);

@@ -101,7 +101,18 @@
     <string name="str_completed">已完成</string>
     <string name="str_cancelled">取消</string>
     <string name="str_myorder_info">我的订单信息</string>
-    <string name="str_helpers">好心人</string>
+    <string name="str_helper">好心人</string>
     <string name="alert_cancel">订单不能取消，请联系客服</string>
     <string name="message_cancel">是否确定取消该订单?</string>
+    <!--helper info-->
+    <string name="helper_name">名字: %1$s</string>
+    <string name="helper_phone">手机: %1$s</string>
+    <string name="helper_email">邮箱: %1$s</string>
+    <string name="helper_gender">性别: %1$s</string>
+    <string name="helper_charge">收费: %1$s</string>
+    <string name="str_helpers">好心人</string>
+    <string name="str_go_help">跑吧</string>
+    <!--run-->
+    <string name="str_run">跑吧</string>
+    <string name="str_cost">%1$s 块</string>
 </resources>

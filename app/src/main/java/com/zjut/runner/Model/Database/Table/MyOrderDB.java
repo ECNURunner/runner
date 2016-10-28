@@ -56,6 +56,7 @@ public class MyOrderDB extends DBModel {
     public static final String HELPER_NAME = "card_name";
     public static final String HELPER_MOBILE = "acc_mobile";
     public static final String HELPER_EMAIL = "acc_email";
+    public static final String REQUEST_REPLY = "request_reply_id";
 
     @Override
     protected String getReadLogKey() {
@@ -98,9 +99,11 @@ public class MyOrderDB extends DBModel {
                         + " ("
                         + KEY_ID + " integer primary key autoincrement, "
                         + KEY_OBJECT_ID + " varchar(20), "
+                        + REQUEST_REPLY + " varchar(25) unique, "
+                        + KEY_CHARGE + " int, "
                         + HELPER_CARD_ID + " varchar(20), "
-                        + HELPER_CAMPUS_ID + " varchar(25) unique, "
-                        + HELPER_USER_ID + " varchar(25) unique, "
+                        + HELPER_CAMPUS_ID + " varchar(25), "
+                        + HELPER_USER_ID + " varchar(25), "
                         + HELPER_NAME + " varchar(60), "
                         + HELPER_MOBILE + " varchar(20), "
                         + HELPER_EMAIL + " varchar(60), "
