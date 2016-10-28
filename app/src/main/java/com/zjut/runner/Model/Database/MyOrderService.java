@@ -47,14 +47,6 @@ public class MyOrderService {
                     + MyOrderDB.KEY_OBJECT_ID
                     + " =?";
 
-    final static String getOrders =
-            "SELECT * FROM "
-                    + MyOrderDB.TABLE_MYORDER
-                    + " WHERE "
-                    + MyOrderDB.KEY_CARD_ID
-                    + " !=?";
-
-
     public Collection<OrderModel> loadMyOrderModel(final String ownerID,final String status){
         final List<OrderModel> orderModelList = new ArrayList<>();
         TableOperator tableOperator = new TableOperator() {
@@ -75,25 +67,6 @@ public class MyOrderService {
         return orderModelList;
     }
 
-    public Collection<OrderModel> loadMyOrderModel(final String ownerID){
-        final List<OrderModel> orderModelList = new ArrayList<>();
-        TableOperator tableOperator = new TableOperator() {
-            @Override
-            public void doWork(SQLiteDatabase db) {
-                net.sqlcipher.Cursor cursor = db.rawQuery(getOrders,new String[]{ownerID});;
-                if(cursor.moveToFirst()){
-                    do{
-                        OrderModel orderModel = getOrderInfo(cursor);
-                        if(orderModel != null)
-                            orderModelList.add(orderModel);
-                    }while (cursor.moveToNext());
-                }
-                cursor.close();
-            }
-        };
-        myOrderDB.readOperator(tableOperator);
-        return orderModelList;
-    }
 
     private OrderModel getOrderInfo(net.sqlcipher.Cursor cursor) {
         if(cursor == null){
@@ -242,7 +215,9 @@ public class MyOrderService {
             contentValues.put(MyOrderDB.KEY_URL,helper.getUrl());
             contentValues.put(MyOrderDB.USER_OBJECT_ID,helper.getUserObjectId());
             contentValues.put(MyOrderDB.KEY_NAME,helper.getCampusName());
-            contentValues.put(MyOrderDB.KEY_GENDER,helper.getGenderType().toString());
+            if(helper.getGenderType() != null) {
+                contentValues.put(MyOrderDB.KEY_GENDER, helper.getGenderType().toString());
+            }
             contentValues.put(MyOrderDB.KEY_MOBILE,helper.getMobile());
             contentValues.put(MyOrderDB.KEY_EMAIL,helper.getEmail());
             contentValues.put(MyOrderDB.KEY_STUDENT_ID,helper.getCampusID());
@@ -274,7 +249,9 @@ public class MyOrderService {
         contentValues.put(MyOrderDB.HELPER_NAME,helperModel.getCampusName());
         contentValues.put(MyOrderDB.HELPER_MOBILE,helperModel.getMobile());
         contentValues.put(MyOrderDB.HELPER_EMAIL,helperModel.getEmail());
-        contentValues.put(MyOrderDB.KEY_GENDER,helperModel.getGenderType().toString());
+        if(helperModel.getGenderType() != null) {
+            contentValues.put(MyOrderDB.KEY_GENDER, helperModel.getGenderType().toString());
+        }
         contentValues.put(MyOrderDB.KEY_URL,helperModel.getUrl());
         contentValues.put(MyOrderDB.REQUEST_REPLY, helperModel.getObjectId());
         contentValues.put(MyOrderDB.KEY_CHARGE,helperModel.getHelperCharge());

@@ -37,7 +37,7 @@ public class AllOrderFragment extends OrderContentFragment{
         dbLoad = new AsyncTask<Object, Void, List<OrderModel>>() {
             @Override
             protected List<OrderModel> doInBackground(Object... params) {
-                return CurrentSession.getOrderModels(activity,campusID);
+                return CurrentSession.getAllOrderModels(activity,campusID);
             }
 
             @Override
@@ -65,12 +65,14 @@ public class AllOrderFragment extends OrderContentFragment{
         innerQuery.whereNotEqualTo(Constants.PARAM_CAMPUS_ID,campusID);
         innerQuery.whereEqualTo(Constants.PARAM_STATUS, OrderStatus.PENDING.toString());
         innerQuery.whereEqualTo(Constants.PARAM_CHOSEN,false);
-        innerQuery.setSkip(skip);
-        innerQuery.setLimit(limit);
+        AVQuery<AVObject> query = AVQuery.getQuery(Constants.PARAM_REQUEST_REPLY);
+        query.whereMatchesQuery(Constants.PARAM_REQUEST_OBJ,innerQuery);
+        query.include(Constants.PARAM_CAMPUS_INFO);
+        query.include(Constants.PARAM_REQUEST_OBJ);
+        query.setSkip(skip);
+        query.setLimit(limit);
         innerQuery.orderByDescending(Constants.PARAM_CREATE);
-        innerQuery.include(Constants.PARAM_HELPER_USER);
-        innerQuery.include(Constants.PARAM_HELPER_CAMPUS);
-        innerQuery.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 progressBar.setVisibility(View.GONE);
@@ -89,6 +91,21 @@ public class AllOrderFragment extends OrderContentFragment{
         });
     }
 
+    @Override
+    protected void notifyData(List<AVObject> list) {
+        onLoadData();
+        if(onLoad){
+            onLoad = false;
+            orderModels.addAll(OrderModel.OrderModels(list,campusID));
+            refreshList();
+        }else{
+            orderModels.clear();
+            orderModels.addAll(OrderModel.OrderModels(list,campusID));
+            refreshList();
+            saveOrderToDB();
+        }
+    }
+
     protected synchronized void saveOrderToDB(){
         if(dbSaveOrder != null)
             return;
@@ -96,7 +113,7 @@ public class AllOrderFragment extends OrderContentFragment{
             @Override
             protected Void doInBackground(Object... params) {
                 for(OrderModel orderModel:orderModels){
-                    CurrentSession.putOrderModel(activity,orderModel,orderModel.getOwner());
+                    CurrentSession.putAllOrders(activity,orderModel,campusID);
                 }
                 return null;
             }

@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.zjut.runner.Model.CampusModel;
+import com.zjut.runner.Model.Database.DBController.AllOrderDBController;
 import com.zjut.runner.Model.Database.DBController.CampusDBController;
 import com.zjut.runner.Model.Database.DBController.MyOrderDBController;
 import com.zjut.runner.Model.HelperModel;
@@ -118,20 +119,27 @@ public class CurrentSession {
         return null;
     }
 
-    public static List<OrderModel> getOrderModels(Context context, String ownerID){
-
-        Collection<OrderModel> orderModels = MyOrderDBController.getOrderFromDB(context,ownerID);
-        if(orderModels != null && orderModels.size() > 0){
-            return new ArrayList<>(orderModels);
-        }
-        return null;
-    }
-
     public static void putOrderModel(Context context,OrderModel orderModel,String ownerID){
         if(orderModel == null){
             return;
         }
         MyOrderDBController.saveOrderToDB(context,orderModel,ownerID);
+    }
+
+    public static void putAllOrders(Context context,OrderModel orderModel,String studentID){
+        if(orderModel == null){
+            return;
+        }
+        AllOrderDBController.saveOrderToDB(context,orderModel,studentID);
+    }
+
+    public static List<OrderModel> getAllOrderModels(Context context, String ownerID){
+
+        Collection<OrderModel> orderModels = AllOrderDBController.getOrderFromDB(context,ownerID);
+        if(orderModels != null && orderModels.size() > 0){
+            return new ArrayList<>(orderModels);
+        }
+        return null;
     }
 
     public static List<HelperModel> getHelperModels(Context context, String objectID){

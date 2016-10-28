@@ -15,6 +15,10 @@ import android.view.Display;
 import android.view.View;
 import android.widget.EditText;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.zjut.runner.R;
+
 import java.util.regex.Pattern;
 
 /**
@@ -123,6 +127,23 @@ public class GeneralUtils {
             MLog.e(TAG, e);
         }
         return false;
+    }
+
+    /**
+     * return display option
+     * @param context
+     *
+     */
+    public static DisplayImageOptions getOptions(){
+        return new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_usericon_default)
+                .showImageForEmptyUri(R.drawable.ic_usericon_default)
+                .showImageOnFail(R.drawable.ic_usericon_default)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
 
 }

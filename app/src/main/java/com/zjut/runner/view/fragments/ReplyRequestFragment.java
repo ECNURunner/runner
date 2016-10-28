@@ -17,6 +17,7 @@ import com.zjut.runner.Model.OrderModel;
 import com.zjut.runner.Model.OrderStatus;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
+import com.zjut.runner.util.StringUtil;
 import com.zjut.runner.widget.MaterialDialog;
 
 
@@ -86,14 +87,14 @@ public class ReplyRequestFragment extends RequestInfoFragment {
         final TextView tv_charge = (TextView) view.findViewById(R.id.tv_charge);
         final MaterialDialog materialDialog = new MaterialDialog(activity)
                 .setView(view);
-        charge = 5;
-        tv_charge.setText(getString(R.string.str_charge,"5 ")+ getString(R.string.str_currency));
+        charge = orderModel.getCharge();
+        seekBar.setProgress(charge);
+        tv_charge.setText(getString(R.string.helper_charge, StringUtil.convertIntegerToString(charge)));
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 charge = progress;
-                tv_charge.setText(getString(R.string.str_charge,String.valueOf(progress))+ " " +
-                        getString(R.string.str_currency));
+                tv_charge.setText(getString(R.string.helper_charge,String.valueOf(progress)));
             }
 
             @Override

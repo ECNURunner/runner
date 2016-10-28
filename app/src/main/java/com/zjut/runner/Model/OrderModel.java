@@ -3,6 +3,7 @@ package com.zjut.runner.Model;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.zjut.runner.util.Constants;
+import com.zjut.runner.util.StringUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,14 +24,29 @@ public class OrderModel implements Serializable{
     private int charge;
     private int finalCharge;
     private CampusModel helper;
+    private CampusModel ownerModel;
+    private String ownerUserID;
     private OrderStatus status;
     private String objectID;
     private int helpers;
     private String owner;
 
-    public OrderModel(String remark, boolean isChosen, String orderDate, String deadline,String title,
+    public OrderModel(String remark, String orderDate, String deadline, String title, String dest,
+                      int charge, CampusModel ownerModel, String objectID,int helpers) {
+        this.remark = remark;
+        this.orderDate = orderDate;
+        this.deadline = deadline;
+        this.title = title;
+        this.dest = dest;
+        this.charge = charge;
+        this.ownerModel = ownerModel;
+        this.objectID = objectID;
+        this.helpers = helpers;
+    }
+
+    public OrderModel(String remark, boolean isChosen, String orderDate, String deadline, String title,
                       String dest, int charge, int finalCharge,
-                      CampusModel helper, OrderStatus status, String objectID,int helpers) {
+                      CampusModel helper, OrderStatus status, String objectID, int helpers) {
         this.remark = remark;
         this.isChosen = isChosen;
         this.orderDate = orderDate;
@@ -43,6 +59,22 @@ public class OrderModel implements Serializable{
         this.deadline = deadline;
         this.objectID = objectID;
         this.helpers = helpers;
+    }
+
+    public CampusModel getOwnerModel() {
+        return ownerModel;
+    }
+
+    public void setOwnerModel(CampusModel ownerModel) {
+        this.ownerModel = ownerModel;
+    }
+
+    public String getOwnerUserID() {
+        return ownerUserID;
+    }
+
+    public void setOwnerUserID(String ownerUserID) {
+        this.ownerUserID = ownerUserID;
     }
 
     public String getOwner() {
@@ -174,6 +206,34 @@ public class OrderModel implements Serializable{
                     finalCharge,helper,status,objectID,numHelpers);
             orderModel.setOwner(owner);
             orderModels.add(orderModel);
+        }
+        return orderModels;
+    }
+
+    public static List<OrderModel> OrderModels(List<AVObject> avObjects,String campusID){
+        if(avObjects == null)
+            return null;
+        AVObject avObject,campusObject;
+        List<OrderModel> orderModels = new ArrayList<>();
+        for(AVObject avObj:avObjects){
+            avObject = avObj.getAVObject(Constants.PARAM_REQUEST_OBJ);
+            campusObject = avObject.getAVObject(Constants.PARAM_CAMPUS_INFO);
+            String studentID = campusObject.getString(Constants.PARAM_ID);
+            if(!studentID.equals(campusID)) {
+                String objectID = avObject.getObjectId();
+                String remark = avObject.getString(Constants.PARAM_REMARK);
+                String orderDate = avObject.getString(Constants.PARAM_ORDER_DATE);
+                String deadline = avObject.getString(Constants.PARAM_DEADLINE);
+                String title = avObject.getString(Constants.PARAM_TITLE);
+                String dest = avObject.getString(Constants.PARAM_DEST);
+                int charge = (int) avObject.getNumber(Constants.PARAM_CHARGE);
+                AVObject ownerCampus = avObject.getAVObject(Constants.PARAM_OWNER_CAMPUS);
+                AVUser ownerUser = avObject.getAVUser(Constants.PARAM_OWNER_USER);
+                CampusModel owner = CampusModel.setCampusModel(ownerUser);
+                CampusModel ownerModel = CampusModel.refreshCampus(owner, ownerCampus);
+                int numHelpers = (int) avObject.getNumber(Constants.PARAM_NUM_HELPER);
+                orderModels.add(new OrderModel(remark,orderDate,deadline,title,dest,charge,ownerModel,objectID,numHelpers));
+            }
         }
         return orderModels;
     }

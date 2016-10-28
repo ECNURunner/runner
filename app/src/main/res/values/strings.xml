@@ -117,7 +117,7 @@
     <string name="helper_phone">Phone: %1$s</string>
     <string name="helper_email">Email: %1$s</string>
     <string name="helper_gender">Gender: %1$s</string>
-    <string name="helper_charge">Charge: %1$s</string>
+    <string name="helper_charge">Charge: %1$s RMB</string>
     <string name="str_helpers">Helpers</string>
     <string name="str_go_help">Go Run</string>
     <!--run-->

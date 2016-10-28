@@ -58,7 +58,9 @@ public class HelperAdapter extends RecyclerView.Adapter<HelperAdapter.ViewHolder
         viewHolder.tv_name.setText(helperModel.getCampusName());
         viewHolder.tv_charge.setText(context.getString((R.string.str_cost),
                 StringUtil.convertIntegerToString(helperModel.getHelperCharge())));
-        viewHolder.tv_gender.setText(helperModel.getGenderType().toString());
+        if(helperModel.getGenderType() != null) {
+            viewHolder.tv_gender.setText(helperModel.getGenderType().toString());
+        }
         ImageLoader.getInstance().displayImage(helperModel.getUrl(),viewHolder.iv_user,options);
     }
 

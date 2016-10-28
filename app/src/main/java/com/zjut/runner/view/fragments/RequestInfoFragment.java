@@ -16,7 +16,9 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -51,6 +53,8 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
     protected OrderModel orderModel;
 
     private List<HelperModel> helperModels = new ArrayList<>();
+    private AVObject campusObj;
+    private AVObject campusUser;
 
     private LinearLayout ll_wrap;
 
@@ -97,16 +101,20 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
     }
 
     protected void loadHelpers(){
-        if(orderModel.getHelpers() > 0){
-            progressBar.setVisibility(View.VISIBLE);
-            AddViewHelperClick();
-            loadHelpersInfo();
+        if(orderModel.getHelpers() > 0) {
+            if(orderModel.isChosen()) {
+                AddViewHelperClick(orderModel.getHelper().getCampusName());
+            }else{
+                progressBar.setVisibility(View.VISIBLE);
+                loadHelpersInfo();
+                AddViewHelperClick(StringUtil.convertIntegerToString(orderModel.getHelpers()));
+            }
         }
     }
 
-    private void AddViewHelperClick(){
+    private void AddViewHelperClick(String name){
         detailActionItemHolder = new DetailActionItemHolder(activity,0,
-                R.string.str_helper,StringUtil.convertIntegerToString(orderModel.getHelpers()), ActionType.HELPER,true,this);
+                R.string.str_helper,name, ActionType.HELPER,true,this);
         View root = detailActionItemHolder.getRootView();
         addView(root);
         setMarginTop(GeneralUtils.getDimenPx(activity, R.dimen.margin_standard),root);
@@ -280,10 +288,10 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         });
     }
 
-    protected void updateStatusToCloud(HelperModel helperModel){
+    protected void updateStatusToCloud(HelperModel helperModel,AVObject campusObj,AVObject campusUser){
         AVObject request = AVObject.createWithoutData(Constants.TABLE_REQUEST,orderModel.getObjectID());
-        request.put(Constants.PARAM_HELPER_USER,helperModel.getUserObjectId());
-        request.put(Constants.PARAM_HELPER_CAMPUS,helperModel.getObjectId());
+        request.put(Constants.PARAM_HELPER_USER,campusUser);
+        request.put(Constants.PARAM_HELPER_CAMPUS,campusObj);
         request.put(Constants.PARAM_CHOSEN,true);
         request.put(Constants.PARAM_FINAL_CHARGE,helperModel.getHelperCharge());
         request.saveInBackground(new SaveCallback() {
@@ -292,6 +300,32 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
                 progressBar.setVisibility(View.GONE);
                 if(e == null){
                     successSubmit();
+                }else{
+                    failSubmit();
+                }
+            }
+        });
+    }
+
+    private void getHelperObjects(final HelperModel helperModel){
+        final AVObject campusObject = AVObject.createWithoutData(Constants.TABLE_CAMPUS,helperModel.getObjectId());
+        campusObject.fetchInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                if(e == null){
+                    campusObj = avObject;
+                    final AVObject avUser = AVUser.createWithoutData(Constants.TABLE_USER,helperModel.getUserObjectId());
+                    avUser.fetchInBackground(new GetCallback<AVObject>() {
+                        @Override
+                        public void done(AVObject avObject, AVException e) {
+                            if(e == null){
+                                campusUser = avObject;
+                                updateStatusToCloud(helperModel,campusObj,campusUser);
+                            }else{
+                                failSubmit();
+                            }
+                        }
+                    });
                 }else{
                     failSubmit();
                 }
@@ -375,7 +409,9 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         tv_name.setText(getString(R.string.helper_name,campusModel.getCampusName()));
         tv_phone.setText(getString(R.string.helper_phone,campusModel.getMobile()));
         tv_email.setText(getString(R.string.helper_email,campusModel.getEmail()));
-        tv_gender.setText(getString(R.string.helper_gender,campusModel.getGenderType().toString()));
+        if(campusModel.getGenderType() != null) {
+            tv_gender.setText(getString(R.string.helper_gender, campusModel.getGenderType().toString()));
+        }
         tv_charge.setText(getString(R.string.helper_charge,StringUtil.convertIntegerToString(orderModel.getFinalCharge())));
         materialDialog.setPositiveButton(getString(R.string.button_ok), new View.OnClickListener() {
             @Override
@@ -403,7 +439,7 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
             HelperModel helperModel = (HelperModel) selectedItem;
             detailActionItemHolder.changeFixedHelper(helperModel.getCampusName());
             progressBar.setVisibility(View.VISIBLE);
-            updateStatusToCloud(helperModel);
+            getHelperObjects(helperModel);
         }
     }
 }

@@ -38,13 +38,6 @@ public class MyOrderDBController {
         return myOrderService.loadMyOrderModel(ownerID,status);
     }
 
-    public static Collection<OrderModel> getOrderFromDB(Context context,String ownerID){
-        MyOrderService myOrderService = DBController.getMyOrderService(context);
-        if(myOrderService == null){
-            return null;
-        }
-        return myOrderService.loadMyOrderModel(ownerID);
-    }
 
     public static Collection<HelperModel> getHelperFromDB(Context context,String requestID){
         MyOrderService myOrderService = DBController.getMyOrderService(context);
