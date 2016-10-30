@@ -19,5 +19,30 @@
         android:progress="5"
         android:layout_marginBottom="@dimen/margin_standard"
         />
+    <View
+        android:id="@+id/detail_item_line"
+        android:layout_marginTop="@dimen/margin_standard"
+        style="@style/grey_line_style"
+        android:layout_marginBottom="@dimen/margin_standard"/>
+
+    <com.zjut.runner.widget.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/iv_helper"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:civ_border_width="@dimen/boarder_width"
+        app:civ_border_color="@color/line_gray"
+        />
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/helper_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tv_gender"
+        style="@style/helper_info"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
 
 </LinearLayout>

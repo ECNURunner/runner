@@ -115,6 +115,35 @@ public class CampusModel extends AccountModel{
         return campusModel;
     }
 
+    public static CampusModel setCampusModel(AVObject avUser){
+        if(avUser == null)
+            return null;
+        CampusModel campusModel = new CampusModel();
+        String userObjectId = avUser.getObjectId();
+        campusModel.setUserObjectId(userObjectId);
+        String email = avUser.getString(Constants.PARAM_EMAIL);
+        if(email != null){
+            campusModel.setEmail(email);
+        }
+        String phone = avUser.getString(Constants.PARAM_PHONE_NUMBER);
+        if(phone != null){
+            campusModel.setMobile(phone);
+        }
+        AVFile urlProfile = avUser.getAVFile(Constants.PARAM_PIC_URL);
+        if(urlProfile != null){
+            campusModel.setUrl(urlProfile.getThumbnailUrl(false,100,100));
+        }
+        String genderType = avUser.getString(Constants.PARAM_GENDER);
+        if(genderType != null){
+            campusModel.setGenderType(GenderType.getType(genderType));
+        }
+        String campusID = avUser.getString(Constants.PARAM_ID);
+        if(!StringUtil.isNull(campusID)){
+            campusModel.setCampusID(campusID);
+        }
+        return campusModel;
+    }
+
     public void setBalance(float cardBalance) {
         this.balance = cardBalance;
     }

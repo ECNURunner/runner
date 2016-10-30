@@ -69,6 +69,8 @@ public class AllOrderService {
         String remark = cursor.getString(
                 cursor.getColumnIndex(MyOrderDB.KEY_REMARK));
 
+        String replyID = cursor.getString(cursor.getColumnIndex(OtherOrderDB.KEY_REPLY_ID));
+
         String orderDate = cursor.getString(cursor.getColumnIndex(OtherOrderDB.KEY_ORDER_DATE));
 
         String deadline = cursor.getString(cursor.getColumnIndex(OtherOrderDB.KEY_DEADLINE));
@@ -100,7 +102,8 @@ public class AllOrderService {
         int helperNum = cursor.getInt(cursor.getColumnIndex(OtherOrderDB.KEY_NUM_HELPER));
 
         MLog.i("All Order", "FROM DB");
-        return new OrderModel(remark,orderDate,deadline,title,dest,charge,owner,requestObjectID,helperNum);
+        return new OrderModel(remark,orderDate,deadline,title,dest,charge,owner,requestObjectID,
+                helperNum,OrderStatus.PENDING,replyID);
     }
 
     public boolean SaveOrderToDB(final OrderModel orderModel, final String ownerID){
@@ -136,6 +139,7 @@ public class AllOrderService {
         contentValues.put(OtherOrderDB.KEY_MOBILE,owner.getMobile());
         contentValues.put(OtherOrderDB.KEY_EMAIL,owner.getEmail());
         contentValues.put(OtherOrderDB.KEY_NAME,owner.getCampusName());
+        contentValues.put(OtherOrderDB.KEY_REPLY_ID,orderModel.getReplyRequestObjectID());
         db.insertWithOnConflict(OtherOrderDB.TABLE_ORDER, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
         MLog.i("all order", " insert");
         return true;

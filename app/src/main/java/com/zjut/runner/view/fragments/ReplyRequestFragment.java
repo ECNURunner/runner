@@ -10,14 +10,18 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.Model.OrderModel;
-import com.zjut.runner.Model.OrderStatus;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
+import com.zjut.runner.util.GeneralUtils;
 import com.zjut.runner.util.StringUtil;
+import com.zjut.runner.widget.CircleImageView;
 import com.zjut.runner.widget.MaterialDialog;
 
 
@@ -32,6 +36,7 @@ public class ReplyRequestFragment extends RequestInfoFragment {
     private AVObject requestObj;
     private AVUser userObj;
     private AVObject campusObj;
+    private CampusModel user;
 
     @Override
     protected void parseArgument() {
@@ -74,22 +79,52 @@ public class ReplyRequestFragment extends RequestInfoFragment {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_sub:
-                showDialog();
+                //showDialog();
+                fetchObj();
                 break;
             default:
                 super.onClick(v);
         }
     }
 
+    private void fetchObj(){
+        AVQuery<AVObject> avQuery = new AVQuery<>(Constants.TABLE_REQUEST);
+        avQuery.include(Constants.PARAM_OWNER_USER);
+        avQuery.include(Constants.PARAM_OWNER_CAMPUS);
+        avQuery.getInBackground(orderModel.getObjectID(), new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                if(e == null){
+                    requestObj = avObject;
+                    AVObject ownerUser = avObject.getAVObject(Constants.PARAM_OWNER_USER);
+                    CampusModel userObj = CampusModel.setCampusModel(ownerUser);
+                    ownerUser = avObject.getAVObject(Constants.PARAM_OWNER_CAMPUS);
+                    user = CampusModel.refreshCampus(userObj,ownerUser);
+                    showDialog();
+                }else{
+                    failSubmit();
+                }
+            }
+        });
+    }
+
     private void showDialog(){
         final View view = activity.getLayoutInflater().inflate(R.layout.dialog_slider, null);
         final AppCompatSeekBar seekBar = (AppCompatSeekBar) view.findViewById(R.id.seekbar);
         final TextView tv_charge = (TextView) view.findViewById(R.id.tv_charge);
+        final TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
+        final TextView tv_gender = (TextView) view.findViewById(R.id.tv_gender);
+        final CircleImageView iv_user = (CircleImageView) view.findViewById(R.id.iv_helper);
         final MaterialDialog materialDialog = new MaterialDialog(activity)
                 .setView(view);
         charge = orderModel.getCharge();
         seekBar.setProgress(charge);
         tv_charge.setText(getString(R.string.helper_charge, StringUtil.convertIntegerToString(charge)));
+        if(user.getGenderType() != null){
+            tv_gender.setText(user.getGenderType().toString());
+        }
+        tv_name.setText(user.getCampusName());
+        ImageLoader.getInstance().displayImage(user.getUrl(),iv_user, GeneralUtils.getOptions());
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -125,24 +160,13 @@ public class ReplyRequestFragment extends RequestInfoFragment {
     }
 
     private void submitHelperToCloud(){
-        final AVObject request = AVObject.createWithoutData(Constants.TABLE_REQUEST,orderModel.getObjectID());
-        request.fetchInBackground(new GetCallback<AVObject>() {
+        AVObject campus = AVObject.createWithoutData(Constants.TABLE_CAMPUS,campusID);
+        campus.fetchInBackground(new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
                 if(e == null){
-                    requestObj = avObject;
-                    AVObject campus = AVObject.createWithoutData(Constants.TABLE_CAMPUS,campusID);
-                    campus.fetchInBackground(new GetCallback<AVObject>() {
-                        @Override
-                        public void done(AVObject avObject, AVException e) {
-                            if(e == null){
-                                campusObj = avObject;
-                                putToRequestReply();
-                            }else{
-                                failSubmit();
-                            }
-                        }
-                    });
+                    campusObj = avObject;
+                    putToRequestReply();
                 }else{
                     failSubmit();
                 }
@@ -151,17 +175,22 @@ public class ReplyRequestFragment extends RequestInfoFragment {
     }
 
     private void putToRequestReply(){
-        AVObject reply = new AVObject(Constants.PARAM_REQUEST_REPLY);
+        AVObject reply;
+        if(orderModel.getHelpers() > 0) {
+            reply = new AVObject(Constants.PARAM_REQUEST_REPLY);
+        }else{
+            reply = AVObject.createWithoutData(Constants.PARAM_REQUEST_REPLY,orderModel.getReplyRequestObjectID());
+        }
         reply.put(Constants.PARAM_REQUEST_OBJ, requestObj);
-        reply.put(Constants.PARAM_CAMPUS_INFO,campusObj);
+        reply.put(Constants.PARAM_CAMPUS_INFO, campusObj);
         reply.put(Constants.PARAM_USER_INFO, userObj);
-        reply.put(Constants.PARAM_CHARGE,charge);
+        reply.put(Constants.PARAM_CHARGE, charge);
         reply.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
-                if(e == null){
+                if (e == null) {
                     incrementHelper();
-                }else{
+                } else {
                     failSubmit();
                 }
             }

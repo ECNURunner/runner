@@ -65,6 +65,8 @@ public class AllOrderFragment extends OrderContentFragment{
         innerQuery.whereNotEqualTo(Constants.PARAM_CAMPUS_ID,campusID);
         innerQuery.whereEqualTo(Constants.PARAM_STATUS, OrderStatus.PENDING.toString());
         innerQuery.whereEqualTo(Constants.PARAM_CHOSEN,false);
+        innerQuery.include(Constants.PARAM_OWNER_USER);
+        innerQuery.include(Constants.PARAM_OWNER_CAMPUS);
         AVQuery<AVObject> query = AVQuery.getQuery(Constants.PARAM_REQUEST_REPLY);
         query.whereMatchesQuery(Constants.PARAM_REQUEST_OBJ,innerQuery);
         query.include(Constants.PARAM_CAMPUS_INFO);

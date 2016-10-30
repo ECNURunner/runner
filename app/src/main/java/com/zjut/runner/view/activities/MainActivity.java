@@ -49,9 +49,7 @@ import com.zjut.runner.util.StringUtil;
 import com.zjut.runner.util.ToastUtil;
 import com.zjut.runner.view.fragments.BaseFragment;
 import com.zjut.runner.view.fragments.MainPageFragment;
-import com.zjut.runner.view.fragments.RunnerFragment;
 import com.zjut.runner.view.fragments.UserProfileFragment;
-import com.zjut.runner.widget.BaseViewHolder;
 import com.zjut.runner.widget.UserHeaderHolder;
 
 import java.io.FileNotFoundException;

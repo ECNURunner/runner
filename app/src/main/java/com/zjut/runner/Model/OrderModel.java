@@ -30,9 +30,10 @@ public class OrderModel implements Serializable{
     private String objectID;
     private int helpers;
     private String owner;
+    private String replyRequestObjectID;
 
     public OrderModel(String remark, String orderDate, String deadline, String title, String dest,
-                      int charge, CampusModel ownerModel, String objectID,int helpers) {
+                      int charge, CampusModel ownerModel, String objectID,int helpers,OrderStatus status,String getReplyID) {
         this.remark = remark;
         this.orderDate = orderDate;
         this.deadline = deadline;
@@ -42,6 +43,8 @@ public class OrderModel implements Serializable{
         this.ownerModel = ownerModel;
         this.objectID = objectID;
         this.helpers = helpers;
+        this.status = status;
+        this.replyRequestObjectID = getReplyID;
     }
 
     public OrderModel(String remark, boolean isChosen, String orderDate, String deadline, String title,
@@ -181,6 +184,14 @@ public class OrderModel implements Serializable{
         this.objectID = objectID;
     }
 
+    public String getReplyRequestObjectID() {
+        return replyRequestObjectID;
+    }
+
+    public void setReplyRequestObjectID(String replyRequestObjectID) {
+        this.replyRequestObjectID = replyRequestObjectID;
+    }
+
     public static List<OrderModel> setOrderModels(List<AVObject> avObjects){
         if(avObjects == null)
             return null;
@@ -216,10 +227,15 @@ public class OrderModel implements Serializable{
         AVObject avObject,campusObject;
         List<OrderModel> orderModels = new ArrayList<>();
         for(AVObject avObj:avObjects){
+            String studentID = "";
             avObject = avObj.getAVObject(Constants.PARAM_REQUEST_OBJ);
-            campusObject = avObject.getAVObject(Constants.PARAM_CAMPUS_INFO);
-            String studentID = campusObject.getString(Constants.PARAM_ID);
-            if(!studentID.equals(campusID)) {
+            campusObject = avObj.getAVObject(Constants.PARAM_CAMPUS_INFO);
+            int numHelpers = (int) avObject.getNumber(Constants.PARAM_NUM_HELPER);
+            if(campusObject != null) {
+                studentID = campusObject.getString(Constants.PARAM_ID);
+            }
+            if(!studentID.equals(campusID) || numHelpers == 0) {
+                String replyRequestID = avObj.getObjectId();
                 String objectID = avObject.getObjectId();
                 String remark = avObject.getString(Constants.PARAM_REMARK);
                 String orderDate = avObject.getString(Constants.PARAM_ORDER_DATE);
@@ -229,10 +245,11 @@ public class OrderModel implements Serializable{
                 int charge = (int) avObject.getNumber(Constants.PARAM_CHARGE);
                 AVObject ownerCampus = avObject.getAVObject(Constants.PARAM_OWNER_CAMPUS);
                 AVUser ownerUser = avObject.getAVUser(Constants.PARAM_OWNER_USER);
+                OrderStatus status = OrderStatus.getType(avObject.getString(Constants.PARAM_STATUS));
                 CampusModel owner = CampusModel.setCampusModel(ownerUser);
                 CampusModel ownerModel = CampusModel.refreshCampus(owner, ownerCampus);
-                int numHelpers = (int) avObject.getNumber(Constants.PARAM_NUM_HELPER);
-                orderModels.add(new OrderModel(remark,orderDate,deadline,title,dest,charge,ownerModel,objectID,numHelpers));
+                orderModels.add(new OrderModel(remark,orderDate,deadline,title,dest,charge,
+                        ownerModel,objectID,numHelpers,status,replyRequestID));
             }
         }
         return orderModels;

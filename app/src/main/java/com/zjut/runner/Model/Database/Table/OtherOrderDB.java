@@ -13,7 +13,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 public class OtherOrderDB extends DBModel {
 
     private static OtherOrderDB instance;
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
     private static final String DBNAME = "otherorder.db";
 
     public OtherOrderDB(Context context){
@@ -30,6 +30,7 @@ public class OtherOrderDB extends DBModel {
 
     public static final String KEY_ID = "_id";
     public static final String KEY_OBJECT_ID = "_objectID";
+    public static final String KEY_REPLY_ID = "_replyID";
     public static final String KEY_STUDENT_ID = "_studentID";
     public static final String KEY_REMARK = "_remark";
     public static final String KEY_ORDER_DATE = "_orderDate";
@@ -51,7 +52,8 @@ public class OtherOrderDB extends DBModel {
         db.execSQL( "CREATE TABLE IF NOT EXISTS " + TABLE_ORDER
                 + " ("
                 + KEY_ID + " integer primary key autoincrement, "
-                + KEY_OBJECT_ID + " varchar(25) unique, "
+                + KEY_OBJECT_ID + " varchar(25), "
+                + KEY_REPLY_ID + " varchar(25) unique,"
                 + KEY_OWNER_USERID + " varchar(25), "
                 + KEY_REMARK + " varchar(100), "
                 + KEY_CHARGE + " int, "

@@ -318,7 +318,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
     }
 
     private void putRequest(AVObject campus,String time,String remark,String deadline,String title,String dest,int charge){
-         AVObject repair = new AVObject(Constants.TABLE_REQUEST);
+        final AVObject repair = new AVObject(Constants.TABLE_REQUEST);
         repair.put(Constants.PARAM_REMARK, remark);
         repair.put(Constants.PARAM_ORDER_DATE, time);
         repair.put(Constants.PARAM_DEADLINE, deadline);
@@ -332,13 +332,40 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
             @Override
             public void done(AVException e) {
                 if (e == null) {
-                    successSubmit();
+                    //successSubmit();
+                    putToReplyRequest(repair.getObjectId());
                 } else {
                     failSubmit();
                 }
             }
         });
     }
+
+    private void putToReplyRequest(String objectID){
+        AVObject request = AVObject.createWithoutData(Constants.TABLE_REQUEST,objectID);
+        request.fetchInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                if(e == null){
+                    AVObject reply = new AVObject(Constants.PARAM_REQUEST_REPLY);
+                    reply.put(Constants.PARAM_REQUEST_OBJ,avObject);
+                    reply.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if(e == null){
+                                successSubmit();
+                            }else{
+                                failSubmit();
+                            }
+                        }
+                    });
+                }else{
+                    failSubmit();
+                }
+            }
+        });
+    }
+
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {

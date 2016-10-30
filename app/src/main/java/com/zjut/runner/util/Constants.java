@@ -97,6 +97,8 @@ public class Constants {
     public static final String PARAM_USER_INFO = "userInfo";
     public static final String PARAM_OBJECT_ID = "objectId";
     public static final String TABLE_USER = "_User";
+    public static final String PARAM_EMAIL = "email";
+    public static final String PARAM_PHONE_NUMBER = "mobilePhoneNumber";
 
 
 }
