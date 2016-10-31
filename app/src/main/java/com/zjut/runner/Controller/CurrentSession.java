@@ -8,6 +8,7 @@ import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.Model.Database.DBController.AllOrderDBController;
 import com.zjut.runner.Model.Database.DBController.CampusDBController;
 import com.zjut.runner.Model.Database.DBController.MyOrderDBController;
+import com.zjut.runner.Model.Database.DBController.RunDBController;
 import com.zjut.runner.Model.HelperModel;
 import com.zjut.runner.Model.OrderModel;
 
@@ -119,11 +120,27 @@ public class CurrentSession {
         return null;
     }
 
+    public static List<OrderModel> getRunModels(Context context, String ownerID,String status){
+
+        Collection<OrderModel> orderModels = RunDBController.getRunFromDB(context,ownerID,status);
+        if(orderModels != null && orderModels.size() > 0){
+            return new ArrayList<>(orderModels);
+        }
+        return null;
+    }
+
     public static void putOrderModel(Context context,OrderModel orderModel,String ownerID){
         if(orderModel == null){
             return;
         }
         MyOrderDBController.saveOrderToDB(context,orderModel,ownerID);
+    }
+
+    public static void putRunModel(Context context,OrderModel orderModel,String ownerID){
+        if(orderModel == null){
+            return;
+        }
+        RunDBController.saveRunToDB(context,orderModel,ownerID);
     }
 
     public static void putAllOrders(Context context,OrderModel orderModel,String studentID){
@@ -157,4 +174,6 @@ public class CurrentSession {
         }
         MyOrderDBController.saveHelpersToDB(context,helperModel);
     }
+
+
 }

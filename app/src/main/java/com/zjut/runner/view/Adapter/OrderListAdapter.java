@@ -69,7 +69,7 @@ public class OrderListAdapter extends BaseAdapter {
         }
         viewHolder.tv_title.setText(orderModel.getTitle());
         viewHolder.tv_remark.setText(orderModel.getRemark());
-        setBackgroundDate(orderModel, viewHolder);
+        setBackgroundDate(context,orderModel, viewHolder);
         String[] dateTime = orderModel.getOrderDate().split("\\s+");
         String date = dateTime[0];
         String time = dateTime[1];
@@ -81,7 +81,7 @@ public class OrderListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void setBackgroundDate(OrderModel orderModel,ViewHolder viewHolder) {
+    protected void setBackgroundDate(Context context,OrderModel orderModel,ViewHolder viewHolder) {
         switch (orderModel.getStatus()){
             case PENDING:
                 viewHolder.rl_date.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));

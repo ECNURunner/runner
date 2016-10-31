@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -238,6 +239,9 @@ public class MaterialDialog {
 
 
         private Builder() {
+            if (Looper.myLooper() == null) {
+                Looper.prepare();
+            }
             mAlertDialog = new AlertDialog.Builder(mContext).create();
             mAlertDialog.show();
 

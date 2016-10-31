@@ -46,6 +46,7 @@ public class ReplyRequestFragment extends RequestInfoFragment {
         orderModel = (OrderModel) bundle.getSerializable(Constants.PARAM_ORDER);
         campusID = activity.campusModel.getObjectId();
         userObj = AVUser.getCurrentUser();
+        user = orderModel.getOwnerModel();
     }
 
     @Override
@@ -57,8 +58,6 @@ public class ReplyRequestFragment extends RequestInfoFragment {
         setEnable(false);
         setButtonDisable(true);
     }
-
-
 
     @Override
     protected void loadHelpers() {
@@ -79,15 +78,15 @@ public class ReplyRequestFragment extends RequestInfoFragment {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_sub:
-                //showDialog();
-                fetchObj();
+                showDialog();
+                //fetchObj();
                 break;
             default:
                 super.onClick(v);
         }
     }
 
-    private void fetchObj(){
+    /*private void fetchObj(){
         AVQuery<AVObject> avQuery = new AVQuery<>(Constants.TABLE_REQUEST);
         avQuery.include(Constants.PARAM_OWNER_USER);
         avQuery.include(Constants.PARAM_OWNER_CAMPUS);
@@ -106,7 +105,7 @@ public class ReplyRequestFragment extends RequestInfoFragment {
                 }
             }
         });
-    }
+    }*/
 
     private void showDialog(){
         final View view = activity.getLayoutInflater().inflate(R.layout.dialog_slider, null);
@@ -181,16 +180,31 @@ public class ReplyRequestFragment extends RequestInfoFragment {
         }else{
             reply = AVObject.createWithoutData(Constants.PARAM_REQUEST_REPLY,orderModel.getReplyRequestObjectID());
         }
-        reply.put(Constants.PARAM_REQUEST_OBJ, requestObj);
-        reply.put(Constants.PARAM_CAMPUS_INFO, campusObj);
-        reply.put(Constants.PARAM_USER_INFO, userObj);
-        reply.put(Constants.PARAM_CHARGE, charge);
-        reply.saveInBackground(new SaveCallback() {
+        fetchRequestObj(reply);
+    }
+
+    private void fetchRequestObj(final AVObject reply){
+        AVObject campus = AVObject.createWithoutData(Constants.TABLE_REQUEST,orderModel.getObjectID());
+        campus.fetchInBackground(new GetCallback<AVObject>() {
             @Override
-            public void done(AVException e) {
-                if (e == null) {
-                    incrementHelper();
-                } else {
+            public void done(AVObject avObject, AVException e) {
+                if(e == null){
+                    requestObj = avObject;
+                    reply.put(Constants.PARAM_REQUEST_OBJ, requestObj);
+                    reply.put(Constants.PARAM_CAMPUS_INFO, campusObj);
+                    reply.put(Constants.PARAM_USER_INFO, userObj);
+                    reply.put(Constants.PARAM_CHARGE, charge);
+                    reply.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if (e == null) {
+                                incrementHelper();
+                            } else {
+                                failSubmit();
+                            }
+                        }
+                    });
+                }else{
                     failSubmit();
                 }
             }
@@ -199,7 +213,7 @@ public class ReplyRequestFragment extends RequestInfoFragment {
 
     private void incrementHelper(){
         AVObject request = AVObject.createWithoutData(Constants.TABLE_REQUEST,orderModel.getObjectID());
-        request.put(Constants.PARAM_NUM_HELPER, 1);
+        request.increment(Constants.PARAM_NUM_HELPER, 1);
         request.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {

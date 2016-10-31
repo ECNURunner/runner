@@ -27,15 +27,15 @@ import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectListener;
 
 public class MyOrderFragment extends BaseFragment {
 
-    private PagerBottomTabLayout pagerBottomTabLayout;
-    private Controller controller;
+    protected PagerBottomTabLayout pagerBottomTabLayout;
+    protected Controller controller;
 
     @Override
     public void changeTitle() {
         activity.changeTitle(R.string.str_myorder);
     }
 
-    private void initFragment(int index)
+    protected void initFragment(int index)
     {
         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.frameLayout,createFragment(0));
@@ -48,7 +48,7 @@ public class MyOrderFragment extends BaseFragment {
         transaction.commit();
     }
 
-    private OrderContentFragment createFragment(int index){
+    protected OrderContentFragment createFragment(int index){
         OrderContentFragment orderContentFragment = new OrderContentFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.PARAM_NO,index);

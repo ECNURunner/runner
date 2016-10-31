@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ import com.zjut.runner.util.GeneralUtils;
 import com.zjut.runner.util.MLog;
 import com.zjut.runner.util.ResourceUtil;
 import com.zjut.runner.util.StringUtil;
+import com.zjut.runner.util.ToastUtil;
 import com.zjut.runner.widget.CircleImageView;
 import com.zjut.runner.widget.DetailActionItemHolder;
 import com.zjut.runner.widget.MaterialDialog;
@@ -58,7 +60,7 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
 
     private LinearLayout ll_wrap;
 
-    private  DetailActionItemHolder detailActionItemHolder;
+    protected   DetailActionItemHolder detailActionItemHolder;
 
     //load model
     private AsyncTask<Object,Void,List<HelperModel>> dbLoad = null;
@@ -66,7 +68,19 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
     //save model
     private AsyncTask<Object,Void,Void> dbSave = null;
 
-    private DisplayImageOptions options;
+    private final Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 1:
+                    successSubmit();
+                    break;
+                case 2:
+                    failSubmit();
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,15 +93,6 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         if(bundle == null)
             return;
         orderModel = (OrderModel) bundle.getSerializable(Constants.PARAM_ORDER);
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_usericon_default)
-                .showImageForEmptyUri(R.drawable.ic_usericon_default)
-                .showImageOnFail(R.drawable.ic_usericon_default)
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
     }
 
     @Override
@@ -112,7 +117,7 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         }
     }
 
-    private void AddViewHelperClick(String name){
+    protected void AddViewHelperClick(String name){
         detailActionItemHolder = new DetailActionItemHolder(activity,0,
                 R.string.str_helper,name, ActionType.HELPER,true,this);
         View root = detailActionItemHolder.getRootView();
@@ -210,8 +215,7 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
 
     protected void setView(){
         et_remarks.setText(orderModel.getRemark());
-        tv_charge.setText(getString(R.string.str_charge,StringUtil.convertIntegerToString(orderModel.getCharge()))
-                + getString(R.string.str_currency));
+        tv_charge.setText(getString(R.string.str_charge,StringUtil.convertIntegerToString(orderModel.getCharge())));
         seekBar.setProgress(orderModel.getCharge());
         et_title.setText(orderModel.getTitle());
         et_time.setText(orderModel.getOrderDate());
@@ -250,7 +254,7 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         }
     }
 
-    private void showCancellDialog(){
+    protected void showCancellDialog(){
         final MaterialDialog materialDialog = new MaterialDialog(activity)
                 .setTitle(getString(R.string.reminder))
                 .setMessage(getString(R.string.message_cancel))
@@ -299,7 +303,8 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
             public void done(AVException e) {
                 progressBar.setVisibility(View.GONE);
                 if(e == null){
-                    successSubmit();
+                    //successSubmit();
+                    updateReplyRequest();
                 }else{
                     failSubmit();
                 }
@@ -323,6 +328,41 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
                                 updateStatusToCloud(helperModel,campusObj,campusUser);
                             }else{
                                 failSubmit();
+                            }
+                        }
+                    });
+                }else{
+                    failSubmit();
+                }
+            }
+        });
+    }
+
+    private void updateReplyRequest(){
+        AVQuery<AVObject> innerquery = new AVQuery<>(Constants.TABLE_REQUEST);
+        innerquery.whereEqualTo(Constants.PARAM_OBJECT_ID,orderModel.getObjectID());
+        AVQuery<AVObject> query = new AVQuery<>(Constants.PARAM_REQUEST_REPLY);
+        query.whereMatchesQuery(Constants.PARAM_REQUEST_OBJ,innerquery);
+        query.include(Constants.PARAM_CAMPUS_INFO);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if(e == null){
+                    for(AVObject avObject:list){
+                        String campus = avObject.getAVObject(Constants.PARAM_CAMPUS_INFO).getString(Constants.PARAM_ID);
+                        if(campus.equalsIgnoreCase(campusObj.getString(Constants.PARAM_ID))){
+                            avObject.put(Constants.PARAM_STATUS,OrderStatus.GO.toString());
+                        }else{
+                            avObject.put(Constants.PARAM_STATUS,OrderStatus.REJECTED.toString());
+                        }
+                    }
+                    AVObject.saveAllInBackground(list, new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if(e == null){
+                                handler.sendEmptyMessage(1);
+                            }else{
+                                handler.sendEmptyMessage(2);
                             }
                         }
                     });
@@ -404,7 +444,7 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
                 .setView(view);
         CampusModel campusModel = orderModel.getHelper();
         if(!StringUtil.isNull(campusModel.getUrl())){
-            ImageLoader.getInstance().displayImage(campusModel.getUrl(),iv_icon,options);
+            ImageLoader.getInstance().displayImage(campusModel.getUrl(),iv_icon,GeneralUtils.getOptions());
         }
         tv_name.setText(getString(R.string.helper_name,campusModel.getCampusName()));
         tv_phone.setText(getString(R.string.helper_phone,campusModel.getMobile()));
@@ -442,4 +482,5 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
             getHelperObjects(helperModel);
         }
     }
+
 }

@@ -86,7 +86,7 @@
     <string name="str_create_title">Title</string>
     <string name="str_deadline">Deadline:</string>
     <string name="str_dest">Destination</string>
-    <string name="str_charge">Tip Ref: %1$s</string>
+    <string name="str_charge">Tip Ref: %1$s RMB</string>
     <string name="title_new">New Request</string>
     <string name = "str_set">Set</string>
     <string name = "str_sure">Are you sure to submit?</string>
@@ -112,6 +112,7 @@
     <string name="str_helper">Helper</string>
     <string name="alert_cancel">Order can\'t be cancelled, please contact our front desk</string>
     <string name="message_cancel">Are you sure you want to cancel?</string>
+    <string name="message_done">Are you done?</string>
     <!--helper info-->
     <string name="helper_name">Name: %1$s</string>
     <string name="helper_phone">Phone: %1$s</string>
@@ -123,6 +124,11 @@
     <!--run-->
     <string name="str_run">Let\'s Run</string>
     <string name="str_cost">%1$s RMB</string>
-
-
+    <string name="title_run_list">Run List</string>
+    <string name="str_rejected">Rejected</string>
+    <string name="str_approving">Approving</string>
+    <string name="str_approved">GO</string>
+    <string name="str_owner">Owner</string>
+    <string name="str_info">Run Info</string>
+    <string name="str_done">Done</string>
 </resources>

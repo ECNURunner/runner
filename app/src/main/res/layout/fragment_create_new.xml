@@ -37,6 +37,42 @@
                 android:background="@drawable/edit_text_box"
                 android:layout_marginTop="@dimen/margin_five"
                 android:layout_marginBottom="@dimen/margin_standard"/>
+            <EditText
+                android:id="@+id/et_remark"
+                android:layout_width="match_parent"
+                android:hint="@string/str_remark"
+                android:layout_height="@dimen/height_remark"
+                android:background="@drawable/edit_text_box"
+                android:textColor="@color/colorAccent"
+                android:layout_marginTop="@dimen/margin_five"
+                android:gravity="top"
+                android:layout_marginBottom="@dimen/margin_standard"
+                />
+            <EditText
+                android:id="@+id/et_dest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/str_dest"
+                android:drawableLeft="@drawable/ic_menu_send"
+                android:textColor="@color/colorAccent"
+                android:maxLines="1"
+                android:background="@drawable/edit_text_box"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:layout_marginBottom="@dimen/margin_standard"/>
+            <TextView
+                android:id="@+id/tv_charge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/size_font_create"
+                android:layout_gravity="center_vertical"/>
+            <android.support.v7.widget.AppCompatSeekBar
+                android:id="@+id/seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:progress="5"
+                android:layout_marginBottom="@dimen/margin_standard"
+                />
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
@@ -71,42 +107,6 @@
                 android:editable="false"
                 android:hint="@string/tap_to_select"
                 android:layout_marginTop="@dimen/margin_five"
-                android:layout_marginBottom="@dimen/margin_standard"
-                />
-            <EditText
-                android:id="@+id/et_dest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/str_dest"
-                android:drawableLeft="@drawable/ic_menu_send"
-                android:textColor="@color/colorAccent"
-                android:maxLines="1"
-                android:background="@drawable/edit_text_box"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:layout_marginBottom="@dimen/margin_standard"/>
-            <TextView
-                android:id="@+id/tv_charge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/size_font_create"
-                android:layout_gravity="center_vertical"/>
-            <android.support.v7.widget.AppCompatSeekBar
-                android:id="@+id/seekbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="100"
-                android:progress="5"
-                android:layout_marginBottom="@dimen/margin_standard"
-                />
-            <EditText
-                android:id="@+id/et_remark"
-                android:layout_width="match_parent"
-                android:hint="@string/str_remark"
-                android:layout_height="@dimen/height_remark"
-                android:background="@drawable/edit_text_box"
-                android:textColor="@color/colorAccent"
-                android:layout_marginTop="@dimen/margin_five"
-                android:gravity="top"
                 android:layout_marginBottom="@dimen/margin_standard"
                 />
             <Button

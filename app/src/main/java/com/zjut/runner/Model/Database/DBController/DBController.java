@@ -5,6 +5,7 @@ import android.content.Context;
 import com.zjut.runner.Model.Database.AllOrderService;
 import com.zjut.runner.Model.Database.CampusService;
 import com.zjut.runner.Model.Database.MyOrderService;
+import com.zjut.runner.Model.Database.RunService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,7 @@ public class DBController {
     private static Map<Context, CampusService> campusModels = new HashMap<>();
     private static Map<Context,MyOrderService> orderServiceMap = new HashMap<>();
     private static Map<Context,AllOrderService> AllorderServiceMap = new HashMap<>();
+    private static Map<Context,RunService> RunServiceMap = new HashMap<>();
     /**
      * @author Phuylai
      * @param context
@@ -72,5 +74,22 @@ public class DBController {
         return allOrderService;
     }
 
+    /**
+     * @author Phuylai
+     * @param context
+     *
+     */
+    public static RunService runService(Context context){
+        if(context == null){
+            return null;
+        }
+        Context applicationContext = context.getApplicationContext();
+        RunService runService = RunServiceMap.get(applicationContext);
+        if(runService == null){
+            runService = new RunService(applicationContext);
+            RunServiceMap.put(applicationContext,runService);
+        }
+        return runService;
+    }
 
 }

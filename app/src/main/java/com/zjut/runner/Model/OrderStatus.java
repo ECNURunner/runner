@@ -5,7 +5,8 @@ package com.zjut.runner.Model;
  */
 
 public enum OrderStatus {
-    PENDING("pending"),COMPLETED("completed"),CANCELLED("cancelled");
+    PENDING("pending"),COMPLETED("completed"),CANCELLED("cancelled"),REJECTED("rejected"),
+    GO("go");
     private String text;
     OrderStatus(String text){
         this.text = text;
@@ -29,7 +30,15 @@ public enum OrderStatus {
         if(COMPLETED.equal(value)){
             return COMPLETED;
         }
+        if(REJECTED.equal(value)){
+            return REJECTED;
+        }
+        if(GO.equal(value)){
+            return GO;
+        }
         return CANCELLED;
     }
+
+
 
 }

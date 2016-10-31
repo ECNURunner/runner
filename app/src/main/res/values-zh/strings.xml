@@ -115,4 +115,12 @@
     <!--run-->
     <string name="str_run">跑吧</string>
     <string name="str_cost">%1$s 块</string>
+    <string name="title_run_list">跑吧订单</string>
+    <string name="str_rejected">被拒</string>
+    <string name="str_approving">审批中</string>
+    <string name="str_approved">跑吧</string>
+    <string name="str_owner">主人</string>
+    <string name="str_info">跑吧信息</string>
+    <string name="str_done">完成</string>
+    <string name="message_done">订单已经完成?</string>
 </resources>

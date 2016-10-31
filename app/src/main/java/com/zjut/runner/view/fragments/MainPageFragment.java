@@ -241,7 +241,7 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
         }
         switch (menuType){
             case RUN:
-                //activity.goToFragment(new ServiceListFragment());
+                activity.goToFragment(new MyRunListFragment());
                 break;
             case ORDER:
                 activity.goToFragment(new MyOrderFragment());

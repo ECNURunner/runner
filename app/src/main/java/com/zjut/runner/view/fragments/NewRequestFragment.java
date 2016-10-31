@@ -179,6 +179,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
         et_title.addTextChangedListener(this);
         seekBar.setOnSeekBarChangeListener(this);
         et_time.addTextChangedListener(this);
+        et_deadline.addTextChangedListener(this);
         et_remarks.addTextChangedListener(this);
         //et_remarks.requestFocus();
         bt_submit.setOnClickListener(this);
@@ -317,7 +318,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
         });
     }
 
-    private void putRequest(AVObject campus,String time,String remark,String deadline,String title,String dest,int charge){
+    private void putRequest(final AVObject campus, String time, String remark, String deadline, String title, String dest, int charge){
         final AVObject repair = new AVObject(Constants.TABLE_REQUEST);
         repair.put(Constants.PARAM_REMARK, remark);
         repair.put(Constants.PARAM_ORDER_DATE, time);
@@ -326,14 +327,12 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
         repair.put(Constants.PARAM_DEST, dest);
         repair.put(Constants.PARAM_CHARGE, charge);
         repair.put(Constants.PARAM_CAMPUS_ID, activity.campusModel.getCampusID());
-        repair.put(Constants.PARAM_OWNER_CAMPUS,campus);
-        repair.put(Constants.PARAM_OWNER_USER, AVUser.getCurrentUser());
         repair.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
                 if (e == null) {
                     //successSubmit();
-                    putToReplyRequest(repair.getObjectId());
+                    putToReplyRequest(repair.getObjectId(),campus);
                 } else {
                     failSubmit();
                 }
@@ -341,7 +340,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
         });
     }
 
-    private void putToReplyRequest(String objectID){
+    private void putToReplyRequest(String objectID,final AVObject campus){
         AVObject request = AVObject.createWithoutData(Constants.TABLE_REQUEST,objectID);
         request.fetchInBackground(new GetCallback<AVObject>() {
             @Override
@@ -349,6 +348,8 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
                 if(e == null){
                     AVObject reply = new AVObject(Constants.PARAM_REQUEST_REPLY);
                     reply.put(Constants.PARAM_REQUEST_OBJ,avObject);
+                    reply.put(Constants.PARAM_OWNER_CAMPUS,campus);
+                    reply.put(Constants.PARAM_OWNER_USER, AVUser.getCurrentUser());
                     reply.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(AVException e) {

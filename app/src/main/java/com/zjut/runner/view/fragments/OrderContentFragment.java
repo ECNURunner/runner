@@ -37,8 +37,8 @@ import java.util.List;
 public class OrderContentFragment extends BaseFragment implements PullToRefreshLayout.OnRefreshListener,
         Runnable, AdapterView.OnItemClickListener, BaseFragment.SelectedItemCallBackListener {
 
-    private PullToRefreshLayout pullToRefreshLayout;
-    private PullListView pullListView;
+    protected PullToRefreshLayout pullToRefreshLayout;
+    protected PullListView pullListView;
     protected ProgressBar progressBar;
 
     protected List<Object> models = new ArrayList<>();
@@ -57,8 +57,8 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
     protected int SKIP = 0;
     protected boolean onLoad = false;
 
-    private int index;
-    private String status;
+    protected int index;
+    protected String status;
     protected String campusID;
 
     @Override
@@ -205,6 +205,8 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
     }
 
     protected void onLoadData(){
+        orderModels.clear();
+        refreshList();
         pullToRefreshLayout.refreshFinish(true);
         pullToRefreshLayout.loadMoreFinish(true);
     }

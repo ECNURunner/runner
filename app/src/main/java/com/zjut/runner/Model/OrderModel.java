@@ -64,6 +64,22 @@ public class OrderModel implements Serializable{
         this.helpers = helpers;
     }
 
+    public OrderModel(String remark, String orderDate, String deadline,
+                      String title, String dest, int charge, int finalCharge, CampusModel ownerModel,
+                      String replyRequestObjectID,String orderID, OrderStatus status) {
+        this.remark = remark;
+        this.orderDate = orderDate;
+        this.deadline = deadline;
+        this.title = title;
+        this.dest = dest;
+        this.charge = charge;
+        this.finalCharge = finalCharge;
+        this.ownerModel = ownerModel;
+        this.replyRequestObjectID = replyRequestObjectID;
+        this.status = status;
+        this.objectID = orderID;
+    }
+
     public CampusModel getOwnerModel() {
         return ownerModel;
     }
@@ -221,7 +237,7 @@ public class OrderModel implements Serializable{
         return orderModels;
     }
 
-    public static List<OrderModel> OrderModels(List<AVObject> avObjects,String campusID){
+    public static List<OrderModel> OrderModels(List<AVObject> avObjects, String campusID){
         if(avObjects == null)
             return null;
         AVObject avObject,campusObject;
@@ -243,8 +259,8 @@ public class OrderModel implements Serializable{
                 String title = avObject.getString(Constants.PARAM_TITLE);
                 String dest = avObject.getString(Constants.PARAM_DEST);
                 int charge = (int) avObject.getNumber(Constants.PARAM_CHARGE);
-                AVObject ownerCampus = avObject.getAVObject(Constants.PARAM_OWNER_CAMPUS);
-                AVUser ownerUser = avObject.getAVUser(Constants.PARAM_OWNER_USER);
+                AVObject ownerCampus = avObj.getAVObject(Constants.PARAM_OWNER_CAMPUS);
+                AVUser ownerUser = avObj.getAVUser(Constants.PARAM_OWNER_USER);
                 OrderStatus status = OrderStatus.getType(avObject.getString(Constants.PARAM_STATUS));
                 CampusModel owner = CampusModel.setCampusModel(ownerUser);
                 CampusModel ownerModel = CampusModel.refreshCampus(owner, ownerCampus);
@@ -255,4 +271,29 @@ public class OrderModel implements Serializable{
         return orderModels;
     }
 
+    public static List<OrderModel> setRunModels(List<AVObject> avObjects){
+        if(avObjects == null)
+            return null;
+        List<OrderModel> orderModels = new ArrayList<>();
+        for(AVObject avObject:avObjects){
+            String objectID = avObject.getObjectId();
+            AVObject request = avObject.getAVObject(Constants.PARAM_REQUEST_OBJ);
+            String orderID = request.getObjectId();
+            String remark = request.getString(Constants.PARAM_REMARK);
+            String orderDate = request.getString(Constants.PARAM_ORDER_DATE);
+            String deadline = request.getString(Constants.PARAM_DEADLINE);
+            String title = request.getString(Constants.PARAM_TITLE);
+            String dest = request.getString(Constants.PARAM_DEST);
+            int charge = (int) request.getNumber(Constants.PARAM_CHARGE);
+            int finalCharge = (int) avObject.getNumber(Constants.PARAM_CHARGE);
+            OrderStatus status = OrderStatus.getType(avObject.getString(Constants.PARAM_STATUS));
+            AVObject ownerCampus = avObject.getAVObject(Constants.PARAM_OWNER_CAMPUS);
+            AVUser ownerUser = avObject.getAVUser(Constants.PARAM_OWNER_USER);
+            CampusModel user = CampusModel.setCampusModel(ownerUser);
+            CampusModel owner = CampusModel.refreshCampus(user,ownerCampus);
+            orderModels.add(new OrderModel(remark,orderDate,deadline,title,dest,charge,finalCharge,
+                    owner,objectID,orderID,status));
+        }
+        return orderModels;
+    }
 }
