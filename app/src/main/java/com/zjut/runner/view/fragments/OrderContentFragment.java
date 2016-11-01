@@ -205,7 +205,6 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
     }
 
     protected void onLoadData(){
-        orderModels.clear();
         refreshList();
         pullToRefreshLayout.refreshFinish(true);
         pullToRefreshLayout.loadMoreFinish(true);

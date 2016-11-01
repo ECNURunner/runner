@@ -101,7 +101,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
         et_title.setText("");
         et_dest.setText("");
         seekBar.setProgress(5);
-        tv_charge.setText(getString(R.string.str_charge,"5 ")+ getString(R.string.str_currency));
+        tv_charge.setText(getString(R.string.str_charge,"5 "));
         et_remarks.setText("");
         charge = 5;
         //updateCurrentTime();

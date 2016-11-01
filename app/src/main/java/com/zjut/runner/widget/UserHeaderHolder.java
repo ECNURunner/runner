@@ -64,7 +64,7 @@ public class UserHeaderHolder extends BaseViewHolder {
     public void setView(){
         ViewController.setVisible(false, rl_icon);
         setGender();
-        tv_name.setText(campusModel.getUsername());
+        tv_name.setText(campusModel.getCampusName());
     }
 
     private void setGender(){

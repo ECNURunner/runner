@@ -27,6 +27,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -39,17 +40,21 @@ import com.avos.avoscloud.SaveCallback;
 import com.koushikdutta.ion.Ion;
 import com.zjut.runner.Controller.CurrentSession;
 import com.zjut.runner.Model.CampusModel;
+import com.zjut.runner.Model.LanguageType;
 import com.zjut.runner.Model.RefreshType;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.GeneralUtils;
+import com.zjut.runner.util.LanguageUtil;
 import com.zjut.runner.util.ResourceUtil;
 import com.zjut.runner.util.RunnableManager;
 import com.zjut.runner.util.StringUtil;
 import com.zjut.runner.util.ToastUtil;
 import com.zjut.runner.view.fragments.BaseFragment;
+import com.zjut.runner.view.fragments.ChangePasswordFragment;
 import com.zjut.runner.view.fragments.MainPageFragment;
 import com.zjut.runner.view.fragments.UserProfileFragment;
+import com.zjut.runner.widget.MaterialDialog;
 import com.zjut.runner.widget.UserHeaderHolder;
 
 import java.io.FileNotFoundException;
@@ -170,7 +175,7 @@ public class MainActivity extends BaseActivity
     private UserHeaderHolder AddHeader(UserHeaderHolder userHeaderHolder,int marginTop){
         View rootView = userHeaderHolder.getRootView();
         addView(rootView);
-        setMarginTop(marginTop, rootView);
+        GeneralUtils.setMarginTop(marginTop, rootView);
         return userHeaderHolder;
     }
 
@@ -186,19 +191,6 @@ public class MainActivity extends BaseActivity
         }
         ll_collapsing.addView(view);
     }
-
-    protected void setMarginTop(int marginTop, View view) {
-        if (view == null) {
-            return;
-        }
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) view.getLayoutParams();
-        if (lp == null){
-            lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-        lp.topMargin = marginTop;
-        view.setLayoutParams(lp);
-    }
-
 
     protected void initHeaderView(){
         headerView = navigationView.getHeaderView(0);
@@ -366,14 +358,60 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-
+            goToFragment(new ChangePasswordFragment());
         } else if (id == R.id.nav_share) {
-
+            showChangeLanguage();
         } else if (id == R.id.nav_send) {
             logOut();
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showChangeLanguage() {
+        View layout = getLayoutInflater().inflate(R.layout.dialog_gender, null);
+        TextView english = (TextView) layout.findViewById(R.id.tv_name_a);
+        TextView chinese = (TextView) layout.findViewById(R.id.tv_name_b);
+        TextView title = (TextView) layout.findViewById(R.id.tv_title);
+        english.setText(R.string.str_english);
+        chinese.setText(R.string.str_chinese);
+        title.setText(R.string.str_language);
+        final RadioButton rb_english = (RadioButton) layout.findViewById(R.id.rb_female);
+        View rl_english = layout.findViewById(R.id.rl_female);
+        View rl_chinese = layout.findViewById(R.id.rl_male);
+        final RadioButton rb_chinese = (RadioButton) layout.findViewById(R.id.rb_male);
+        final MaterialDialog materialDialog = new MaterialDialog(this);
+        GeneralUtils.setChecked(this,rb_english, rb_chinese);
+        rl_english.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveLanguage(LanguageType.ENGLISH);
+                materialDialog.dismiss();
+            }
+        });
+        rl_chinese.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveLanguage(LanguageType.CHINESE);
+                materialDialog.dismiss();
+            }
+        });
+        materialDialog.setView(layout);
+        materialDialog.setCanceledOnTouchOutside(true);
+        materialDialog.show();
+    }
+
+    private void saveLanguage(LanguageType languageType) {
+        LanguageUtil.changeLanguage(this,languageType);
+        Intent intent = getIntent();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.PARAM_CAMPUS,campusModel);
+        intent.putExtras(bundle);
+        overridePendingTransition(0,0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0,0);
+        startActivity(intent);
     }
 
     @Override
@@ -689,5 +727,9 @@ public class MainActivity extends BaseActivity
         if(collapsingToolbarLayout != null){
             collapsingToolbarLayout.setTitle(title);
         }
+    }
+
+    public void removeHeader(){
+        ll_collapsing.removeAllViews();
     }
 }

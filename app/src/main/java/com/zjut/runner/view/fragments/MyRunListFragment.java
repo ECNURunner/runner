@@ -1,6 +1,7 @@
 package com.zjut.runner.view.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.zjut.runner.R;
@@ -58,14 +59,14 @@ public class MyRunListFragment extends MyOrderFragment {
         TabItemBuilder cancelled = new TabItemBuilder(activity).create()
                 .setDefaultIcon(android.R.drawable.ic_menu_compass)
                 .setText(getString(R.string.str_cancelled))
-                .setSelectedColor(ResourceUtil.getColor(R.color.red))
+                .setSelectedColor(ResourceUtil.getColor(R.color.gray))
                 .setTag("4")
                 .build();
 
         TabItemBuilder rejeted = new TabItemBuilder(activity).create()
                 .setDefaultIcon(android.R.drawable.ic_menu_add)
                 .setText(getString(R.string.str_rejected))
-                .setSelectedColor(ResourceUtil.getColor(R.color.gray))
+                .setSelectedColor(ResourceUtil.getColor(R.color.red))
                 .setTag("5")
                 .build();
 
@@ -78,6 +79,8 @@ public class MyRunListFragment extends MyOrderFragment {
                 .setMode(TabLayoutMode.HIDE_TEXT| TabLayoutMode.CHANGE_BACKGROUND_COLOR)
                 .build();
         controller.addTabItemClickListener(listener);
-        initFragment(0);
+        controller.setSelect(1);
+        initFragment(1);
     }
+
 }

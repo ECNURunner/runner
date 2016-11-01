@@ -5,6 +5,7 @@ import android.content.Context;
 import com.zjut.runner.Model.Database.MyOrderService;
 import com.zjut.runner.Model.Database.RunService;
 import com.zjut.runner.Model.OrderModel;
+import com.zjut.runner.Model.OrderStatus;
 
 import java.util.Collection;
 
@@ -28,5 +29,13 @@ public class RunDBController {
             return;
         }
         runService.SaveRunToDB(orderModel,ownerID);
+    }
+
+    public static void updateRunStatusToDB(Context context, String requestID, OrderStatus status){
+        RunService runService = DBController.runService(context);
+        if(runService == null){
+            return;
+        }
+        runService.updateRunService(requestID,status);
     }
 }

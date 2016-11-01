@@ -15,8 +15,10 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.zjut.runner.Controller.CurrentSession;
 import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.Model.OrderModel;
+import com.zjut.runner.Model.OrderStatus;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.GeneralUtils;
@@ -85,27 +87,6 @@ public class ReplyRequestFragment extends RequestInfoFragment {
                 super.onClick(v);
         }
     }
-
-    /*private void fetchObj(){
-        AVQuery<AVObject> avQuery = new AVQuery<>(Constants.TABLE_REQUEST);
-        avQuery.include(Constants.PARAM_OWNER_USER);
-        avQuery.include(Constants.PARAM_OWNER_CAMPUS);
-        avQuery.getInBackground(orderModel.getObjectID(), new GetCallback<AVObject>() {
-            @Override
-            public void done(AVObject avObject, AVException e) {
-                if(e == null){
-                    requestObj = avObject;
-                    AVObject ownerUser = avObject.getAVObject(Constants.PARAM_OWNER_USER);
-                    CampusModel userObj = CampusModel.setCampusModel(ownerUser);
-                    ownerUser = avObject.getAVObject(Constants.PARAM_OWNER_CAMPUS);
-                    user = CampusModel.refreshCampus(userObj,ownerUser);
-                    showDialog();
-                }else{
-                    failSubmit();
-                }
-            }
-        });
-    }*/
 
     private void showDialog(){
         final View view = activity.getLayoutInflater().inflate(R.layout.dialog_slider, null);
@@ -194,6 +175,7 @@ public class ReplyRequestFragment extends RequestInfoFragment {
                     reply.put(Constants.PARAM_CAMPUS_INFO, campusObj);
                     reply.put(Constants.PARAM_USER_INFO, userObj);
                     reply.put(Constants.PARAM_CHARGE, charge);
+                    reply.put(Constants.PARAM_STATUS, OrderStatus.PENDING.toString());
                     reply.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(AVException e) {
@@ -218,6 +200,7 @@ public class ReplyRequestFragment extends RequestInfoFragment {
             @Override
             public void done(AVException e) {
                 if(e == null){
+                    CurrentSession.removeRunOrder(activity,orderModel.getObjectID());
                     successSubmit();
                 }else{
                     failSubmit();

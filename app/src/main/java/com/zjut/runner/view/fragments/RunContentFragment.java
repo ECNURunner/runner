@@ -58,6 +58,7 @@ public class RunContentFragment extends OrderContentFragment {
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.PARAM_ORDER,orderModel);
         requestInfoFragment.setArguments(bundle);
+        requestInfoFragment.registerSelectedCallBackListener(this,null);
         activity.goToFragment(requestInfoFragment);
     }
 
@@ -181,6 +182,5 @@ public class RunContentFragment extends OrderContentFragment {
         };
         AsyncTaskController.startTask(dbSaveOrder);
     }
-
 
 }

@@ -123,4 +123,10 @@
     <string name="str_info">跑吧信息</string>
     <string name="str_done">完成</string>
     <string name="message_done">订单已经完成?</string>
+    <!--nav sidebar-->
+    <string name="str_language">语言</string>
+    <string name="str_chinese">中文</string>
+    <string name="str_english">英文</string>
+    <string name="str_change_psd">修改密码</string>
+    <string name="str_tool">工具</string>
 </resources>

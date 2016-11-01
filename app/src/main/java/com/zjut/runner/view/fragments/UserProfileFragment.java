@@ -445,4 +445,11 @@ public class UserProfileFragment extends BaseFragment implements
         activity.hideKeyBoard();
         refreshList();
     }
+
+    @Override
+    public boolean onBackPressed() {
+        activity.removeHeader();
+        return super.onBackPressed();
+    }
+
 }

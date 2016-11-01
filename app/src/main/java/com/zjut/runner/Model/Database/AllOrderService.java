@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.bst.akario.db.TableOperator;
 import com.zjut.runner.Model.CampusModel;
+import com.zjut.runner.Model.Database.Table.CampusModelDB;
 import com.zjut.runner.Model.Database.Table.MyOrderDB;
 import com.zjut.runner.Model.Database.Table.OtherOrderDB;
 import com.zjut.runner.Model.GenderType;
@@ -143,6 +144,22 @@ public class AllOrderService {
         db.insertWithOnConflict(OtherOrderDB.TABLE_ORDER, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
         MLog.i("all order", " insert");
         return true;
+    }
+
+    public boolean removeOrderFromDB(
+            final String requestID
+    ){
+        synchronized (otherOrderDB){
+            TableOperator deleteOperator = new TableOperator() {
+                @Override
+                public void doWork(SQLiteDatabase db) {
+                    db.delete(OtherOrderDB.TABLE_ORDER,
+                            OtherOrderDB.KEY_OBJECT_ID + " =?",new String[]{requestID});
+                }
+            };
+            MLog.i("request ","Remove");
+            return otherOrderDB.writeOperator(deleteOperator);
+        }
     }
 
 }

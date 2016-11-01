@@ -30,4 +30,12 @@ public class AllOrderDBController {
         return myOrderService.loadMyOrderModel(studentID);
     }
 
+    public static void removeOrderFromDB(Context context,String requestID){
+        AllOrderService myOrderService = DBController.getAllOrderService(context);
+        if(myOrderService == null){
+            return;
+        }
+        myOrderService.removeOrderFromDB(requestID);
+    }
+
 }

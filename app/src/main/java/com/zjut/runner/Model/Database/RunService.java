@@ -24,7 +24,7 @@ import java.util.List;
 
 public class RunService {
     private RunDB runDB;
-    private static ContentValues contentValues = new ContentValues();
+    private static final ContentValues contentValues = new ContentValues();
 
     public RunService(Context context){
         runDB = RunDB.getInstance(context);
@@ -147,5 +147,21 @@ public class RunService {
         db.insertWithOnConflict(RunDB.TABLE_RUN, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
         MLog.i("my run", " insert");
         return true;
+    }
+
+    public boolean updateRunService(final String requestID, final OrderStatus status){
+        synchronized (runDB){
+            TableOperator tableOperator = new TableOperator() {
+                @Override
+                public void doWork(SQLiteDatabase db) {
+                    contentValues.clear();
+                    contentValues.put(RunDB.KEY_STATUS,status.toString());
+                    db.update(RunDB.TABLE_RUN, contentValues,
+                           RunDB.KEY_REQUEST_ID + " =?", new String[]{requestID});
+                }
+            };
+            MLog.i("run status ","Updated");
+            return runDB.writeOperator(tableOperator);
+        }
     }
 }

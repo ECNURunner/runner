@@ -38,12 +38,33 @@
              android:orientation="horizontal" >
          </LinearLayout>
       </RelativeLayout>
-       <android.support.v7.widget.RecyclerView
+       <LinearLayout
+           android:id="@+id/ll_indicator"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_below="@id/rl_header"
+           android:orientation="vertical"
+           android:paddingLeft="@dimen/margin_top"
+           android:paddingRight="@dimen/margin_top"
+           android:layout_marginTop="@dimen/margin_standard"
+           android:visibility="gone"
+           >
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               style="@style/helper_info"
+               android:text="@string/str_run"/>
+           <View
+               android:id="@+id/detail_item_line"
+               style="@style/grey_line_style"/>
+       </LinearLayout>
+       <com.zjut.runner.widget.MyListView
            android:id="@+id/rv_list"
            android:layout_width="match_parent"
            android:layout_height="match_parent"
-           android:layout_below="@id/rl_header">
-       </android.support.v7.widget.RecyclerView>
+           android:scrollbars="none"
+           android:layout_below="@id/ll_indicator">
+       </com.zjut.runner.widget.MyListView>
    </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

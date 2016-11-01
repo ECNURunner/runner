@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
@@ -21,6 +22,8 @@ import com.avos.avoscloud.FindCallback;
 import com.zjut.runner.Model.BannerModel;
 import com.zjut.runner.Model.GridViewIconModel;
 import com.zjut.runner.Model.MenuType;
+import com.zjut.runner.Model.OrderModel;
+import com.zjut.runner.Model.OrderStatus;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.GeneralUtils;
@@ -29,6 +32,7 @@ import com.zjut.runner.util.StringUtil;
 import com.zjut.runner.util.ToastUtil;
 import com.zjut.runner.view.Adapter.GridViewAdapter;
 import com.zjut.runner.view.Adapter.HeaderAdapter;
+import com.zjut.runner.view.Adapter.OrderListAdapter;
 import com.zjut.runner.widget.AutoScrollViewPager;
 import com.zjut.runner.widget.CircleView;
 import com.zjut.runner.widget.MaterialDialog;
@@ -56,7 +60,12 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
     private View mView;
 
     //list
-    private RecyclerView recyclerView;
+    private ListView recyclerView;
+    protected OrderListAdapter orderListAdapter;
+    protected List<Object> models = new ArrayList<>();
+    private List<OrderModel> temp = new ArrayList<>();
+    private String campusID;
+    private LinearLayout ll_info;
 
     @Nullable
     @Override
@@ -96,14 +105,17 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         drawerindicatorEnabled = true;
+        campusID = activity.campusModel.getCampusID();
         menuIcons();
         requestBanner();
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
         viewPager.startAutoScroll();
+        loadFromCloud(0,5);
     }
 
     @Override
@@ -133,8 +145,60 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
         tapPoint = (LinearLayout) rootView.findViewById(R.id.tap_point);
 
         //list
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_list);
+        recyclerView = (ListView) rootView.findViewById(R.id.rv_list);
+        orderListAdapter = new OrderListAdapter(activity,models);
+        recyclerView.setAdapter(orderListAdapter);
+        ll_info = (LinearLayout) rootView.findViewById(R.id.ll_indicator);
+        GeneralUtils.setListViewHeightBasedOnChildren(recyclerView);
+        loadFromCloud(0,5);
     }
+
+    protected void loadFromCloud(int skip, int limit) {
+        AVQuery<AVObject> innerQuery = AVQuery.getQuery(Constants.TABLE_REQUEST);
+        innerQuery.whereNotEqualTo(Constants.PARAM_CAMPUS_ID,campusID);
+        innerQuery.whereEqualTo(Constants.PARAM_STATUS, OrderStatus.PENDING.toString());
+        innerQuery.whereEqualTo(Constants.PARAM_CHOSEN,false);
+        AVQuery<AVObject> query = AVQuery.getQuery(Constants.PARAM_REQUEST_REPLY);
+        query.whereMatchesQuery(Constants.PARAM_REQUEST_OBJ,innerQuery);
+        query.include(Constants.PARAM_CAMPUS_INFO);
+        query.include(Constants.PARAM_REQUEST_OBJ);
+        query.include(Constants.PARAM_OWNER_USER);
+        query.include(Constants.PARAM_OWNER_CAMPUS);
+        query.setSkip(skip);
+        query.setLimit(limit);
+        innerQuery.orderByDescending(Constants.PARAM_CREATE);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if(e == null){
+                    if(list == null || list.size() == 0){
+                        ll_info.setVisibility(View.GONE);
+                        return;
+                    }
+                    notifyData(list);
+                }else{
+                    ToastUtil.showToastShort(activity, e.getMessage());
+                }
+            }
+        });
+    }
+
+    protected void notifyData(List<AVObject> list) {
+        models.clear();
+        temp = OrderModel.OrderModels(list,campusID);
+        if(temp.size() > 0){
+            ll_info.setVisibility(View.VISIBLE);
+        }else{
+            ll_info.setVisibility(View.GONE);
+        }
+        models.addAll(temp);
+        if (orderListAdapter != null) {
+            orderListAdapter.notifyDataSetChanged();
+            GeneralUtils.setListViewHeightBasedOnChildren(recyclerView);
+        }
+    }
+
+
 
     private void requestBanner() {
         final List<BannerModel> models = new ArrayList<>();
@@ -201,7 +265,7 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
 
     @Override
     protected void setListener() {
-
+        recyclerView.setOnItemClickListener(this);
     }
 
     @Override
@@ -222,15 +286,24 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        GridViewIconModel gridViewIconModel = (GridViewIconModel) adapter.getItem(position);
-        MenuType menuType = gridViewIconModel.getType();
-        switch (menuType){
-            case HELPS:
-            case ORDER:
-            case RUN:
-            case CREATE:
-                authorizedFunction(menuType);
-                break;
+        if(parent.getId() == R.id.rv_list){
+            OrderModel orderModel = (OrderModel) models.get(position);
+            ReplyRequestFragment replyRequestFragment = new ReplyRequestFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constants.PARAM_ORDER,orderModel);
+            replyRequestFragment.setArguments(bundle);
+            activity.goToFragment(replyRequestFragment);
+        }else {
+            GridViewIconModel gridViewIconModel = (GridViewIconModel) adapter.getItem(position);
+            MenuType menuType = gridViewIconModel.getType();
+            switch (menuType) {
+                case HELPS:
+                case ORDER:
+                case RUN:
+                case CREATE:
+                    authorizedFunction(menuType);
+                    break;
+            }
         }
     }
 
@@ -292,4 +365,5 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
     public void onPageScrollStateChanged(int state) {
 
     }
+
 }

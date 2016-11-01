@@ -11,6 +11,7 @@ import com.zjut.runner.Model.Database.DBController.MyOrderDBController;
 import com.zjut.runner.Model.Database.DBController.RunDBController;
 import com.zjut.runner.Model.HelperModel;
 import com.zjut.runner.Model.OrderModel;
+import com.zjut.runner.Model.OrderStatus;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -143,11 +144,25 @@ public class CurrentSession {
         RunDBController.saveRunToDB(context,orderModel,ownerID);
     }
 
+    public static void updateRunStatus(Context context, String requestID, OrderStatus status){
+        if(requestID == null || status == null){
+            return;
+        }
+        RunDBController.updateRunStatusToDB(context,requestID,status);
+    }
+
     public static void putAllOrders(Context context,OrderModel orderModel,String studentID){
         if(orderModel == null){
             return;
         }
         AllOrderDBController.saveOrderToDB(context,orderModel,studentID);
+    }
+
+    public static void removeRunOrder(Context context,String requestID){
+        if(requestID == null){
+            return;
+        }
+        AllOrderDBController.removeOrderFromDB(context,requestID);
     }
 
     public static List<OrderModel> getAllOrderModels(Context context, String ownerID){

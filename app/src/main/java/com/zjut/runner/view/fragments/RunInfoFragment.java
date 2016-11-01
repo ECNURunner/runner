@@ -1,6 +1,7 @@
 package com.zjut.runner.view.fragments;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,25 +12,29 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.SaveCallback;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.zjut.runner.Controller.AsyncTaskController;
+import com.zjut.runner.Controller.CurrentSession;
 import com.zjut.runner.Model.ActionType;
 import com.zjut.runner.Model.CampusModel;
+import com.zjut.runner.Model.OrderModel;
 import com.zjut.runner.Model.OrderStatus;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.GeneralUtils;
-import com.zjut.runner.util.MLog;
 import com.zjut.runner.util.StringUtil;
 import com.zjut.runner.widget.CircleImageView;
 import com.zjut.runner.widget.DetailActionItemHolder;
 import com.zjut.runner.widget.MaterialDialog;
 
-import java.io.Serializable;
 
 /**
  * Created by Phuylai on 2016/10/31.
  */
 
 public class RunInfoFragment extends RequestInfoFragment {
+
+    //save model
+    protected AsyncTask<Object,Void,Void> dbSaveOrder = null;
 
     @Override
     protected void loadHelpers() {
@@ -142,7 +147,24 @@ public class RunInfoFragment extends RequestInfoFragment {
             public void done(AVException e) {
                 progressBar.setVisibility(View.GONE);
                 if(e == null){
-                    successSubmit();
+                    decreaseHelperNumber();
+                }else{
+                    failSubmit();
+                }
+            }
+        });
+    }
+
+    private void decreaseHelperNumber(){
+        AVObject request = AVObject.createWithoutData(Constants.TABLE_REQUEST,orderModel.getObjectID());
+        request.increment(Constants.PARAM_NUM_HELPER,-1);
+        request.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if(e == null){
+                    //CurrentSession.updateRunStatus(activity,orderModel.getObjectID(),OrderStatus.CANCELLED);
+                    //successSubmit();
+                    saveOrderToDB(orderModel.getObjectID(),OrderStatus.CANCELLED);
                 }else{
                     failSubmit();
                 }
@@ -168,14 +190,15 @@ public class RunInfoFragment extends RequestInfoFragment {
     }
 
     protected void saveDoneToRequest(){
-        AVObject request = AVObject.createWithoutData(Constants.TABLE_REQUEST,orderModel.getObjectID());
+        final AVObject request = AVObject.createWithoutData(Constants.TABLE_REQUEST,orderModel.getObjectID());
         request.put(Constants.PARAM_STATUS, OrderStatus.COMPLETED.toString());
         request.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
                 progressBar.setVisibility(View.GONE);
                 if(e == null){
-                    successSubmit();
+                    //successSubmit();
+                    saveOrderToDB(orderModel.getObjectID(),OrderStatus.COMPLETED);
                 }else{
                     failSubmit();
                 }
@@ -212,6 +235,25 @@ public class RunInfoFragment extends RequestInfoFragment {
             }
         });
         materialDialog.show();
+    }
+
+    protected synchronized void saveOrderToDB(final String requestID, final OrderStatus status) {
+        if(dbSaveOrder != null)
+            return;
+        dbSaveOrder = new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... params) {
+                CurrentSession.updateRunStatus(activity,requestID,status);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                dbSaveOrder = null;
+                successSubmit();
+            }
+        };
+        AsyncTaskController.startTask(dbSaveOrder);
     }
 
 }

@@ -59,6 +59,8 @@
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
     <string name="tv_old_psd">Enter Old Password</string>
+    <string name="tv_reset_psd">Reset Password</string>
+    <string name="tv_reset_psd_new">Enter New Password</string>
     <string name="toast_old_psd_error">Incorrect old password</string>
     <string name="tv_reset_psd_confirm">Confirm New Password</string>
     <string name="tv_reset_psd_reset">Reset</string>
@@ -131,4 +133,10 @@
     <string name="str_owner">Owner</string>
     <string name="str_info">Run Info</string>
     <string name="str_done">Done</string>
+    <!--nav sidebar-->
+    <string name="str_language">Language</string>
+    <string name="str_chinese">Chinese</string>
+    <string name="str_english">English</string>
+    <string name="str_change_psd">Change Password</string>
+    <string name="str_tool">Tools</string>
 </resources>

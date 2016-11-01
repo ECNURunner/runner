@@ -18,7 +18,8 @@ public class AccountModel implements Serializable{
     private GenderType genderType;
     private String url;
 
-    public AccountModel(String userObjectId, String username, String mobile, String email, GenderType genderType, String url) {
+    public AccountModel(String userObjectId, String username, String mobile, String email,
+                        GenderType genderType, String url) {
         this.username = username;
         this.userObjectId = userObjectId;
         this.mobile = mobile;
@@ -33,7 +34,7 @@ public class AccountModel implements Serializable{
         this.password = password;
 
     }
-
+    
     public String getUserObjectId() {
         return userObjectId;
     }

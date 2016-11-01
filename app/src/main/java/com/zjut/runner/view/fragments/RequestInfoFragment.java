@@ -176,6 +176,7 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         AVQuery<AVObject> query = new AVQuery<>(Constants.PARAM_REQUEST_REPLY);
         query.whereMatchesQuery(Constants.PARAM_REQUEST_OBJ,innerquery);
         query.orderByAscending(Constants.PARAM_CREATE);
+        query.whereNotEqualTo(Constants.PARAM_STATUS,OrderStatus.CANCELLED.toString());
         query.include(Constants.PARAM_USER_INFO);
         query.include(Constants.PARAM_CAMPUS_INFO);
         query.findInBackground(new FindCallback<AVObject>() {

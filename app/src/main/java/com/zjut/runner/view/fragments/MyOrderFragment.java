@@ -38,7 +38,7 @@ public class MyOrderFragment extends BaseFragment {
     protected void initFragment(int index)
     {
         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.frameLayout,createFragment(0));
+        transaction.add(R.id.frameLayout,createFragment(index));
         transaction.commit();
     }
 
