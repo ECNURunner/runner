@@ -44,6 +44,7 @@ public class RunDB extends DBModel{
     public static final String KEY_GENDER = "acc_gender";
     public static final String KEY_URL = "profile_url";
     public static final String KEY_STATUS ="_status";
+    public static final String KEY_INSTALL = "_install";
 
     @Override
     protected String getReadLogKey() {
@@ -65,6 +66,7 @@ public class RunDB extends DBModel{
                 + KEY_REMARK + " varchar(100), "
                 + KEY_CHARGE + " int, "
                 + KEY_STUDENT_ID + " varchar(15), "
+                + KEY_INSTALL + " varchar(50), "
                 + KEY_NAME + " varchar(25), "
                 + KEY_GENDER + " varchar(7), "
                 + KEY_MOBILE + " varchar(12), "

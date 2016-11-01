@@ -27,7 +27,7 @@ import java.util.List;
 public class AllOrderService {
 
     private OtherOrderDB otherOrderDB;
-    private static ContentValues contentValues = new ContentValues();
+    private final static ContentValues contentValues = new ContentValues();
 
     public AllOrderService(Context context){
          otherOrderDB = OtherOrderDB.getInstance(context);
@@ -94,9 +94,11 @@ public class AllOrderService {
             genderType = GenderType.getType(gender);
         }
 
+        String install = cursor.getString(cursor.getColumnIndex(OtherOrderDB.KEY_INSTALL));
+
         String url = cursor.getString(cursor.getColumnIndex(MyOrderDB.KEY_URL));
 
-        CampusModel owner = new CampusModel(ownerObj,helperName,mobile,email,genderType,url);
+        CampusModel owner = new CampusModel(ownerObj,helperName,mobile,email,genderType,url,install);
 
         int charge = cursor.getInt(cursor.getColumnIndex(OtherOrderDB.KEY_CHARGE));
 
@@ -140,6 +142,7 @@ public class AllOrderService {
         contentValues.put(OtherOrderDB.KEY_MOBILE,owner.getMobile());
         contentValues.put(OtherOrderDB.KEY_EMAIL,owner.getEmail());
         contentValues.put(OtherOrderDB.KEY_NAME,owner.getCampusName());
+        contentValues.put(OtherOrderDB.KEY_INSTALL,owner.getInstallationID());
         contentValues.put(OtherOrderDB.KEY_REPLY_ID,orderModel.getReplyRequestObjectID());
         db.insertWithOnConflict(OtherOrderDB.TABLE_ORDER, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
         MLog.i("all order", " insert");

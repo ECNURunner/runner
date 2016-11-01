@@ -26,7 +26,7 @@ import java.util.List;
 public class MyOrderService {
 
     private MyOrderDB myOrderDB;
-    private static ContentValues contentValues = new ContentValues();
+    private final static ContentValues contentValues = new ContentValues();
 
     public MyOrderService(Context context){
         myOrderDB = MyOrderDB.getInstance(context);
@@ -102,6 +102,8 @@ public class MyOrderService {
 
         String email = cursor.getString(cursor.getColumnIndex(MyOrderDB.KEY_EMAIL));
 
+        String install = cursor.getString(cursor.getColumnIndex(MyOrderDB.KEY_INSTALL));
+
         String gender = cursor.getString(cursor.getColumnIndex(MyOrderDB.KEY_GENDER));
         GenderType genderType = null;
         if(!StringUtil.isNull(gender)){
@@ -120,7 +122,7 @@ public class MyOrderService {
 
         CampusModel helper = null;
         if(helperNum > 0){
-            helper = new CampusModel(helperUserID,helperName,mobile,email,genderType,url);
+            helper = new CampusModel(helperUserID,helperName,mobile,email,genderType,url,install);
         }
 
         MLog.i("My Order", "FROM DB");
@@ -171,6 +173,8 @@ public class MyOrderService {
 
         String objectId = cursor.getString(cursor.getColumnIndex(MyOrderDB.REQUEST_REPLY));
 
+        String install = cursor.getString(cursor.getColumnIndex(MyOrderDB.KEY_INSTALL));
+
         int charge = cursor.getInt(cursor.getColumnIndex(MyOrderDB.KEY_CHARGE));
 
         GenderType genderType = null;
@@ -181,7 +185,7 @@ public class MyOrderService {
         String url = cursor.getString(cursor.getColumnIndex(MyOrderDB.KEY_URL));
 
         MLog.i("Helpers", "FROM DB");
-        return new HelperModel(helperCampusID,helperUserID,null,mobile,email,genderType,url,cardID,name,requestID,objectId,charge);
+        return new HelperModel(helperCampusID,helperUserID,null,mobile,email,genderType,url,cardID,name,requestID,objectId,charge,install);
     }
 
     public boolean SaveOrderToDB(final OrderModel orderModel, final String ownerID){
@@ -221,6 +225,7 @@ public class MyOrderService {
             contentValues.put(MyOrderDB.KEY_MOBILE,helper.getMobile());
             contentValues.put(MyOrderDB.KEY_EMAIL,helper.getEmail());
             contentValues.put(MyOrderDB.KEY_STUDENT_ID,helper.getCampusID());
+            contentValues.put(MyOrderDB.KEY_INSTALL,helper.getInstallationID());
         }
 
         db.insertWithOnConflict(MyOrderDB.TABLE_MYORDER, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
@@ -255,6 +260,7 @@ public class MyOrderService {
         contentValues.put(MyOrderDB.KEY_URL,helperModel.getUrl());
         contentValues.put(MyOrderDB.REQUEST_REPLY, helperModel.getObjectId());
         contentValues.put(MyOrderDB.KEY_CHARGE,helperModel.getHelperCharge());
+        contentValues.put(MyOrderDB.KEY_INSTALL,helperModel.getInstallationID());
 
         db.insertWithOnConflict(MyOrderDB.TABLE_HELPERS, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
         MLog.i("Helper", " insert");

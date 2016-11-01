@@ -112,9 +112,11 @@ public class CampusService {
                 cursor.getColumnIndex(CampusModelDB.USER_OBJECT_ID)
         );
 
+        String install = cursor.getString(cursor.getColumnIndex(CampusModelDB.KEY_INSTALL));
+
         MLog.i("CAMPUS DATA","FROM DB");
         return new CampusModel(objectId,userObjectId,displayName,mobile,email,genderType,url,cardPass,
-                cardID,cardName,balance);
+                cardID,cardName,balance,install);
     }
 
     public boolean SaveCampusModelToDB(final CampusModel campusModel){
@@ -140,6 +142,7 @@ public class CampusService {
         contentValues.put(CampusModelDB.KEY_DIS_NAME,campusModel.getUsername());
         contentValues.put(CampusModelDB.KEY_MOBILE,campusModel.getMobile());
         contentValues.put(CampusModelDB.KEY_EMAIL,campusModel.getEmail());
+        contentValues.put(CampusModelDB.KEY_INSTALL,campusModel.getInstallationID());
         if(campusModel.getGenderType() != null) {
             contentValues.put(CampusModelDB.KEY_GENDER, campusModel.getGenderType().toString());
         }

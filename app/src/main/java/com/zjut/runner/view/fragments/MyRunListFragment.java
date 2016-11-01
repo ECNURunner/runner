@@ -36,35 +36,35 @@ public class MyRunListFragment extends MyOrderFragment {
     protected void findViews(View rootView) {
         pagerBottomTabLayout = (PagerBottomTabLayout) rootView.findViewById(R.id.tab);
         TabItemBuilder pending = new TabItemBuilder(activity).create()
-                .setDefaultIcon(android.R.drawable.ic_menu_send)
+                .setDefaultIcon(R.drawable.ic_action_pending)
                 .setText(getString(R.string.str_pending))
                 .setSelectedColor(ResourceUtil.getColor(R.color.colorPrimary))
                 .setTag("1")
                 .build();
 
         TabItemBuilder go = new TabItemBuilder(activity).create()
-                .setDefaultIcon(android.R.drawable.ic_menu_call)
+                .setDefaultIcon(R.drawable.ic_action_man)
                 .setText(getString(R.string.str_go_help))
                 .setSelectedColor(ResourceUtil.getColor(R.color.colorPrimaryDark))
                 .setTag("2")
                 .build();
 
         TabItemBuilder completed = new TabItemBuilder(activity).create()
-                .setDefaultIcon(android.R.drawable.ic_menu_search)
+                .setDefaultIcon(R.drawable.ic_action_check)
                 .setText(getString(R.string.str_completed))
                 .setSelectedColor(ResourceUtil.getColor(R.color.green))
                 .setTag("3")
                 .build();
 
         TabItemBuilder cancelled = new TabItemBuilder(activity).create()
-                .setDefaultIcon(android.R.drawable.ic_menu_compass)
+                .setDefaultIcon(R.drawable.ic_action_cancel)
                 .setText(getString(R.string.str_cancelled))
                 .setSelectedColor(ResourceUtil.getColor(R.color.gray))
                 .setTag("4")
                 .build();
 
         TabItemBuilder rejeted = new TabItemBuilder(activity).create()
-                .setDefaultIcon(android.R.drawable.ic_menu_add)
+                .setDefaultIcon(R.drawable.ic_action_document)
                 .setText(getString(R.string.str_rejected))
                 .setSelectedColor(ResourceUtil.getColor(R.color.red))
                 .setTag("5")

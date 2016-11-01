@@ -101,8 +101,9 @@ public class RunService {
         if(!StringUtil.isNull(status)){
             orderStatus = OrderStatus.getType(status);
         }
+        String install = cursor.getString(cursor.getColumnIndex(RunDB.KEY_INSTALL));
         CampusModel owner = null;
-        owner = new CampusModel(null,ownerName,mobile,email,genderType,url);
+        owner = new CampusModel(null,ownerName,mobile,email,genderType,url,install);
         MLog.i("RUN", "FROM DB");
         return new OrderModel(remark,orderDate,deadline,title,dest,charge,finalCharge,
                 owner,requestObjectID,requestID,orderStatus);
@@ -137,6 +138,7 @@ public class RunService {
         if(owner != null){
             contentValues.put(RunDB.KEY_URL,owner.getUrl());
             contentValues.put(RunDB.KEY_NAME,owner.getCampusName());
+            contentValues.put(RunDB.KEY_INSTALL,owner.getInstallationID());
             if(owner.getGenderType() != null) {
                 contentValues.put(RunDB.KEY_GENDER, owner.getGenderType().toString());
             }

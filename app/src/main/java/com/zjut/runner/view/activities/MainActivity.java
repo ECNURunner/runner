@@ -33,11 +33,14 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVInstallation;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.PushService;
 import com.avos.avoscloud.RefreshCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.koushikdutta.ion.Ion;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zjut.runner.Controller.CurrentSession;
 import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.Model.LanguageType;
@@ -53,7 +56,10 @@ import com.zjut.runner.util.ToastUtil;
 import com.zjut.runner.view.fragments.BaseFragment;
 import com.zjut.runner.view.fragments.ChangePasswordFragment;
 import com.zjut.runner.view.fragments.MainPageFragment;
+import com.zjut.runner.view.fragments.MyOrderFragment;
+import com.zjut.runner.view.fragments.MyRunListFragment;
 import com.zjut.runner.view.fragments.UserProfileFragment;
+import com.zjut.runner.widget.CircleImageView;
 import com.zjut.runner.widget.MaterialDialog;
 import com.zjut.runner.widget.UserHeaderHolder;
 
@@ -80,7 +86,7 @@ public class MainActivity extends BaseActivity
     private FrameLayout content = null;
     private LinearLayout ll_nav_header = null;
     private View headerView = null;
-    private ImageView iv_profile = null;
+    private CircleImageView iv_profile = null;
     private TextView tv_name = null;
     private TextView tv_mobile = null;
     private LinearLayout ll_collapsing = null;
@@ -103,13 +109,52 @@ public class MainActivity extends BaseActivity
         parseArgument();
         layoutId = R.layout.activity_main;
         super.onCreate(savedInstanceState);
+        onNewIntent(getIntent());
+    }
+
+    protected void onNewIntent(Intent intent){
+        if(intent == null)
+            return;
+        Bundle bundle = intent.getExtras();
+        if(bundle == null)
+            return;
+        int notiID = bundle.getInt(Constants.PARAM_STATUS,-1);
+        switch (notiID){
+            case 1:
+            case 3:
+                goToFragment(new MyOrderFragment());
+                break;
+            case 2:
+                goToFragment(new MyRunListFragment());
+                break;
+            default:
+                break;
+        }
     }
 
     private void parseArgument(){
         Bundle bundle = this.getIntent().getExtras();
         if(bundle != null) {
             campusModel = (CampusModel) bundle.getSerializable(Constants.PARAM_CAMPUS);
+            if(StringUtil.isNull(campusModel.getInstallationID())){
+                AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if(e == null){
+                            String install = AVInstallation.getCurrentInstallation().getInstallationId();
+                            updateToUser(install);
+                        }else{
+                            ToastUtil.showToast(R.string.push_fail);
+                        }
+                    }
+                });
+            }
         }
+    }
+
+    private void updateToUser(String install){
+        AVUser.getCurrentUser().put(Constants.PARAM_INSTALLATION, install);
+        AVUser.getCurrentUser().saveInBackground();
     }
 
     public void expandToolbar(boolean expand){
@@ -162,6 +207,10 @@ public class MainActivity extends BaseActivity
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         appBarLayout.setExpanded(false,true);
 
+        //push
+        PushService.setDefaultPushCallback(this,MainActivity.class);
+        PushService.subscribe(this,Constants.PARAM_MY_ORDER,MainActivity.class);
+        PushService.subscribe(this,Constants.PARAM_MY_RUN,MainActivity.class);
 
         initHeaderView();
         initFragment();
@@ -195,14 +244,11 @@ public class MainActivity extends BaseActivity
     protected void initHeaderView(){
         headerView = navigationView.getHeaderView(0);
         ll_nav_header = (LinearLayout) headerView;
-        iv_profile = (ImageView) headerView.findViewById(R.id.imageView);
+        iv_profile = (CircleImageView) headerView.findViewById(R.id.imageView);
         tv_name = (TextView) headerView.findViewById(R.id.tv_name);
         tv_mobile = (TextView) headerView.findViewById(R.id.tv_phone);
         if(campusModel.getUrl() != null){
-            Ion.with(iv_profile)
-                    .placeholder(R.drawable.ic_usericon_default)
-                    .error(R.drawable.ic_usericon_default)
-                    .load(campusModel.getUrl());
+            ImageLoader.getInstance().displayImage(campusModel.getUrl(),iv_profile,GeneralUtils.getOptions());
         }
         tv_name.setText(campusModel.getUsername());
         tv_mobile.setText(campusModel.getMobile());
@@ -351,12 +397,8 @@ public class MainActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-            Log.d("gallery","gallery");
-        } else if (id == R.id.nav_slideshow) {
-
+        if (id == R.id.nav_slideshow) {
+            GeneralUtils.showCallDialog(this);
         } else if (id == R.id.nav_manage) {
             goToFragment(new ChangePasswordFragment());
         } else if (id == R.id.nav_share) {

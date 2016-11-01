@@ -100,5 +100,14 @@ public class Constants {
     public static final String PARAM_EMAIL = "email";
     public static final String PARAM_PHONE_NUMBER = "mobilePhoneNumber";
 
+    //PUSH
+    public static final String PARAM_MY_ORDER = "myorder";
+    public static final String PARAM_MY_RUN = "myrun";
+    public static final String PARAM_INSTALLATION = "installationID";
+    public static final String PARAM_ALERT = "alert";
+    public static final String MSG_1 = "1";
+    public static final String MSG_2 = "2";
+    public static final String MSG_3 = "3";
+
 
 }

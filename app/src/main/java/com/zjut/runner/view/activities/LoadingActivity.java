@@ -37,6 +37,7 @@ public class LoadingActivity extends BaseActivity {
 
     //campus model
     private CampusModel campusModel;
+    private int notiID;
 
     //load campus model
     private AsyncTask<Object,Void,CampusModel> dbLoad = null;
@@ -47,7 +48,16 @@ public class LoadingActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         layoutId = R.layout.activity_loading;
         super.onCreate(savedInstanceState);
-        //new Handler().postDelayed(runnable, 2000);// 2 seconds to jump to another page
+        onNewIntent(getIntent());
+    }
+
+    protected void onNewIntent(Intent intent){
+        if(intent == null)
+            return;
+        Bundle bundle = intent.getExtras();
+        if(bundle == null)
+            return;
+        notiID = bundle.getInt(Constants.PARAM_STATUS,-1);
     }
 
     @Override
@@ -89,6 +99,7 @@ public class LoadingActivity extends BaseActivity {
         Intent intent = new Intent(LoadingActivity.this,MainActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.PARAM_CAMPUS,campusModel);
+        bundle.putInt(Constants.PARAM_STATUS,notiID);
         intent.putExtras(bundle);
         startActivity(intent);
         finish();
@@ -100,21 +111,6 @@ public class LoadingActivity extends BaseActivity {
         GeneralUtils.recycleBackground(rl_background);
         GeneralUtils.recycleBackground(iv_loading);
     }
-
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            if(AVUser.getCurrentUser() != null){
-                Intent intent = new Intent(LoadingActivity.this,MainActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Intent intent = new Intent(LoadingActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }
-    };
 
     private synchronized void loadCampusInfo(){
         if(dbLoad != null){

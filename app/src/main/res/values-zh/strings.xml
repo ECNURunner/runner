@@ -129,4 +129,13 @@
     <string name="str_english">英文</string>
     <string name="str_change_psd">修改密码</string>
     <string name="str_tool">工具</string>
+    <string name="str_hotline">热线: %1$s</string>
+    <string name="call_service">确认拨号</string>
+    <string name="str_center">服务支持</string>
+    <!--push-->
+    <string name="push.fail">订阅失败</string>
+    <string name="push.message.1">您的请求有人参与</string>
+    <string name="push.messge.2">快跑吧</string>
+    <string name="push.message.3">请求已完成</string>
+
 </resources>

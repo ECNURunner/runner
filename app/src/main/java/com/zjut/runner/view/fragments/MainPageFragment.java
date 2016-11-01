@@ -257,10 +257,10 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     private void menuIcons() {
-        Icons.add(0,new GridViewIconModel(MenuType.CREATE,"Help Me","帮帮我",R.mipmap.ic_launcher));
-        Icons.add(1,new GridViewIconModel(MenuType.ORDER,"My Order","我的订单",R.mipmap.ic_launcher));
-        Icons.add(2,new GridViewIconModel(MenuType.HELPS,"Let's Run","跑吧",R.mipmap.ic_launcher));
-        Icons.add(3,new GridViewIconModel(MenuType.RUN,"Run List","跑吧订单",R.mipmap.ic_launcher));
+        Icons.add(0,new GridViewIconModel(MenuType.CREATE,"Help Me","帮帮我",R.drawable.ic_info));
+        Icons.add(1,new GridViewIconModel(MenuType.ORDER,"My Order","我的订单",R.drawable.ic_list));
+        Icons.add(2,new GridViewIconModel(MenuType.HELPS,"Let's Run","跑吧",R.drawable.ic_man));
+        Icons.add(3,new GridViewIconModel(MenuType.RUN,"Run List","跑吧订单",R.drawable.ic_list_1));
     }
 
     @Override

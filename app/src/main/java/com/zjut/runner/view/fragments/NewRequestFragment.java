@@ -150,7 +150,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
         progressBar = (ProgressBar) rootView.findViewById(R.id.pb_sending_post);
         progressBar.setVisibility(View.GONE);
         bt_submit = (Button) rootView.findViewById(R.id.btn_sub);
-        tv_charge.setText(getString(R.string.str_charge,"5 ")+ getString(R.string.str_currency));
+        tv_charge.setText(getString(R.string.str_charge,"5 "));
         //updateCurrentTime();
         setButtonDisable(checkInputInfo());
     }

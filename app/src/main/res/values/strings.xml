@@ -139,4 +139,12 @@
     <string name="str_english">English</string>
     <string name="str_change_psd">Change Password</string>
     <string name="str_tool">Tools</string>
+    <string name="str_center">Call Center</string>
+    <string name="str_hotline">Hotline: %1$s</string>
+    <string name="call_service">Call</string>
+    <!--push-->
+    <string name="push.fail">Fail to Subscribe</string>
+    <string name="push.message.1">Your request got helper</string>
+    <string name="push.messge.2">Let\'s run</string>
+    <string name="push.message.3">Request is completed</string>
 </resources>

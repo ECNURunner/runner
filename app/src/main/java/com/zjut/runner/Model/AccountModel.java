@@ -17,15 +17,17 @@ public class AccountModel implements Serializable{
     private String email;
     private GenderType genderType;
     private String url;
+    private String installationID;
 
     public AccountModel(String userObjectId, String username, String mobile, String email,
-                        GenderType genderType, String url) {
+                        GenderType genderType, String url,String installationID) {
         this.username = username;
         this.userObjectId = userObjectId;
         this.mobile = mobile;
         this.email = email;
         this.genderType = genderType;
         this.url = url;
+        this.installationID = installationID;
     }
 
     public AccountModel(String username, String mobile, String password) {
@@ -34,7 +36,15 @@ public class AccountModel implements Serializable{
         this.password = password;
 
     }
-    
+
+    public String getInstallationID() {
+        return installationID;
+    }
+
+    public void setInstallationID(String installationID) {
+        this.installationID = installationID;
+    }
+
     public String getUserObjectId() {
         return userObjectId;
     }

@@ -45,6 +45,8 @@ dependencies {
     }
     // LeanCloud 基础包
     compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
+    // 推送与实时聊天需要的包
+    compile ('cn.leancloud.android:avoscloud-push:v3.+@aar'){transitive = true}
     //bottom tab
     compile 'me.majiajie:pager-bottom-tab-strip:1.0.0'
 }

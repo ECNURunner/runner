@@ -46,6 +46,7 @@ public class OtherOrderDB extends DBModel {
     public static final String KEY_URL = "profile_url";
     public static final String KEY_OWNER_USERID = "owner_userID";
     public static final String KEY_NUM_HELPER = "_numHelper";
+    public static final String KEY_INSTALL = "_install";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -56,6 +57,7 @@ public class OtherOrderDB extends DBModel {
                 + KEY_REPLY_ID + " varchar(25) unique,"
                 + KEY_OWNER_USERID + " varchar(25), "
                 + KEY_REMARK + " varchar(100), "
+                + KEY_INSTALL + " varchar(50), "
                 + KEY_CHARGE + " int, "
                 + KEY_STUDENT_ID + " varchar(15), "
                 + KEY_CARD_ID + " varchar(15), "

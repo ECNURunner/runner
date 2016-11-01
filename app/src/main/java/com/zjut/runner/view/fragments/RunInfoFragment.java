@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVPush;
 import com.avos.avoscloud.SaveCallback;
+import com.avos.avoscloud.SendCallback;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zjut.runner.Controller.AsyncTaskController;
 import com.zjut.runner.Controller.CurrentSession;
@@ -197,8 +199,10 @@ public class RunInfoFragment extends RequestInfoFragment {
             public void done(AVException e) {
                 progressBar.setVisibility(View.GONE);
                 if(e == null){
-                    //successSubmit();
                     saveOrderToDB(orderModel.getObjectID(),OrderStatus.COMPLETED);
+                    AVPush avPush = GeneralUtils.getPush(orderModel.getOwnerModel().getInstallationID(),
+                            Constants.MSG_3);
+                    avPush.sendInBackground();
                 }else{
                     failSubmit();
                 }

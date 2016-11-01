@@ -45,7 +45,7 @@
                 android:layout_width="@dimen/login_icon_width"
                 android:layout_height="@dimen/login_icon_width"
                 android:layout_centerVertical="true"
-                android:layout_marginBottom="@dimen/login_icon_width"
+                android:layout_marginBottom="@dimen/margin_standard"
                 android:layout_marginLeft="@dimen/margin_top"
                 android:background="@drawable/ic_username"
                 android:gravity="center_horizontal" />
@@ -80,7 +80,7 @@
                 android:layout_width="@dimen/login_icon_width"
                 android:layout_height="@dimen/login_icon_width"
                 android:layout_centerVertical="true"
-                android:layout_marginBottom="@dimen/login_icon_width"
+                android:layout_marginBottom="@dimen/margin_standard"
                 android:layout_marginLeft="@dimen/margin_top"
                 android:background="@drawable/ic_password"
                 android:gravity="center_horizontal" />

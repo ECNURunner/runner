@@ -9,11 +9,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVInstallation;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVPush;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.avos.avoscloud.SendCallback;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zjut.runner.Controller.CurrentSession;
 import com.zjut.runner.Model.CampusModel;
@@ -25,6 +28,8 @@ import com.zjut.runner.util.GeneralUtils;
 import com.zjut.runner.util.StringUtil;
 import com.zjut.runner.widget.CircleImageView;
 import com.zjut.runner.widget.MaterialDialog;
+
+import org.json.JSONObject;
 
 
 /**
@@ -201,7 +206,14 @@ public class ReplyRequestFragment extends RequestInfoFragment {
             public void done(AVException e) {
                 if(e == null){
                     CurrentSession.removeRunOrder(activity,orderModel.getObjectID());
-                    successSubmit();
+                    AVPush avPush = GeneralUtils.getPush(orderModel.getOwnerModel().getInstallationID(),
+                            Constants.MSG_1);
+                    avPush.sendInBackground(new SendCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            successSubmit();
+                        }
+                    });
                 }else{
                     failSubmit();
                 }

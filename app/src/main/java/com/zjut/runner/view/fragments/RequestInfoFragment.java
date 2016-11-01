@@ -16,11 +16,13 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVPush;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.avos.avoscloud.SendCallback;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -73,7 +75,14 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 1:
-                    successSubmit();
+                    AVPush avPush = GeneralUtils.getPush(orderModel.getHelper().getInstallationID(),
+                            Constants.MSG_1);
+                    avPush.sendInBackground(new SendCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            successSubmit();
+                        }
+                    });
                     break;
                 case 2:
                     failSubmit();

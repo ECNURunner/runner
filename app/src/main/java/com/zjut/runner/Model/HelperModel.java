@@ -19,8 +19,8 @@ public class HelperModel extends CampusModel{
 
     public HelperModel(String objectId, String userObjectId, String username, String mobile,
                        String email, GenderType genderType, String url,
-                       String campusID, String campusName, String requestObjectID,String requstReplyID, int helperCharge) {
-        super(objectId, userObjectId, username, mobile, email, genderType, url, campusID, campusName);
+                       String campusID, String campusName, String requestObjectID,String requstReplyID, int helperCharge,String install) {
+        super(objectId, userObjectId, username, mobile, email, genderType, url, campusID, campusName,install);
         this.requestObjectID = requestObjectID;
         this.helperCharge = helperCharge;
         this.requstReplyID = requstReplyID;
@@ -63,7 +63,7 @@ public class HelperModel extends CampusModel{
             String requestReply = avObject.getObjectId();
             helperModels.add(new HelperModel(helper.getObjectId(),helper.getUserObjectId(),helper.getUsername(),
                     helper.getMobile(),helper.getEmail(),helper.getGenderType(),helper.getUrl(),helper.getCampusID(),
-                    helper.getCampusName(),objectId,requestReply,helperCharge));
+                    helper.getCampusName(),objectId,requestReply,helperCharge,helper.getInstallationID()));
         }
         return helperModels;
     }

@@ -29,6 +29,7 @@ public class CampusModelDB extends DBModel{
     public static final String KEY_DIS_NAME = "acc_name";
     public static final String KEY_GENDER = "acc_gender";
     public static final String KEY_URL = "profile_url";
+    public static final String KEY_INSTALL = "_install";
     public static final String KEY_BALANCE = "card_balance";
 
     private CampusModelDB(Context context){
@@ -68,6 +69,7 @@ public class CampusModelDB extends DBModel{
                         + KEY_DIS_NAME + " varchar(30), "
                         + KEY_BALANCE + " float, "
                         + KEY_GENDER + " varchar(10), "
+                        + KEY_INSTALL + " varchar(50), "
                         + KEY_URL + " varchar(100), "
                         + "CONSTRAINT"
                         + " unique_id"

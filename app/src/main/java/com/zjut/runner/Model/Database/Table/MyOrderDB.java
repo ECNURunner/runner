@@ -49,6 +49,7 @@ public class MyOrderDB extends DBModel {
     public static final String KEY_URL = "profile_url";
     public static final String KEY_STATUS ="_status";
     public static final String KEY_NUM_HELPER = "_numHelper";
+    public static final String KEY_INSTALL = "_install";
 
     public static final String HELPER_CAMPUS_ID = "objectId";
     public static final String HELPER_USER_ID = "userObjectId";
@@ -81,6 +82,7 @@ public class MyOrderDB extends DBModel {
                 + KEY_FINAL_CHARGE + " int, "
                 + KEY_URL + " varchar(100), "
                 + USER_OBJECT_ID + " varchar(25), "
+                + KEY_INSTALL + " varchar(50), "
                 + KEY_NAME + " varchar(25), "
                 + KEY_GENDER + " varchar(7), "
                 + KEY_MOBILE + " varchar(12), "
@@ -102,6 +104,7 @@ public class MyOrderDB extends DBModel {
                         + REQUEST_REPLY + " varchar(25) unique, "
                         + KEY_CHARGE + " int, "
                         + HELPER_CARD_ID + " varchar(20), "
+                        + KEY_INSTALL + " varchar(50), "
                         + HELPER_CAMPUS_ID + " varchar(25), "
                         + HELPER_USER_ID + " varchar(25), "
                         + HELPER_NAME + " varchar(60), "

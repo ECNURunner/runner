@@ -1,5 +1,7 @@
 package com.zjut.runner.Model;
 
+import android.content.Context;
+
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
@@ -22,8 +24,8 @@ public class CampusModel extends AccountModel{
     private float balance;
 
     public CampusModel(String objectId,String userObjectId, String username, String mobile, String email, GenderType genderType,
-                       String url, String cardPass, String campusID, String campusName, float balance) {
-        super(userObjectId,username, mobile, email, genderType, url);
+                       String url, String cardPass, String campusID, String campusName, float balance,String installationID) {
+        super(userObjectId,username, mobile, email, genderType, url,installationID);
         this.cardPass = cardPass;
         this.campusID = campusID;
         this.campusName = campusName;
@@ -31,8 +33,8 @@ public class CampusModel extends AccountModel{
         this.objectId = objectId;
     }
 
-    public CampusModel(String userObjectId, String username, String mobile, String email, GenderType genderType, String urlProfile) {
-        super(userObjectId,username, mobile, email, genderType,urlProfile);
+    public CampusModel(String userObjectId, String username, String mobile, String email, GenderType genderType, String urlProfile,String installationID) {
+        super(userObjectId,username, mobile, email, genderType,urlProfile,installationID);
     }
 
     public CampusModel(String mobile) {
@@ -43,8 +45,8 @@ public class CampusModel extends AccountModel{
     }
 
     public CampusModel(String objectId, String userObjectId, String username, String mobile,
-                       String email, GenderType genderType, String url, String campusID, String campusName) {
-        super(userObjectId,username, mobile, email, genderType, url);
+                       String email, GenderType genderType, String url, String campusID, String campusName,String installationID) {
+        super(userObjectId,username, mobile, email, genderType, url,installationID);
         this.campusID = campusID;
         this.campusName = campusName;
         this.objectId = objectId;
@@ -112,6 +114,9 @@ public class CampusModel extends AccountModel{
         if(!StringUtil.isNull(campusID)){
             campusModel.setCampusID(campusID);
         }
+        String installationID = avUser.getString(Constants.PARAM_INSTALLATION);
+        campusModel.setInstallationID(installationID);
+
         return campusModel;
     }
 
@@ -141,6 +146,8 @@ public class CampusModel extends AccountModel{
         if(!StringUtil.isNull(campusID)){
             campusModel.setCampusID(campusID);
         }
+        String installationID = avUser.getString(Constants.PARAM_INSTALLATION);
+        campusModel.setInstallationID(installationID);
         return campusModel;
     }
 
@@ -168,6 +175,7 @@ public class CampusModel extends AccountModel{
         campusModel.setGenderType(oldModel.getGenderType());
         campusModel.setCampusID(oldModel.getCampusID());
         campusModel.setUserObjectId(oldModel.getUserObjectId());
+        campusModel.setInstallationID(oldModel.getInstallationID());
         return campusModel;
     }
 
