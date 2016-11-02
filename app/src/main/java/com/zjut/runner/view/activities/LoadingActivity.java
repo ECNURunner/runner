@@ -69,10 +69,10 @@ public class LoadingActivity extends BaseActivity {
             Resources resources = getResources();
             Bitmap loadingBackground = BitmapFactory.decodeResource(resources,R.drawable.loading_background);
             rl_background.setBackground(new BitmapDrawable(loadingBackground));
-            Bitmap logo = BitmapFactory.decodeResource(resources, R.drawable.logo);
-            iv_loading.setBackground(new BitmapDrawable(logo));
+            //Bitmap logo = BitmapFactory.decodeResource(resources, R.drawable.logo);
+            //iv_loading.setBackground(new BitmapDrawable(logo));
             loadingBackground = null;
-            logo = null;
+            //logo = null;
         }catch (OutOfMemoryError e){
 
         }

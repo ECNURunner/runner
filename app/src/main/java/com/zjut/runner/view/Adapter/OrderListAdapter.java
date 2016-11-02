@@ -98,7 +98,6 @@ public class OrderListAdapter extends BaseAdapter {
                 break;
             case COMPLETED:
                 viewHolder.rl_date.setBackgroundColor(context.getResources().getColor(R.color.green));
-                viewHolder.tv_title.setText(orderModel.getHelper().getCampusName());
                 viewHolder.iv_helper.setImageResource(R.drawable.ic_tag_faces_black_24dp);
                 break;
             case CANCELLED:

@@ -3,11 +3,16 @@ package com.zjut.runner.Model;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.zjut.runner.util.Constants;
+import com.zjut.runner.util.GeneralUtils;
 import com.zjut.runner.util.StringUtil;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Phuylai on 2016/10/25.
@@ -242,34 +247,62 @@ public class OrderModel implements Serializable{
             return null;
         AVObject avObject,campusObject;
         List<OrderModel> orderModels = new ArrayList<>();
+        List<OrderModel> returnModels = new ArrayList<>();
+        List<String>  stringList = new ArrayList<>();
+        String studentID = "";
         for(AVObject avObj:avObjects){
-            String studentID = "";
             avObject = avObj.getAVObject(Constants.PARAM_REQUEST_OBJ);
+            String deadline = avObject.getString(Constants.PARAM_DEADLINE);
+            if(GeneralUtils.getDateHourMinute(deadline).before(GeneralUtils.getDateWithTime())){
+                continue;
+            }
             campusObject = avObj.getAVObject(Constants.PARAM_CAMPUS_INFO);
             int numHelpers = (int) avObject.getNumber(Constants.PARAM_NUM_HELPER);
             if(campusObject != null) {
                 studentID = campusObject.getString(Constants.PARAM_ID);
             }
-            if(!studentID.equals(campusID) || numHelpers == 0) {
-                String replyRequestID = avObj.getObjectId();
-                String objectID = avObject.getObjectId();
-                String remark = avObject.getString(Constants.PARAM_REMARK);
-                String orderDate = avObject.getString(Constants.PARAM_ORDER_DATE);
-                String deadline = avObject.getString(Constants.PARAM_DEADLINE);
-                String title = avObject.getString(Constants.PARAM_TITLE);
-                String dest = avObject.getString(Constants.PARAM_DEST);
-                int charge = (int) avObject.getNumber(Constants.PARAM_CHARGE);
-                AVObject ownerCampus = avObj.getAVObject(Constants.PARAM_OWNER_CAMPUS);
-                AVUser ownerUser = avObj.getAVUser(Constants.PARAM_OWNER_USER);
-                OrderStatus status = OrderStatus.getType(avObject.getString(Constants.PARAM_STATUS));
-                CampusModel owner = CampusModel.setCampusModel(ownerUser);
-                CampusModel ownerModel = CampusModel.refreshCampus(owner, ownerCampus);
-                orderModels.add(new OrderModel(remark,orderDate,deadline,title,dest,charge,
-                        ownerModel,objectID,numHelpers,status,replyRequestID));
+            String replyRequestID = avObj.getObjectId();
+            String objectID = avObject.getObjectId();
+            if(!StringUtil.isNull(studentID) && studentID.equals(campusID)){
+                stringList.add(objectID);
+            }
+            String remark = avObject.getString(Constants.PARAM_REMARK);
+            String orderDate = avObject.getString(Constants.PARAM_ORDER_DATE);
+            String title = avObject.getString(Constants.PARAM_TITLE);
+            String dest = avObject.getString(Constants.PARAM_DEST);
+            int charge = (int) avObject.getNumber(Constants.PARAM_CHARGE);
+            AVObject ownerCampus = avObj.getAVObject(Constants.PARAM_OWNER_CAMPUS);
+            AVUser ownerUser = avObj.getAVUser(Constants.PARAM_OWNER_USER);
+            OrderStatus status = OrderStatus.getType(avObject.getString(Constants.PARAM_STATUS));
+            CampusModel owner = CampusModel.setCampusModel(ownerUser);
+            CampusModel ownerModel = CampusModel.refreshCampus(owner, ownerCampus);
+            OrderModel orderModel = new  OrderModel(remark, orderDate, deadline, title, dest, charge,
+                    ownerModel, objectID, numHelpers, status, replyRequestID);
+            if(numHelpers == 0){
+                returnModels.add(orderModel);
+            }else {
+                orderModels.add(orderModel);
             }
         }
-        return orderModels;
+        if(stringList.size() > 0){
+            for(OrderModel model:orderModels){
+                if(filter(model,stringList)){
+                    returnModels.add(model);
+                }
+            }
+        }
+        return returnModels;
     }
+
+    private static boolean filter(OrderModel model,List<String> list){
+        for(String s:list){
+            if(model.getObjectID().equals(s)){
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public static List<OrderModel> setRunModels(List<AVObject> avObjects){
         if(avObjects == null)

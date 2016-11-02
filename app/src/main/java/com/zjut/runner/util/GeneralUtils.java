@@ -37,6 +37,9 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.zjut.runner.Model.LanguageType;
 import com.zjut.runner.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -152,7 +155,7 @@ public class GeneralUtils {
 
     /**
      * return display option
-     * @param context
+     * @param
      *
      */
     public static DisplayImageOptions getOptions() {
@@ -228,6 +231,29 @@ public class GeneralUtils {
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+
+    public static Date getDateHourMinute(String value){
+        if(value == null)
+            return null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm",Locale.CHINA);
+        try {
+            return simpleDateFormat.parse(value);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Date getDateWithTime(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm",Locale.CHINA);
+        Date date = new Date();
+        try {
+            return simpleDateFormat.parse(simpleDateFormat.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static AVPush getPush(String installationID, String alert) {

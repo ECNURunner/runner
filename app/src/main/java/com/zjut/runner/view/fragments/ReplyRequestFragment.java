@@ -14,6 +14,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVPush;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SendCallback;
@@ -31,6 +32,8 @@ import com.zjut.runner.widget.MaterialDialog;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 
 /**
  * Created by Administrator on 2016/10/27.
@@ -44,6 +47,8 @@ public class ReplyRequestFragment extends RequestInfoFragment {
     private AVUser userObj;
     private AVObject campusObj;
     private CampusModel user;
+    private AVObject campusOwnerObj;
+    private int realTimeHelper;
 
     @Override
     protected void parseArgument() {
@@ -151,7 +156,7 @@ public class ReplyRequestFragment extends RequestInfoFragment {
             public void done(AVObject avObject, AVException e) {
                 if(e == null){
                     campusObj = avObject;
-                    putToRequestReply();
+                    getHelpers();
                 }else{
                     failSubmit();
                 }
@@ -161,12 +166,49 @@ public class ReplyRequestFragment extends RequestInfoFragment {
 
     private void putToRequestReply(){
         AVObject reply;
-        if(orderModel.getHelpers() > 0) {
+        if(realTimeHelper > 0) {
             reply = new AVObject(Constants.PARAM_REQUEST_REPLY);
+            fetchOwnerCampusObject(reply);
         }else{
             reply = AVObject.createWithoutData(Constants.PARAM_REQUEST_REPLY,orderModel.getReplyRequestObjectID());
+            fetchRequestObj(reply);
         }
-        fetchRequestObj(reply);
+    }
+
+    private void fetchOwnerCampusObject(final AVObject reply) {
+        AVObject campusObject = AVObject.createWithoutData(Constants.TABLE_CAMPUS,campusID);
+        campusObject.fetchInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                if(e == null){
+                    campusOwnerObj = avObject;
+                    reply.put(Constants.PARAM_OWNER_CAMPUS,avObject);
+                    reply.put(Constants.PARAM_OWNER_USER,AVUser.getCurrentUser());
+                    fetchRequestObj(reply);
+                }else{
+                    failSubmit();
+                }
+            }
+        });
+    }
+
+    private void getHelpers(){
+        AVQuery<AVObject> avQuery = AVQuery.getQuery(Constants.TABLE_REQUEST);
+        avQuery.whereEqualTo(Constants.PARAM_OBJECT_ID,orderModel.getObjectID());
+        avQuery.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if(e == null){
+                    if(list.size() == 0)
+                        return;
+                    AVObject avObject = list.get(0);
+                    realTimeHelper = (int) avObject.getNumber(Constants.PARAM_NUM_HELPER);
+                    putToRequestReply();
+                }else{
+                    failSubmit();
+                }
+            }
+        });
     }
 
     private void fetchRequestObj(final AVObject reply){

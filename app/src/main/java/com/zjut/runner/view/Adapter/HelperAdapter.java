@@ -14,6 +14,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.zjut.runner.Model.HelperModel;
 import com.zjut.runner.R;
+import com.zjut.runner.util.GeneralUtils;
 import com.zjut.runner.util.StringUtil;
 import com.zjut.runner.widget.CircleImageView;
 
@@ -27,22 +28,12 @@ public class HelperAdapter extends RecyclerView.Adapter<HelperAdapter.ViewHolder
 
     private Context context;
     private List<HelperModel> helperModels;
-    private DisplayImageOptions options;
     private HelperClickListener helperClickListener;
 
     public HelperAdapter(Context context,List<HelperModel> helperModels,HelperClickListener helperClickListener){
         this.context = context;
         this.helperModels = helperModels;
         this.helperClickListener = helperClickListener;
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_usericon_default)
-                .showImageForEmptyUri(R.drawable.ic_usericon_default)
-                .showImageOnFail(R.drawable.ic_usericon_default)
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
     }
 
     @Override
@@ -61,7 +52,7 @@ public class HelperAdapter extends RecyclerView.Adapter<HelperAdapter.ViewHolder
         if(helperModel.getGenderType() != null) {
             viewHolder.tv_gender.setText(helperModel.getGenderType().toString());
         }
-        ImageLoader.getInstance().displayImage(helperModel.getUrl(),viewHolder.iv_user,options);
+        ImageLoader.getInstance().displayImage(helperModel.getUrl(),viewHolder.iv_user, GeneralUtils.getOptions());
     }
 
     @Override

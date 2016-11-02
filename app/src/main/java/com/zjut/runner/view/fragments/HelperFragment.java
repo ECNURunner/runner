@@ -70,7 +70,7 @@ public class HelperFragment extends BaseFragment implements Runnable, HelperAdap
     @Override
     protected void findViews(View rootView) {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
+        //recyclerView.setHasFixedSize(true);
         helperAdapter = new HelperAdapter(activity,models,this);
         recyclerView.setAdapter(helperAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));

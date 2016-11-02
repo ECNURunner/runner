@@ -75,8 +75,9 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 1:
-                    AVPush avPush = GeneralUtils.getPush(orderModel.getHelper().getInstallationID(),
-                            Constants.MSG_1);
+                    String installationID = (String) msg.obj;
+                    AVPush avPush = GeneralUtils.getPush(installationID,
+                            Constants.MSG_2);
                     avPush.sendInBackground(new SendCallback() {
                         @Override
                         public void done(AVException e) {
@@ -121,7 +122,9 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
             }else{
                 progressBar.setVisibility(View.VISIBLE);
                 loadHelpersInfo();
-                AddViewHelperClick(StringUtil.convertIntegerToString(orderModel.getHelpers()));
+                if(detailActionItemHolder == null) {
+                    AddViewHelperClick(StringUtil.convertIntegerToString(orderModel.getHelpers()));
+                }
             }
         }
     }
@@ -302,7 +305,7 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         });
     }
 
-    protected void updateStatusToCloud(HelperModel helperModel,AVObject campusObj,AVObject campusUser){
+    protected void updateStatusToCloud(final HelperModel helperModel, AVObject campusObj, AVObject campusUser){
         AVObject request = AVObject.createWithoutData(Constants.TABLE_REQUEST,orderModel.getObjectID());
         request.put(Constants.PARAM_HELPER_USER,campusUser);
         request.put(Constants.PARAM_HELPER_CAMPUS,campusObj);
@@ -314,7 +317,7 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
                 progressBar.setVisibility(View.GONE);
                 if(e == null){
                     //successSubmit();
-                    updateReplyRequest();
+                    updateReplyRequest(helperModel.getInstallationID());
                 }else{
                     failSubmit();
                 }
@@ -348,7 +351,7 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         });
     }
 
-    private void updateReplyRequest(){
+    private void updateReplyRequest(final String installationID){
         AVQuery<AVObject> innerquery = new AVQuery<>(Constants.TABLE_REQUEST);
         innerquery.whereEqualTo(Constants.PARAM_OBJECT_ID,orderModel.getObjectID());
         AVQuery<AVObject> query = new AVQuery<>(Constants.PARAM_REQUEST_REPLY);
@@ -369,10 +372,14 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
                     AVObject.saveAllInBackground(list, new SaveCallback() {
                         @Override
                         public void done(AVException e) {
+                            Message msg = new Message();
                             if(e == null){
-                                handler.sendEmptyMessage(1);
+                                msg.what = 1;
+                                msg.obj = installationID;
+                                handler.sendMessage(msg);
                             }else{
-                                handler.sendEmptyMessage(2);
+                                msg.what = 2;
+                                handler.sendMessage(msg);
                             }
                         }
                     });

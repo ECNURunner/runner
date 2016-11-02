@@ -136,19 +136,20 @@ public class MainActivity extends BaseActivity
         Bundle bundle = this.getIntent().getExtras();
         if(bundle != null) {
             campusModel = (CampusModel) bundle.getSerializable(Constants.PARAM_CAMPUS);
-            if(StringUtil.isNull(campusModel.getInstallationID())){
-                AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(AVException e) {
-                        if(e == null){
-                            String install = AVInstallation.getCurrentInstallation().getInstallationId();
+            AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    if(e == null){
+                        String install = AVInstallation.getCurrentInstallation().getInstallationId();
+                        if(!campusModel.getInstallationID().equals(install)) {
+                            campusModel.setInstallationID(install);
                             updateToUser(install);
-                        }else{
-                            ToastUtil.showToast(R.string.push_fail);
                         }
+                    }else{
+                        ToastUtil.showToast(R.string.push_fail);
                     }
-                });
-            }
+                }
+            });
         }
     }
 
