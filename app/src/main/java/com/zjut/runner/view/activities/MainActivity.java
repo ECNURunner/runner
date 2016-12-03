@@ -47,6 +47,7 @@ import com.zjut.runner.Model.LanguageType;
 import com.zjut.runner.Model.RefreshType;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
+import com.zjut.runner.util.DialogUtil;
 import com.zjut.runner.util.GeneralUtils;
 import com.zjut.runner.util.LanguageUtil;
 import com.zjut.runner.util.ResourceUtil;
@@ -141,7 +142,8 @@ public class MainActivity extends BaseActivity
                 public void done(AVException e) {
                     if(e == null){
                         String install = AVInstallation.getCurrentInstallation().getInstallationId();
-                        if(!campusModel.getInstallationID().equals(install)) {
+                        if(campusModel.getInstallationID() == null || !campusModel.getInstallationID()
+                                .equals(install)) {
                             campusModel.setInstallationID(install);
                             updateToUser(install);
                         }
@@ -399,7 +401,7 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_slideshow) {
-            GeneralUtils.showCallDialog(this);
+            DialogUtil.showCallDialog(this);
         } else if (id == R.id.nav_manage) {
             goToFragment(new ChangePasswordFragment());
         } else if (id == R.id.nav_share) {
@@ -424,7 +426,7 @@ public class MainActivity extends BaseActivity
         View rl_chinese = layout.findViewById(R.id.rl_male);
         final RadioButton rb_chinese = (RadioButton) layout.findViewById(R.id.rb_male);
         final MaterialDialog materialDialog = new MaterialDialog(this);
-        GeneralUtils.setChecked(this,rb_english, rb_chinese);
+        LanguageUtil.setChecked(this,rb_english, rb_chinese);
         rl_english.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -734,10 +736,7 @@ public class MainActivity extends BaseActivity
                 break;
             case PROFILE:
                 AVFile avFile = AVUser.getCurrentUser().getAVFile(Constants.PARAM_PIC_URL);
-                Ion.with(iv_profile)
-                        .placeholder(R.drawable.ic_usericon_default)
-                        .error(R.drawable.ic_usericon_default)
-                        .load(avFile.getThumbnailUrl(false,100,100));
+                ImageLoader.getInstance().displayImage(campusModel.getUrl(),iv_profile,GeneralUtils.getOptions());
                 break;
             case NAME:
                 tv_name.setText(text);

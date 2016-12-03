@@ -41,7 +41,7 @@
     <dimen name="gender_margin">20dp</dimen>
     <dimen name="gender_text">16sp</dimen>
     <!--dashboard-->
-    <dimen name="header_height">130dp</dimen>
+    <dimen name="header_height">180dp</dimen>
     <dimen name="tap_point_height">12dp</dimen>
     <dimen name="tap_point_padding">2dp</dimen>
     <dimen name="header_title_font">20sp</dimen>

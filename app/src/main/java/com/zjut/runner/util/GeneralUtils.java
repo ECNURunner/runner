@@ -52,15 +52,6 @@ public class GeneralUtils {
 
     private static final String TAG = "Utils";
 
-    private static Context mContext = null;
-    private static Resources mResources = null;
-
-
-    public static void initConfig(Context context) {
-        mContext = context;
-        mResources = mContext.getResources();
-    }
-
     public static int getDimenPx(Context context, int dimenId) {
         if (context == null) {
             return 0;
@@ -170,30 +161,6 @@ public class GeneralUtils {
                 .build();
     }
 
-    public static void setChecked(Context context, RadioButton rb_english, RadioButton rb_chinese) {
-        if (rb_english == null || rb_chinese == null) {
-            return;
-        }
-        LanguageType languageType = getLanguageType(context);
-        switch (languageType) {
-            case ENGLISH:
-                rb_english.setChecked(true);
-                break;
-            case CHINESE:
-                rb_chinese.setChecked(true);
-                break;
-        }
-    }
-
-    public static LanguageType getLanguageType(Context context) {
-        LanguageType languageType = MyPreference.getInstance(context).getLanguageType();
-        if (languageType == null) {
-            return Locale.getDefault().getLanguage().equals(Locale.CHINESE.getLanguage()) ?
-                    LanguageType.CHINESE : LanguageType.ENGLISH;
-        }
-        return languageType;
-    }
-
     public static void setMarginTop(int marginTop, View view) {
         if (view == null) {
             return;
@@ -266,28 +233,6 @@ public class GeneralUtils {
         jsonObject.put(Constants.PARAM_ALERT, alert);
         avPush.setData(jsonObject);
         return avPush;
-    }
-
-    public static void showCallDialog(final Context context) {
-        View layout = ((Activity) context).getLayoutInflater().inflate(
-                R.layout.frame_call_dialog, null);
-        Button btn_call = (Button) layout.findViewById(R.id.bt_call);
-        btn_call.getBackground().setAlpha(Constants.DEF_OPAQUE);
-        TextView tv_line = (TextView) layout.findViewById(R.id.tv_hotline);
-        final String phoneNumber = "13127771810";
-        tv_line.setText(context.getString((R.string.str_hotline), "13127771810"));
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setView(layout);
-        final AlertDialog alertDialog = dialog.create();
-        alertDialog.show();
-        btn_call.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
-                context.startActivity(intent);
-                alertDialog.dismiss();
-            }
-        });
     }
 
 }

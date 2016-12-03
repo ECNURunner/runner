@@ -89,7 +89,7 @@
     <string name="str_deadline">Deadline:</string>
     <string name="str_dest">Destination</string>
     <string name="str_charge">Tip Ref: %1$s RMB</string>
-    <string name="title_new">New Request</string>
+    <string name="title_new">Help me</string>
     <string name = "str_set">Set</string>
     <string name = "str_sure">Are you sure to submit?</string>
     <string name="str_currency">RMB</string>

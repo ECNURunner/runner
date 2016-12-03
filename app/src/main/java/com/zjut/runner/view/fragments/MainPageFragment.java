@@ -1,5 +1,6 @@
 package com.zjut.runner.view.fragments;
 
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -19,6 +20,8 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
+import com.zjut.runner.Controller.FragmentFactory;
+import com.zjut.runner.Controller.IconsMaker;
 import com.zjut.runner.Model.BannerModel;
 import com.zjut.runner.Model.GridViewIconModel;
 import com.zjut.runner.Model.MenuType;
@@ -26,6 +29,7 @@ import com.zjut.runner.Model.OrderModel;
 import com.zjut.runner.Model.OrderStatus;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
+import com.zjut.runner.util.DialogUtil;
 import com.zjut.runner.util.GeneralUtils;
 import com.zjut.runner.util.ResourceUtil;
 import com.zjut.runner.util.StringUtil;
@@ -59,13 +63,7 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
     private HeaderAdapter headerAdapter;
     private View mView;
 
-    //list
-    private ListView recyclerView;
-    protected OrderListAdapter orderListAdapter;
-    protected List<Object> models = new ArrayList<>();
-    private List<OrderModel> temp = new ArrayList<>();
     private String campusID;
-    private LinearLayout ll_info;
 
     @Nullable
     @Override
@@ -108,14 +106,12 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
         campusID = activity.campusModel.getCampusID();
         menuIcons();
         requestBanner();
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
         viewPager.startAutoScroll();
-        loadFromCloud(0,5);
     }
 
     @Override
@@ -143,61 +139,7 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
         headerAdapter = new HeaderAdapter(getChildFragmentManager(),bannerModels);
         viewPager.setAdapter(headerAdapter);
         tapPoint = (LinearLayout) rootView.findViewById(R.id.tap_point);
-
-        //list
-        recyclerView = (ListView) rootView.findViewById(R.id.rv_list);
-        orderListAdapter = new OrderListAdapter(activity,models);
-        recyclerView.setAdapter(orderListAdapter);
-        ll_info = (LinearLayout) rootView.findViewById(R.id.ll_indicator);
-        GeneralUtils.setListViewHeightBasedOnChildren(recyclerView);
-        loadFromCloud(0,5);
     }
-
-    protected void loadFromCloud(int skip, int limit) {
-        AVQuery<AVObject> innerQuery = AVQuery.getQuery(Constants.TABLE_REQUEST);
-        innerQuery.whereNotEqualTo(Constants.PARAM_CAMPUS_ID,campusID);
-        innerQuery.whereEqualTo(Constants.PARAM_STATUS, OrderStatus.PENDING.toString());
-        innerQuery.whereEqualTo(Constants.PARAM_CHOSEN,false);
-        AVQuery<AVObject> query = AVQuery.getQuery(Constants.PARAM_REQUEST_REPLY);
-        query.whereMatchesQuery(Constants.PARAM_REQUEST_OBJ,innerQuery);
-        query.include(Constants.PARAM_CAMPUS_INFO);
-        query.include(Constants.PARAM_REQUEST_OBJ);
-        query.include(Constants.PARAM_OWNER_USER);
-        query.include(Constants.PARAM_OWNER_CAMPUS);
-        query.setSkip(skip);
-        query.setLimit(limit);
-        innerQuery.orderByDescending(Constants.PARAM_CREATE);
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                if(e == null){
-                    if(list == null || list.size() == 0){
-                        ll_info.setVisibility(View.GONE);
-                        return;
-                    }
-                    notifyData(list);
-                }else{
-                    ToastUtil.showToastShort(activity, e.getMessage());
-                }
-            }
-        });
-    }
-
-    protected void notifyData(List<AVObject> list) {
-        models.clear();
-        temp = OrderModel.OrderModels(list,campusID);
-        if(temp.size() > 0){
-            ll_info.setVisibility(View.VISIBLE);
-        }else{
-            ll_info.setVisibility(View.GONE);
-        }
-        models.addAll(temp);
-        if (orderListAdapter != null) {
-            orderListAdapter.notifyDataSetChanged();
-            GeneralUtils.setListViewHeightBasedOnChildren(recyclerView);
-        }
-    }
-
 
 
     private void requestBanner() {
@@ -257,15 +199,15 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     private void menuIcons() {
-        Icons.add(0,new GridViewIconModel(MenuType.CREATE,"Help Me","帮帮我",R.drawable.ic_info));
-        Icons.add(1,new GridViewIconModel(MenuType.ORDER,"My Order","我的订单",R.drawable.ic_list));
-        Icons.add(2,new GridViewIconModel(MenuType.HELPS,"Let's Run","跑吧",R.drawable.ic_man));
-        Icons.add(3,new GridViewIconModel(MenuType.RUN,"Run List","跑吧订单",R.drawable.ic_list_1));
+        IconsMaker iconsMaker = new IconsMaker();
+        Icons.add(iconsMaker.getHelpMe());
+        Icons.add(iconsMaker.myOrderIcon());
+        Icons.add(iconsMaker.runList());
+        Icons.add(iconsMaker.myRun());
     }
 
     @Override
     protected void setListener() {
-        recyclerView.setOnItemClickListener(this);
     }
 
     @Override
@@ -286,59 +228,17 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(parent.getId() == R.id.rv_list){
-            OrderModel orderModel = (OrderModel) models.get(position);
-            ReplyRequestFragment replyRequestFragment = new ReplyRequestFragment();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(Constants.PARAM_ORDER,orderModel);
-            replyRequestFragment.setArguments(bundle);
-            activity.goToFragment(replyRequestFragment);
-        }else {
-            GridViewIconModel gridViewIconModel = (GridViewIconModel) adapter.getItem(position);
-            MenuType menuType = gridViewIconModel.getType();
-            switch (menuType) {
-                case HELPS:
-                case ORDER:
-                case RUN:
-                case CREATE:
-                    authorizedFunction(menuType);
-                    break;
-            }
-        }
+        GridViewIconModel gridViewIconModel = (GridViewIconModel) adapter.getItem(position);
+        MenuType menuType = gridViewIconModel.getType();
+        authorizedFunction(menuType);
     }
 
     private void authorizedFunction(MenuType menuType){
         if(activity.campusModel == null || StringUtil.isNull(activity.campusModel.getCampusID())){
-            showDialog();
+            DialogUtil.showDialog(activity,R.string.reminder,R.string.str_message_invalid);
             return;
         }
-        switch (menuType){
-            case RUN:
-                activity.goToFragment(new MyRunListFragment());
-                break;
-            case ORDER:
-                activity.goToFragment(new MyOrderFragment());
-                break;
-            case HELPS:
-                activity.goToFragment(new AllOrderFragment());
-                break;
-            case CREATE:
-                activity.goToFragment(new NewRequestFragment());
-                break;
-        }
-    }
-
-    private void showDialog(){
-        final MaterialDialog materialDialog = new MaterialDialog(activity);
-        materialDialog.setTitle(R.string.reminder);
-        materialDialog.setMessage(R.string.str_message_invalid);
-        materialDialog.setPositiveButton(R.string.button_ok, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                materialDialog.dismiss();
-            }
-        });
-        materialDialog.show();
+        activity.goToFragment(FragmentFactory.getFragment(menuType.toString()));
     }
 
     @Override
@@ -363,7 +263,5 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public void onPageScrollStateChanged(int state) {
-
     }
-
 }

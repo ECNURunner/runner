@@ -1,10 +1,13 @@
 package com.zjut.runner.Model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Phuylai on 2016/10/23.
  */
 
-public class GridViewIconModel {
+public class GridViewIconModel implements Cloneable{
 
     private String url;
     private MenuType type;
@@ -18,17 +21,6 @@ public class GridViewIconModel {
         this.type = type;
         this.enName = enName;
         this.chName = chName;
-        this.imageId = imageId;
-    }
-
-    public GridViewIconModel(String url, MenuType type,String tag,String enName, String chName,
-                             String imageUrl,int imageId) {
-        this.url = url;
-        this.type = type;
-        this.tag = tag;
-        this.enName = enName;
-        this.chName = chName;
-        this.imageUrl = imageUrl;
         this.imageId = imageId;
     }
 
@@ -86,6 +78,17 @@ public class GridViewIconModel {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Object clone = null;
+        try{
+            clone = super.clone();
+        }catch (CloneNotSupportedException e){
+            e.printStackTrace();
+        }
+        return clone;
     }
 }
 

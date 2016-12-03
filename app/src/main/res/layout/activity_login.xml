@@ -88,7 +88,7 @@
             <EditText
                 android:id="@+id/et_password"
                 style="@style/login_edit_style"
-                android:hint="password"
+                android:hint="@string/str_register_password"
                 android:inputType="textPassword"
                 android:paddingLeft="@dimen/login_padding_left"
                 android:textColor="@color/white"/>

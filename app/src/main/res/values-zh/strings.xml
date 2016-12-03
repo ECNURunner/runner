@@ -80,7 +80,7 @@
     <string name="str_deadline">有效时间:</string>
     <string name="str_dest">目的地</string>
     <string name="str_charge">参考小费: %1$s</string>
-    <string name="title_new">创建</string>
+    <string name="title_new">帮帮我</string>
     <string name = "str_set">设置</string>
     <string name = "str_sure">是否确定提交？</string>
     <string name="str_currency">块</string>
@@ -134,8 +134,8 @@
     <string name="str_center">服务支持</string>
     <!--push-->
     <string name="push.fail">订阅失败</string>
-    <string name="push.message.1">您的请求有人参与</string>
+    <string name="push.message.1">您的订单有人申请</string>
     <string name="push.messge.2">快跑吧</string>
-    <string name="push.message.3">请求已完成</string>
+    <string name="push.message.3">您的订单 已完成</string>
 
 </resources>

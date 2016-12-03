@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
+import android.widget.RadioButton;
 
 import com.zjut.runner.Model.LanguageType;
 
@@ -52,4 +53,29 @@ public class LanguageUtil {
         }
         return languageType;
     }
+
+    public static LanguageType getLanguageType(Context context) {
+        LanguageType languageType = MyPreference.getInstance(context).getLanguageType();
+        if (languageType == null) {
+            return Locale.getDefault().getLanguage().equals(Locale.CHINESE.getLanguage()) ?
+                    LanguageType.CHINESE : LanguageType.ENGLISH;
+        }
+        return languageType;
+    }
+
+    public static void setChecked(Context context, RadioButton rb_english, RadioButton rb_chinese) {
+        if (rb_english == null || rb_chinese == null) {
+            return;
+        }
+        LanguageType languageType = getLanguageType(context);
+        switch (languageType) {
+            case ENGLISH:
+                rb_english.setChecked(true);
+                break;
+            case CHINESE:
+                rb_chinese.setChecked(true);
+                break;
+        }
+    }
+
 }

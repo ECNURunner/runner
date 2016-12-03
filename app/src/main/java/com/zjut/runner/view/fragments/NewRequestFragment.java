@@ -331,7 +331,6 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
             @Override
             public void done(AVException e) {
                 if (e == null) {
-                    //successSubmit();
                     putToReplyRequest(repair.getObjectId(),campus);
                 } else {
                     failSubmit();
