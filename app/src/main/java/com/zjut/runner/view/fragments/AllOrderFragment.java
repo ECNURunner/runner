@@ -27,32 +27,13 @@ import java.util.List;
 public class AllOrderFragment extends OrderContentFragment{
 
     @Override
-    protected void parseArgument() {
+    public void parseArgument() {
         campusID = activity.campusModel.getCampusID();
     }
 
-    protected synchronized void loadList(final int skip,final int limit){
-        if(dbLoad != null){
-            return;
-        }
-        dbLoad = new AsyncTask<Object, Void, List<OrderModel>>() {
-            @Override
-            protected List<OrderModel> doInBackground(Object... params) {
-                return CurrentSession.getAllOrderModels(activity,campusID);
-            }
-
-            @Override
-            protected void onPostExecute(List<OrderModel> orders) {
-                dbLoad = null;
-                if(orders != null && orders.size() > 0){
-                    orderModels.clear();
-                    orderModels.addAll(orders);
-                    refreshList();
-                }
-                loadFromCloud(skip,limit);
-            }
-        };
-        AsyncTaskController.startTask(dbLoad);
+    @Override
+    protected List<OrderModel> loadFromDataBase() {
+        return CurrentSession.getAllOrderModels(activity,campusID);
     }
 
     @Override
@@ -111,24 +92,11 @@ public class AllOrderFragment extends OrderContentFragment{
         }
     }
 
-    protected synchronized void saveOrderToDB(){
-        if(dbSaveOrder != null)
-            return;
-        dbSaveOrder = new AsyncTask<Object, Void, Void>() {
-            @Override
-            protected Void doInBackground(Object... params) {
-                for(OrderModel orderModel:orderModels){
-                    CurrentSession.putAllOrders(activity,orderModel,campusID);
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                dbSaveOrder = null;
-            }
-        };
-        AsyncTaskController.startTask(dbSaveOrder);
+    @Override
+    protected void saveModelToDB() {
+        for(OrderModel orderModel:orderModels){
+            CurrentSession.putAllOrders(activity,orderModel,campusID);
+        }
     }
 
     @Override

@@ -35,8 +35,8 @@ import java.util.List;
  * Created by Phuylai on 2016/10/25.
  */
 
-public class OrderContentFragment extends BaseFragment implements PullToRefreshLayout.OnRefreshListener,
-        Runnable, AdapterView.OnItemClickListener, BaseFragment.SelectedItemCallBackListener {
+public class OrderContentFragment extends BaseCloudFragment implements PullToRefreshLayout.OnRefreshListener,
+        AdapterView.OnItemClickListener, BaseFragment.SelectedItemCallBackListener {
 
     protected PullToRefreshLayout pullToRefreshLayout;
     protected PullListView pullListView;
@@ -46,15 +46,6 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
     protected List<OrderModel> orderModels = new ArrayList<>();
     protected OrderListAdapter orderListAdapter;
 
-    //load model
-    protected AsyncTask<Object,Void,List<OrderModel>> dbLoad = null;
-
-    //save model
-    protected AsyncTask<Object,Void,Void> dbSaveOrder = null;
-
-    // refresh
-    protected Handler mUiHandler = new Handler();
-    protected long DELAYMILLIS = 100;
     protected int SKIP = 0;
     protected boolean onLoad = false;
 
@@ -63,12 +54,7 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
     protected String campusID;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        parseArgument();
-    }
-
-    protected void parseArgument(){
+    public void parseArgument() {
         Bundle bundle = getArguments();
         if(bundle == null)
             return;
@@ -90,56 +76,22 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        layoutId = R.layout.fragment_order_list;
-        return super.onCreateView(inflater, container, savedInstanceState);
+    protected void addModels(List<OrderModel> orders) {
+        orderModels.clear();
+        orderModels.addAll(orders);
     }
 
     @Override
-    public void changeTitle() {
-
+    protected List<OrderModel> loadFromDataBase() {
+        return  CurrentSession.getOrderModels(activity,campusID,status);
     }
 
     @Override
-    protected void findViews(View rootView) {
-        pullToRefreshLayout = (PullToRefreshLayout) rootView.findViewById(R.id.pull_refresh_layout);
-        pullListView = (PullListView) rootView.findViewById(R.id.pull_list_view);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.pb_sending_post);
-        orderListAdapter = new OrderListAdapter(activity,models);
-        pullListView.setAdapter(orderListAdapter);
-        progressBar.setVisibility(View.VISIBLE);
-        loadList(0,5);
-    }
-
-    protected synchronized void loadList(final int skip,final int limit){
-        if(dbLoad != null){
-            return;
-        }
-        dbLoad = new AsyncTask<Object, Void, List<OrderModel>>() {
-            @Override
-            protected List<OrderModel> doInBackground(Object... params) {
-                return CurrentSession.getOrderModels(activity,campusID,status);
-            }
-
-            @Override
-            protected void onPostExecute(List<OrderModel> orders) {
-                dbLoad = null;
-                if(orders != null && orders.size() > 0){
-                    orderModels.clear();
-                    orderModels.addAll(orders);
-                    refreshList();
-                }
-                loadFromCloud(skip,limit);
-            }
-        };
-        AsyncTaskController.startTask(dbLoad);
-    }
-
-    protected void loadFromCloud(int skip,int limit){
+    protected void loadFromCloud(int start, int limit) {
         AVQuery<AVObject> innerQuery = AVQuery.getQuery(Constants.TABLE_REQUEST);
         innerQuery.whereEqualTo(Constants.PARAM_CAMPUS_ID,campusID);
         innerQuery.whereEqualTo(Constants.PARAM_STATUS,status);
-        innerQuery.setSkip(skip);
+        innerQuery.setSkip(start);
         innerQuery.setLimit(limit);
         innerQuery.orderByDescending(Constants.PARAM_CREATE);
         innerQuery.include(Constants.PARAM_HELPER_USER);
@@ -163,6 +115,42 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
         });
     }
 
+    @Override
+    protected void saveModelToDB() {
+        for(OrderModel orderModel:orderModels){
+            CurrentSession.putOrderModel(activity,orderModel,campusID);
+        }
+    }
+
+    @Override
+    protected void runThread() {
+        if(models != null) {
+            updateData();
+            notifyData();
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        layoutId = R.layout.fragment_order_list;
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void changeTitle() {
+
+    }
+
+    @Override
+    protected void findViews(View rootView) {
+        pullToRefreshLayout = (PullToRefreshLayout) rootView.findViewById(R.id.pull_refresh_layout);
+        pullListView = (PullListView) rootView.findViewById(R.id.pull_list_view);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.pb_sending_post);
+        orderListAdapter = new OrderListAdapter(activity,models);
+        pullListView.setAdapter(orderListAdapter);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
     protected void notifyData(List<AVObject> list) {
         onLoadData();
         if(onLoad){
@@ -176,33 +164,6 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
             saveOrderToDB();
         }
 
-    }
-
-    protected synchronized void saveOrderToDB(){
-        if(dbSaveOrder != null)
-            return;
-        dbSaveOrder = new AsyncTask<Object, Void, Void>() {
-            @Override
-            protected Void doInBackground(Object... params) {
-                for(OrderModel orderModel:orderModels){
-                    CurrentSession.putOrderModel(activity,orderModel,campusID);
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                dbSaveOrder = null;
-            }
-        };
-        AsyncTaskController.startTask(dbSaveOrder);
-    }
-
-    protected void refreshList(){
-        if(mUiHandler == null){
-            return;
-        }
-        RunnableManager.getInstance().postDelayed(this, DELAYMILLIS);
     }
 
     protected void onLoadData(){
@@ -228,14 +189,6 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
     public void onLoadMore(final PullToRefreshLayout pullToRefresh) {
         onLoad = true;
         loadFromCloud(SKIP,5);
-    }
-
-    @Override
-    public void run() {
-        if(models != null) {
-            updateData();
-            notifyData();
-        }
     }
 
     protected void notifyData(){

@@ -61,7 +61,7 @@ public class RunContentFragment extends OrderContentFragment {
     }
 
     @Override
-    protected void parseArgument() {
+    public void parseArgument() {
         Bundle bundle = getArguments();
         if(bundle == null)
             return;
@@ -88,30 +88,9 @@ public class RunContentFragment extends OrderContentFragment {
         }
     }
 
-
     @Override
-    protected synchronized void loadList(final int skip, final int limit) {
-        if(dbLoad != null){
-            return;
-        }
-        dbLoad = new AsyncTask<Object, Void, List<OrderModel>>() {
-            @Override
-            protected List<OrderModel> doInBackground(Object... params) {
-                return CurrentSession.getRunModels(activity,campusID,status);
-            }
-
-            @Override
-            protected void onPostExecute(List<OrderModel> orders) {
-                dbLoad = null;
-                if(orders != null && orders.size() > 0){
-                    orderModels.clear();
-                    orderModels.addAll(orders);
-                    refreshList();
-                }
-                loadFromCloud(skip,limit);
-            }
-        };
-        AsyncTaskController.startTask(dbLoad);
+    protected List<OrderModel> loadFromDataBase() {
+        return CurrentSession.getRunModels(activity,campusID,status);
     }
 
     @Override
@@ -161,24 +140,9 @@ public class RunContentFragment extends OrderContentFragment {
     }
 
     @Override
-    protected synchronized void saveOrderToDB() {
-        if(dbSaveOrder != null)
-            return;
-        dbSaveOrder = new AsyncTask<Object, Void, Void>() {
-            @Override
-            protected Void doInBackground(Object... params) {
-                for(OrderModel orderModel:orderModels){
-                    CurrentSession.putRunModel(activity,orderModel,campusID);
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                dbSaveOrder = null;
-            }
-        };
-        AsyncTaskController.startTask(dbSaveOrder);
+    protected void saveModelToDB() {
+        for(OrderModel orderModel:orderModels){
+            CurrentSession.putRunModel(activity,orderModel,campusID);
+        }
     }
-
 }
