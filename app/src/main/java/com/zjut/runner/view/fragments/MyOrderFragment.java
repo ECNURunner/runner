@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.zjut.runner.Controller.FragmentFactory;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.ResourceUtil;
@@ -32,7 +33,7 @@ public class MyOrderFragment extends BaseFragment {
 
     @Override
     public void changeTitle() {
-        activity.changeTitle(R.string.str_myorder);
+        setTitle(R.string.str_myorder);
     }
 
     protected void initFragment(int index)
@@ -48,12 +49,10 @@ public class MyOrderFragment extends BaseFragment {
         transaction.commit();
     }
 
-    protected OrderContentFragment createFragment(int index){
-        OrderContentFragment orderContentFragment = new OrderContentFragment();
+    protected BaseFragment createFragment(int index){
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.PARAM_NO,index);
-        orderContentFragment.setArguments(bundle);
-        return orderContentFragment;
+        return FragmentFactory.getFragment(Constants.FRAG_ORDER_CONTENT,bundle,null);
     }
 
     @Override
@@ -119,13 +118,4 @@ public class MyOrderFragment extends BaseFragment {
 
     }
 
-    @Override
-    public void onSearchClose() {
-
-    }
-
-    @Override
-    public void search(String searchString) {
-
-    }
 }

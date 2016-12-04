@@ -109,5 +109,18 @@ public class Constants {
     public static final String MSG_2 = "2";
     public static final String MSG_3 = "3";
 
+    //Fragment
+    public static final String FRAG_ORDER_CONTENT = "OrderContent";
+    public static final String FRAG_ORDER_INFO = "RequestInfo";
+    public static final String FRAG_BIND = "BindFragment";
+    public static final String FRAG_CHANGE_PSW = "ChangePassword";
+    public static final String FRAG_CHANGE_PHONE = "ChangePhone";
+    public static final String FRAG_CHANGE_EMAIL = "ChangeEmail";
+    public static final String FRAG_HELPER = "Helper";
+    public static final String FRAG_CHANGE_NAME = "Name";
+    public static final String FRAG_REPLY_REQ = "ReplyRequest";
+    public static final String FRAG_RUN_CONTENT = "RunContent";
+    public static final String FRAG_RUN_INFO = "RunInfo";
+    public static final String FRAG_WEB = "WebNormal";
 
 }

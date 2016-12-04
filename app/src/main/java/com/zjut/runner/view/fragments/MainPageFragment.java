@@ -122,7 +122,7 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public void changeTitle() {
-        activity.changeTitle(R.string.app_name);
+        setTitle(R.string.app_name);
     }
 
     @Override
@@ -214,16 +214,6 @@ public class MainPageFragment extends BaseFragment implements AdapterView.OnItem
     public boolean onBackPressed() {
         activity.finish();
         return true;
-    }
-
-    @Override
-    public void onSearchClose() {
-
-    }
-
-    @Override
-    public void search(String searchString) {
-
     }
 
     @Override

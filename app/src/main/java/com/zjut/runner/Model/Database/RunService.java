@@ -43,7 +43,7 @@ public class RunService {
         TableOperator tableOperator = new TableOperator() {
             @Override
             public void doWork(SQLiteDatabase db) {
-                net.sqlcipher.Cursor cursor = db.rawQuery(getRun,new String[]{ownerID,status});;
+                net.sqlcipher.Cursor cursor = db.rawQuery(getRun,new String[]{ownerID,status});
                 if(cursor.moveToFirst()){
                     do{
                         OrderModel orderModel = getRunInfo(cursor);

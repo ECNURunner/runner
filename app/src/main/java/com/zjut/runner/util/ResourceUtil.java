@@ -4,6 +4,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+
+import com.zjut.runner.R;
 
 /**
  * Created by Administrator on 2016/10/17.
@@ -93,5 +98,37 @@ public class ResourceUtil {
 
     public static void setmRessurces(Resources mRessurces) {
         ResourceUtil.mRessurces = mRessurces;
+    }
+
+    public static void addGreyLine(Context context,LinearLayout ll, int height){
+        View view = new View(context);
+        view.setBackgroundColor(context.getResources().getColor(R.color.line_gray));
+        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height));
+        addView(ll,view);
+    }
+
+    public static void addView(LinearLayout bodyView,View view) {
+        if (view == null) {
+            return;
+        }
+        if (bodyView == null) {
+            return;
+        }
+        if(view.getParent() != null){
+            bodyView.removeAllViews();
+        }
+        bodyView.addView(view);
+    }
+
+    public static void setMarginTop(int marginTop, View view) {
+        if (view == null) {
+            return;
+        }
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) view.getLayoutParams();
+        if (lp == null){
+            lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        lp.topMargin = marginTop;
+        view.setLayoutParams(lp);
     }
 }

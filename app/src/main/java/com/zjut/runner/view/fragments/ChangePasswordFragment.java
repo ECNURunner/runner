@@ -62,7 +62,7 @@ public class ChangePasswordFragment extends BindFragment {
 
     @Override
     public void changeTitle() {
-       activity.changeTitle(R.string.str_change_psd);
+       setTitle(R.string.str_change_psd);
     }
 
     @Override

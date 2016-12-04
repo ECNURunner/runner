@@ -42,6 +42,7 @@ import com.avos.avoscloud.SaveCallback;
 import com.koushikdutta.ion.Ion;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zjut.runner.Controller.CurrentSession;
+import com.zjut.runner.Controller.FragmentFactory;
 import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.Model.LanguageType;
 import com.zjut.runner.Model.RefreshType;
@@ -74,7 +75,7 @@ import static com.zjut.runner.util.Constants.REQUEST_IMAGE;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
-        MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener, UserHeaderHolder.ProfileClick {
+        UserHeaderHolder.ProfileClick {
 
     public static final String tag = MainActivity.class.getSimpleName();
     public CampusModel campusModel;
@@ -103,7 +104,6 @@ public class MainActivity extends BaseActivity
     protected FragmentTransaction transaction = null;
 
     private static final long SEARCH_WAIT_TIME = 400;
-    private SearchRunnable searchRunnable = new SearchRunnable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -382,10 +382,7 @@ public class MainActivity extends BaseActivity
     }
 
     protected boolean needLeftDrawer() {
-        if (currentFragment == null) {
-            return false;
-        }
-        return true;
+        return currentFragment != null;
     }
 
     private void backToPrevious() {
@@ -403,7 +400,7 @@ public class MainActivity extends BaseActivity
         if (id == R.id.nav_slideshow) {
             DialogUtil.showCallDialog(this);
         } else if (id == R.id.nav_manage) {
-            goToFragment(new ChangePasswordFragment());
+            goToFragment(FragmentFactory.getFragment(Constants.FRAG_CHANGE_PSW));
         } else if (id == R.id.nav_share) {
             showChangeLanguage();
         } else if (id == R.id.nav_send) {
@@ -479,46 +476,6 @@ public class MainActivity extends BaseActivity
         }
         //setSearchViewStatus(menu,null);
         return super.onPrepareOptionsMenu(menu);
-    }
-
-    public void setSearchViewStatus(Menu menu, String searchHint) {
-        if (menu == null) {
-            return;
-        }
-
-        MenuItem searchItem = menu.findItem(R.id.action_settings);
-        if (searchItem == null) {
-            return;
-        }
-
-        SearchView sv = (SearchView) searchItem.getActionView();
-        searchItem.setOnActionExpandListener(this);
-        sv.setIconifiedByDefault(true);
-        sv.setOnQueryTextListener(this);
-    }
-
-    @Override
-    public boolean onMenuItemActionExpand(MenuItem item) {
-        if (currentFragment != null) {
-            currentFragment.onSearchClose();
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onMenuItemActionCollapse(MenuItem item) {
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        search(newText);
-        return false;
     }
 
     public void setDrawerIndicatorEnabled(boolean enable) {
@@ -634,12 +591,6 @@ public class MainActivity extends BaseActivity
         topFragments.add(topFragment);
     }
 
-    private void search(String query) {
-        searchRunnable.setSearchString(query);
-        RunnableManager.getInstance().postDelayed(searchRunnable,
-                SEARCH_WAIT_TIME);
-    }
-
     @Override
     public void changeProfile() {
         int selectMode = MultiImageSelectorActivity.MODE_SINGLE;
@@ -696,21 +647,6 @@ public class MainActivity extends BaseActivity
         });
     }
 
-    class SearchRunnable implements Runnable {
-
-        private String searchString;
-
-        public void setSearchString(String searchString) {
-            this.searchString = searchString;
-        }
-
-        @Override
-        public void run() {
-            if (currentFragment != null)
-                currentFragment.search(searchString);
-        }
-    }
-
     /**
      * When using the ActionBarDrawerToggle, you must call it during
      * onPostCreate() and onConfigurationChanged()...
@@ -753,12 +689,6 @@ public class MainActivity extends BaseActivity
         if (imm.isActive()) {
             imm.hideSoftInputFromWindow(getWindow().getDecorView()
                     .getWindowToken(), 0);
-        }
-    }
-
-    public void changeTitle(int resID){
-        if(collapsingToolbarLayout != null){
-            collapsingToolbarLayout.setTitle(getResources().getString(resID));
         }
     }
 

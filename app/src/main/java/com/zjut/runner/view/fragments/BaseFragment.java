@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.text.Html;
@@ -32,6 +33,7 @@ import java.util.Map;
 public abstract class BaseFragment extends Fragment{
 
     protected MainActivity activity;
+    protected CollapsingToolbarLayout toolbarLayout;
     protected View rootView;
     protected int layoutId = -1;
     private int titleResId = -1;
@@ -54,6 +56,7 @@ public abstract class BaseFragment extends Fragment{
         context = getActivity();
         resources = context.getResources();
         activity = (MainActivity) getActivity();
+        toolbarLayout = activity.collapsingToolbarLayout;
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
     }
@@ -115,36 +118,10 @@ public abstract class BaseFragment extends Fragment{
         return titleResId;
     }
 
-    protected void setTitle(CharSequence title){
-        if(activity == null)
-            return;
-        ActionBar actionBar = activity.getSupportActionBar();
-        if(actionBar == null){
-            return;
+    protected void setTitle(int resourceID){
+        if(toolbarLayout != null){
+            toolbarLayout.setTitle(getResources().getString(resourceID));
         }
-        actionBar.setTitle(Html.fromHtml(title.toString()));
-    }
-
-    protected void setTitle(String title){
-        if(activity == null)
-            return;
-        ActionBar actionBar = activity.getSupportActionBar();
-        if(actionBar == null)
-            return;
-        actionBar.setTitle(title);
-    }
-
-    protected void setTitle(int resourceId) {
-        if (activity == null) {
-            return;
-        }
-
-        ActionBar actionBar = activity.getSupportActionBar();
-        if (actionBar == null) {
-            return;
-        }
-
-        actionBar.setTitle(resourceId);
     }
 
     protected abstract void findViews(View rootView);
@@ -190,29 +167,6 @@ public abstract class BaseFragment extends Fragment{
             return true;
         }
         return false;
-    }
-
-    public abstract void onSearchClose();
-
-    public abstract void search(String searchString);
-
-    protected void resumeSearch(MenuItem searchMenuItem) {
-        if (StringUtil.isNull(searchString)) {
-            return;
-        }
-        if (searchMenuItem == null) {
-            return;
-        }
-        searchMenuItem.expandActionView();
-        SearchView sv = (SearchView) searchMenuItem.getActionView();
-        if (sv == null) {
-            return;
-        }
-        sv.setQuery(searchString, false);
-    }
-
-    public void onKeyBoardStateChange(int state){
-
     }
 
 }

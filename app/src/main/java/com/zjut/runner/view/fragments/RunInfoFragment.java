@@ -65,7 +65,7 @@ public class RunInfoFragment extends RequestInfoFragment {
 
     @Override
     public void changeTitle() {
-        activity.changeTitle(R.string.str_info);
+        setTitle(R.string.str_info);
     }
 
     @Override

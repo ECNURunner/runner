@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
+import com.zjut.runner.Controller.FragmentFactory;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.ResourceUtil;
@@ -19,17 +20,15 @@ import me.majiajie.pagerbottomtabstrip.TabLayoutMode;
 public class MyRunListFragment extends MyOrderFragment {
 
     @Override
-    protected OrderContentFragment createFragment(int index) {
-        RunContentFragment orderContentFragment = new RunContentFragment();
+    protected BaseFragment createFragment(int index) {
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.PARAM_NO,index);
-        orderContentFragment.setArguments(bundle);
-        return orderContentFragment;
+        return FragmentFactory.getFragment(Constants.FRAG_RUN_CONTENT,bundle,null);
     }
 
     @Override
     public void changeTitle() {
-        activity.changeTitle(R.string.title_run_list);
+        setTitle(R.string.title_run_list);
     }
 
     @Override

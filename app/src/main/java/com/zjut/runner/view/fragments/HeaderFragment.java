@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.koushikdutta.ion.Ion;
+import com.zjut.runner.Controller.FragmentFactory;
 import com.zjut.runner.Model.BannerModel;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
@@ -66,12 +67,10 @@ public class HeaderFragment extends Fragment implements View.OnClickListener {
             if (StringUtil.isNull(url)) {
                 return;
             }
-            WebNormalFragment webBrowserFragment = new WebNormalFragment();
             Bundle bundle = new Bundle();
             bundle.putString(Constants.PARAM_URL, url);
             bundle.putString(Constants.PARAM_TITLE, resId.getTitle());
-            webBrowserFragment.setArguments(bundle);
-            activity.goToFragment(webBrowserFragment);
+            activity.goToFragment(FragmentFactory.getFragment(Constants.FRAG_WEB,bundle,null));
         }
         else{
             ToastUtil.showToastShort(activity, R.string.connection_not_avalible);

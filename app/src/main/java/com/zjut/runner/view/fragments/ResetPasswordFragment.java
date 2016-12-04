@@ -204,16 +204,6 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
     }
 
     @Override
-    public void onSearchClose() {
-
-    }
-
-    @Override
-    public void search(String searchString) {
-
-    }
-
-    @Override
     public void onClick(View v) {
         String captcha = et_forget_psd_input_captcha.getText().toString();
         switch (v.getId()) {

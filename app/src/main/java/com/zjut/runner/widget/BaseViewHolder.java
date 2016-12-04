@@ -4,11 +4,19 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2016/10/20.
  */
 
-public abstract class BaseViewHolder implements View.OnClickListener {
+public abstract class BaseViewHolder implements View.OnClickListener{
 
     protected LayoutInflater layoutInflater;
     protected View rootView;
@@ -49,4 +57,5 @@ public abstract class BaseViewHolder implements View.OnClickListener {
     public void onClick(View v) {
 
     }
+
 }

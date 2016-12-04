@@ -52,7 +52,7 @@ public class MyOrderService {
         TableOperator tableOperator = new TableOperator() {
             @Override
             public void doWork(SQLiteDatabase db) {
-                net.sqlcipher.Cursor cursor = db.rawQuery(getMyOrder,new String[]{ownerID,status});;
+                net.sqlcipher.Cursor cursor = db.rawQuery(getMyOrder,new String[]{ownerID,status});
                 if(cursor.moveToFirst()){
                     do{
                         OrderModel orderModel = getOrderInfo(cursor);

@@ -17,12 +17,15 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.zjut.runner.Controller.AsyncTaskController;
 import com.zjut.runner.Controller.CurrentSession;
+import com.zjut.runner.Controller.DetailItemMaker;
+import com.zjut.runner.Controller.FragmentFactory;
 import com.zjut.runner.Model.ActionType;
 import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.Model.GenderType;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.GeneralUtils;
+import com.zjut.runner.util.ResourceUtil;
 import com.zjut.runner.util.RunnableManager;
 import com.zjut.runner.util.StringUtil;
 import com.zjut.runner.util.ToastUtil;
@@ -49,20 +52,12 @@ public class UserProfileFragment extends BaseFragment implements
     private ProgressBar progressBar;
     private Collection<BaseViewHolder> baseViewHolders = new ArrayList<>();
     private LinearLayout bodyView;
-    private NestedScrollView wrapView;
     private View mView;
 
-    private UserHeaderHolder userHeaderHolder;
-    private List<DetailActionItemHolder> detailActionItemHolders = new ArrayList<>();
-    private List<DetailActionItemHolder> detailCampusItemHolders = new ArrayList<>();
-
-    private static final int REQUEST_IMAGE = 9;
+    private List<BaseViewHolder> detailActionItemHolders = new ArrayList<>();
 
     //load campus model
     private AsyncTask<Object,Void,CampusModel> dbLoad = null;
-
-    //save campus model
-    private AsyncTask<Object,Void,Void> dbSave = null;
 
     // refresh
     protected Handler mUiHandler = new Handler();
@@ -98,13 +93,12 @@ public class UserProfileFragment extends BaseFragment implements
             baseViewHolders = null;
         }
         bodyView = null;
-        wrapView = null;
         mUiHandler = null;
     }
 
     @Override
     public void changeTitle() {
-        activity.changeTitle(R.string.title_profile);
+        setTitle(R.string.title_profile);
     }
 
     @Override
@@ -113,7 +107,6 @@ public class UserProfileFragment extends BaseFragment implements
         activity.expandToolbar(true);
         progressBar = (ProgressBar) rootView.findViewById(R.id.pb_sending_post);
         bodyView = (LinearLayout) rootView.findViewById(R.id.ll_details_view);
-        wrapView = (NestedScrollView) rootView.findViewById(R.id.sv_action_area);
         requestModel();
     }
 
@@ -161,75 +154,35 @@ public class UserProfileFragment extends BaseFragment implements
         if(detailActionItemHolders.size() > 0){
             detailActionItemHolders.clear();
         }
-        if(detailCampusItemHolders.size() > 0){
-            detailCampusItemHolders.clear();
-        }
-        addDetail(0,R.string.str_username,activity.campusModel.getUsername(),ActionType.NAME,true);
-        addDetail(0,R.string.str_gender,genderString(), ActionType.GENDER,true);
-        addDetail(0,R.string.str_phone,activity.campusModel.getMobile(),ActionType.PHONE,true);
-        addDetail(0,R.string.str_email,activity.campusModel.getEmail(),ActionType.EMAIL,true);
+        DetailItemMaker detailItemMaker = new DetailItemMaker(activity,activity.campusModel.getUsername(),this);
+        detailActionItemHolders.add(detailItemMaker.getDetailActionItemHolder());
+        detailActionItemHolders.add(detailItemMaker.genderItem(StringUtil.genderString(activity,
+                activity.campusModel.getGenderType())));
+        detailActionItemHolders.add(detailItemMaker.phoneItem(activity.campusModel.getMobile()));
+        detailActionItemHolders.add(detailItemMaker.emailItem(activity.campusModel.getEmail()));
         addToBody(detailActionItemHolders);
-        addGreyLine(GeneralUtils.getDimenPx(activity, R.dimen.super_large_margin));
+        ResourceUtil.addGreyLine(activity,bodyView,
+                GeneralUtils.getDimenPx(activity,R.dimen.super_large_margin));
         if(!StringUtil.isNull(activity.campusModel.getCampusID())){
-            addCampusDetail(0, R.string.str_id, activity.campusModel.getCampusID(), null, false);
-            addCampusDetail(0,R.string.str_name,activity.campusModel.getCampusName(),null,false);
-            addCampusDetail(0,R.string.card_balance,String.valueOf(activity.campusModel.getBalance()),null,false);
-            addCampusDetail(0,R.string.str_unbind,null,ActionType.UNBIND,true);
+            detailActionItemHolders.clear();
+            detailActionItemHolders.add(detailItemMaker.campusID(activity.campusModel.getCampusID()));
+            detailActionItemHolders.add(detailItemMaker.campusName(activity.campusModel.getCampusName()));
+            detailActionItemHolders.add(detailItemMaker.campusBalance(String.valueOf(activity.
+                    campusModel.getBalance())));
+            detailActionItemHolders.add(detailItemMaker.campusUnbind());
         }else{
-            addCampusDetail(0, R.string.str_bind, null, ActionType.BINDING, true);
+            detailActionItemHolders.add(detailItemMaker.campusBind());
         }
-        addToBody(detailCampusItemHolders);
+        addToBody(detailActionItemHolders);
     }
 
-    private String genderString() {
-        String gender = "";
-        if(activity.campusModel.getGenderType() != null){
-            switch (activity.campusModel.getGenderType()){
-                case FEMALE:
-                    gender = getString(R.string.str_female);
-                    break;
-                case MALE:
-                    gender = getString(R.string.str_male);
-                    break;
-            }
-        }
-        return gender;
-    }
-
-    private void addToBody(List<DetailActionItemHolder> list){
-        for(DetailActionItemHolder detailActionItemHolder:list){
+    private void addToBody(List<BaseViewHolder> list){
+        for(BaseViewHolder detailActionItemHolder:list){
             addViewHolder(detailActionItemHolder);
             View rootview = detailActionItemHolder.getRootView();
-            addView(rootview);
-            setMarginTop(GeneralUtils.getDimenPx(activity,R.dimen.margin_zero),rootview);
+            ResourceUtil.addView(bodyView,rootview);
+            ResourceUtil.setMarginTop(GeneralUtils.getDimenPx(activity,R.dimen.margin_zero),rootview);
         }
-    }
-
-    private void addDetail(int iconImage,int actionName,String actionDesc,ActionType actionType,
-                           boolean clickAble){
-        detailActionItemHolders.add(new DetailActionItemHolder(activity, iconImage, actionName,
-                actionDesc, actionType, clickAble, this));
-    }
-
-    private void addCampusDetail(int iconImage,int actionName,String actionDesc,ActionType actionType,
-                                 boolean clickAble){
-        detailCampusItemHolders.add(new DetailActionItemHolder(activity, iconImage, actionName,
-                actionDesc, actionType, clickAble, this));
-    }
-
-    private void addGreyLine(int height){
-        View view = new View(activity);
-        view.setBackgroundColor(getResources().getColor(R.color.line_gray));
-        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height));
-        addView(view);
-    }
-
-    private UserHeaderHolder AddHeader(UserHeaderHolder userHeaderHolder,int marginTop){
-        addViewHolder(userHeaderHolder);
-        View rootView = userHeaderHolder.getRootView();
-        addView(rootView);
-        setMarginTop(marginTop, rootView);
-        return userHeaderHolder;
     }
 
     protected void addViewHolder(BaseViewHolder baseViewHolder) {
@@ -239,54 +192,17 @@ public class UserProfileFragment extends BaseFragment implements
         baseViewHolders.add(baseViewHolder);
     }
 
-    protected void addView(View view) {
-        if (view == null) {
-            return;
-        }
-        if (bodyView == null) {
-            return;
-        }
-        if(view.getParent() != null){
-            bodyView.removeAllViews();
-        }
-        bodyView.addView(view);
-    }
-
-    protected void setMarginTop(int marginTop, View view) {
-        if (view == null) {
-            return;
-        }
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) view.getLayoutParams();
-        if (lp == null){
-            lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-        lp.topMargin = marginTop;
-        view.setLayoutParams(lp);
-    }
-
     @Override
     protected void setListener() {
 
     }
 
     @Override
-    public void onSearchClose() {
-
-    }
-
-    @Override
-    public void search(String searchString) {
-
-    }
-
-    @Override
     public void nameClick() {
-        NameFragment nameFragment = new NameFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.PARAM_ACTION, ActionType.NAME.toString());
         bundle.putString(Constants.PARAM_VALUE, activity.campusModel.getUsername());
-        nameFragment.setArguments(bundle);
-        activity.goToFragment(nameFragment);
+        activity.goToFragment(FragmentFactory.getFragment(Constants.FRAG_CHANGE_NAME,bundle,null));
     }
 
     @Override
@@ -367,21 +283,17 @@ public class UserProfileFragment extends BaseFragment implements
 
     @Override
     public void emailClick() {
-        EmailFragment emailFragment = new EmailFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.PARAM_ACTION,ActionType.NAME.toString());
         bundle.putString(Constants.PARAM_VALUE, activity.campusModel.getEmail());
-        emailFragment.setArguments(bundle);
-        activity.goToFragment(emailFragment);
+        activity.goToFragment(FragmentFactory.getFragment(Constants.FRAG_CHANGE_EMAIL,bundle,null));
     }
 
     @Override
     public void bindClick() {
-        BindFragment bindFragment = new BindFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.PARAM_ACTION, ActionType.BINDING.toString());
-        bindFragment.setArguments(bundle);
-        activity.goToFragment(bindFragment);
+        activity.goToFragment(FragmentFactory.getFragment(Constants.FRAG_BIND,bundle,null));
     }
 
     @Override

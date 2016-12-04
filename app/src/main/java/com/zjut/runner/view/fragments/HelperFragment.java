@@ -64,7 +64,7 @@ public class HelperFragment extends BaseFragment implements Runnable, HelperAdap
 
     @Override
     public void changeTitle() {
-        activity.changeTitle(R.string.str_helpers);
+        setTitle(R.string.str_helpers);
     }
 
     @Override
@@ -105,16 +105,6 @@ public class HelperFragment extends BaseFragment implements Runnable, HelperAdap
 
     @Override
     protected void setListener() {
-
-    }
-
-    @Override
-    public void onSearchClose() {
-
-    }
-
-    @Override
-    public void search(String searchString) {
 
     }
 

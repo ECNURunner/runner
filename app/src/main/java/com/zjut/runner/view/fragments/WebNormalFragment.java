@@ -123,14 +123,5 @@ public class WebNormalFragment extends BaseFragment{
 
     }
 
-    @Override
-    public void onSearchClose() {
-
-    }
-
-    @Override
-    public void search(String searchString) {
-
-    }
 }
 

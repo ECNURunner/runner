@@ -10,17 +10,51 @@ import com.zjut.runner.R;
 import com.zjut.runner.view.activities.MainActivity;
 import com.zjut.runner.view.fragments.RequestInfoFragment;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2016/10/20.
  */
 
-public class DetailActionItemHolder extends BaseViewHolder {
+public class DetailActionItemHolder extends BaseViewHolder implements Cloneable{
     private int iconImage;
     private int actionName;
     private String actionDesc;
     private ActionType actionType;
     private boolean clickAble;
     private ItemClickListener itemClickListener;
+
+    public String getActionDesc() {
+        return actionDesc;
+    }
+
+    public int getActionName() {
+        return actionName;
+    }
+
+    public void setActionName(int actionName) {
+        this.actionName = actionName;
+    }
+
+    public void setActionDesc(String actionDesc) {
+        this.actionDesc = actionDesc;
+    }
+
+    public ActionType getActionType() {
+        return actionType;
+
+    }
+
+    public void setActionType(ActionType actionType) {
+        this.actionType = actionType;
+    }
+
     private SettingItemClickListener settingItemClickListener;
     private HelpersClickListener helpersClickListener;
 
@@ -238,4 +272,5 @@ public class DetailActionItemHolder extends BaseViewHolder {
         iv_navigate = null;
         iv_icon = null;
     }
+
 }

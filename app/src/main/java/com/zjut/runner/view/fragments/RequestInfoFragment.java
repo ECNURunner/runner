@@ -28,6 +28,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.zjut.runner.Controller.AsyncTaskController;
 import com.zjut.runner.Controller.CurrentSession;
+import com.zjut.runner.Controller.FragmentFactory;
 import com.zjut.runner.Model.ActionType;
 import com.zjut.runner.Model.CampusModel;
 import com.zjut.runner.Model.HelperModel;
@@ -238,7 +239,7 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
 
     @Override
     public void changeTitle() {
-        activity.changeTitle(R.string.str_myorder_info);
+        setTitle(R.string.str_myorder_info);
     }
 
     @Override
@@ -440,12 +441,9 @@ public class RequestInfoFragment extends NewRequestFragment implements DetailAct
         if(orderModel.getHelper() != null){
             showFixedHelper();
         }else {
-            HelperFragment helperFragment = new HelperFragment();
             Bundle bundle = new Bundle();
             bundle.putSerializable(Constants.PARAM_HELPER_USER, (Serializable) helperModels);
-            helperFragment.setArguments(bundle);
-            helperFragment.registerSelectedCallBackListener(this, null);
-            activity.goToFragment(helperFragment);
+            activity.goToFragment(FragmentFactory.getFragment(Constants.FRAG_HELPER,bundle,this));
         }
     }
 

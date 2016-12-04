@@ -92,17 +92,6 @@ public class RegisterFragment extends BaseFragment implements TextWatcher, View.
         }
     }
 
-
-    @Override
-    public void onSearchClose() {
-
-    }
-
-    @Override
-    public void search(String searchString) {
-
-    }
-
     protected boolean checkInputInfo() {
         String username = et_username.getText().toString();
         String password = et_password.getText().toString();

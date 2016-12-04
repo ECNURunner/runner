@@ -7,6 +7,7 @@ import android.view.View;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.RequestMobileCodeCallback;
+import com.zjut.runner.Controller.FragmentFactory;
 import com.zjut.runner.R;
 import com.zjut.runner.util.Constants;
 import com.zjut.runner.util.ToastUtil;
@@ -42,11 +43,10 @@ public class PhoneFragment extends NameFragment {
             @Override
             public void done(AVException e) {
                 if(e == null){
-                    ChangePhoneFragment changePhoneFragment = new ChangePhoneFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString(Constants.PARAM_ACCOUNT, name);
-                    changePhoneFragment.setArguments(bundle);
-                    activity.goToFragment(changePhoneFragment);
+                    activity.goToFragment(FragmentFactory.getFragment(Constants.FRAG_CHANGE_PHONE,
+                            bundle,null));
                 }else{
                     ToastUtil.showToastShort(activity,e.getMessage());
                 }
@@ -56,6 +56,6 @@ public class PhoneFragment extends NameFragment {
 
     @Override
     public void changeTitle() {
-        activity.changeTitle(R.string.str_phone);
+        setTitle(R.string.str_phone);
     }
 }

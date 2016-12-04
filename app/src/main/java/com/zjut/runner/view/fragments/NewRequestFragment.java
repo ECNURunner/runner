@@ -90,7 +90,6 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
                 materialDialog.dismiss();
                 progressBar.setVisibility(View.GONE);
                 setEnable(true);
-                //TODO: clear input
                 clearInput();
             }
         });
@@ -134,7 +133,7 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
 
     @Override
     public void changeTitle() {
-        activity.changeTitle(R.string.title_new);
+        setTitle(R.string.title_new);
     }
 
     @Override
@@ -151,7 +150,6 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
         progressBar.setVisibility(View.GONE);
         bt_submit = (Button) rootView.findViewById(R.id.btn_sub);
         tv_charge.setText(getString(R.string.str_charge,"5 "));
-        //updateCurrentTime();
         setButtonDisable(checkInputInfo());
     }
 
@@ -183,16 +181,6 @@ public class NewRequestFragment extends BaseFragment implements View.OnFocusChan
         et_remarks.addTextChangedListener(this);
         //et_remarks.requestFocus();
         bt_submit.setOnClickListener(this);
-    }
-
-    @Override
-    public void onSearchClose() {
-
-    }
-
-    @Override
-    public void search(String searchString) {
-
     }
 
     @Override

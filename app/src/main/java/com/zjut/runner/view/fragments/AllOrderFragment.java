@@ -11,6 +11,7 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.zjut.runner.Controller.AsyncTaskController;
 import com.zjut.runner.Controller.CurrentSession;
+import com.zjut.runner.Controller.FragmentFactory;
 import com.zjut.runner.Model.OrderModel;
 import com.zjut.runner.Model.OrderStatus;
 import com.zjut.runner.R;
@@ -56,7 +57,7 @@ public class AllOrderFragment extends OrderContentFragment{
 
     @Override
     public void changeTitle() {
-        activity.changeTitle(R.string.str_run);
+        setTitle(R.string.str_run);
     }
 
     @Override
@@ -133,11 +134,8 @@ public class AllOrderFragment extends OrderContentFragment{
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         OrderModel orderModel = orderModels.get(position);
-        ReplyRequestFragment replyRequestFragment = new ReplyRequestFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.PARAM_ORDER,orderModel);
-        replyRequestFragment.setArguments(bundle);
-        replyRequestFragment.registerSelectedCallBackListener(this,null);
-        activity.goToFragment(replyRequestFragment);
+        activity.goToFragment(FragmentFactory.getFragment(Constants.FRAG_REPLY_REQ,bundle,this));
     }
 }

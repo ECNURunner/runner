@@ -16,6 +16,7 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.zjut.runner.Controller.AsyncTaskController;
 import com.zjut.runner.Controller.CurrentSession;
+import com.zjut.runner.Controller.FragmentFactory;
 import com.zjut.runner.Model.OrderModel;
 import com.zjut.runner.Model.OrderStatus;
 import com.zjut.runner.R;
@@ -217,16 +218,6 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
     }
 
     @Override
-    public void onSearchClose() {
-
-    }
-
-    @Override
-    public void search(String searchString) {
-
-    }
-
-    @Override
     public void onRefresh(final PullToRefreshLayout pullToRefresh) {
         onLoad = false;
         SKIP = 0;
@@ -259,14 +250,10 @@ public class OrderContentFragment extends BaseFragment implements PullToRefreshL
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        MLog.d("CLICK","HERE");
         OrderModel orderModel = orderModels.get(position);
-        RequestInfoFragment requestInfoFragment = new RequestInfoFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.PARAM_ORDER,orderModel);
-        requestInfoFragment.setArguments(bundle);
-        requestInfoFragment.registerSelectedCallBackListener(this,null);
-        activity.goToFragment(requestInfoFragment);
+        activity.goToFragment(FragmentFactory.getFragment(Constants.FRAG_ORDER_INFO,bundle,this));
     }
 
     @Override

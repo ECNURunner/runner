@@ -1,5 +1,10 @@
 package com.zjut.runner.util;
 
+import android.content.Context;
+
+import com.zjut.runner.Model.GenderType;
+import com.zjut.runner.R;
+
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -179,5 +184,21 @@ public class StringUtil {
     public static String currencyFormat(double unitPrice){
         DecimalFormat format = new DecimalFormat("#,###,###.##");
         return format.format(unitPrice);
+    }
+
+    /*Gender to String*/
+    public static String genderString(Context context,GenderType genderType) {
+        String gender = "";
+        if(genderType != null){
+            switch (genderType){
+                case FEMALE:
+                    gender = context.getString(R.string.str_female);
+                    break;
+                case MALE:
+                    gender = context.getString(R.string.str_male);
+                    break;
+            }
+        }
+        return gender;
     }
 }

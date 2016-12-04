@@ -204,17 +204,6 @@ public class ValidationCodeFragment extends BaseFragment implements View.OnClick
         }
     }
 
-
-    @Override
-    public void onSearchClose() {
-
-    }
-
-    @Override
-    public void search(String searchString) {
-
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){

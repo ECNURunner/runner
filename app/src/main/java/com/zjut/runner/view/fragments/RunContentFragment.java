@@ -13,6 +13,7 @@ import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.zjut.runner.Controller.AsyncTaskController;
 import com.zjut.runner.Controller.CurrentSession;
+import com.zjut.runner.Controller.FragmentFactory;
 import com.zjut.runner.Model.OrderModel;
 import com.zjut.runner.Model.OrderStatus;
 import com.zjut.runner.R;
@@ -54,12 +55,9 @@ public class RunContentFragment extends OrderContentFragment {
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         OrderModel orderModel = orderModels.get(position);
-        RunInfoFragment requestInfoFragment = new RunInfoFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.PARAM_ORDER,orderModel);
-        requestInfoFragment.setArguments(bundle);
-        requestInfoFragment.registerSelectedCallBackListener(this,null);
-        activity.goToFragment(requestInfoFragment);
+        activity.goToFragment(FragmentFactory.getFragment(Constants.FRAG_RUN_INFO,bundle,this));
     }
 
     @Override

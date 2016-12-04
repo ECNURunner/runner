@@ -7,12 +7,8 @@ import com.zjut.runner.util.GeneralUtils;
 import com.zjut.runner.util.StringUtil;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Phuylai on 2016/10/25.
@@ -329,4 +325,5 @@ public class OrderModel implements Serializable{
         }
         return orderModels;
     }
+
 }

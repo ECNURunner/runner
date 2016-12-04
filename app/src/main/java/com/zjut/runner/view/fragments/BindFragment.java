@@ -67,7 +67,7 @@ public class BindFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void changeTitle() {
-        activity.changeTitle(R.string.str_bind);
+        setTitle(R.string.str_bind);
     }
 
     @Override
@@ -117,16 +117,6 @@ public class BindFragment extends BaseFragment implements View.OnClickListener, 
         inputID.addTextChangedListener(this);
         inputPass.addTextChangedListener(this);
         inputOldPass.addTextChangedListener(this);
-    }
-
-    @Override
-    public void onSearchClose() {
-
-    }
-
-    @Override
-    public void search(String searchString) {
-
     }
 
     @Override

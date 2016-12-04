@@ -78,7 +78,7 @@ public class ReplyRequestFragment extends RequestInfoFragment {
 
     @Override
     public void changeTitle() {
-        activity.changeTitle(R.string.str_myorder_info);
+        setTitle(R.string.str_myorder_info);
     }
 
     @Override
